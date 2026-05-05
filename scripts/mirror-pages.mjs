@@ -114,7 +114,7 @@ async function mirrorHtml(pageUrl) {
     .replace(/<script>\(function\(d,\s*w\)\{[\s\S]*?lp9\.ru\/widget\/[\s\S]*?<\/script>\s*/gi, "")
     .replace(
       /<!--\/allrecords-->[\s\S]*$/i,
-      `<!--/allrecords--><script src="/mirror-assets/form-bridge.js" defer></script></body></html>`,
+      `<!--/allrecords--><script src="/mirror-assets/form-bridge.js" defer></script><script src="/mirror-assets/custom-enhancements.js" defer></script></body></html>`,
     );
 
   return html;
