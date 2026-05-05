@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { SiteHeader } from "@/components/site-header";
 
 export const metadata: Metadata = {
   title: "Роман Шумилов",
@@ -14,10 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru" className="h-full antialiased">
-      <body className="min-h-full flex flex-col bg-[#0b1220]">
-        <SiteHeader />
-        <div className="flex flex-1 flex-col">{children}</div>
-      </body>
+      <body className="min-h-full bg-black">{children}</body>
     </html>
   );
 }

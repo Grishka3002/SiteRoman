@@ -19,88 +19,102 @@ export default async function AdminPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#0b1220] px-5 py-10 text-white sm:px-8">
+    <main className="min-h-screen bg-black px-5 py-10 text-white sm:px-8">
       <div className="mx-auto w-full max-w-7xl">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#c8a36a]">
-              Admin
-            </p>
-            <h1 className="mt-4 text-4xl font-semibold tracking-tight">
-              Управление страницами и заявками
+        <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-[#101010] shadow-[0_24px_80px_rgba(0,0,0,0.35)]">
+          <div className="border-b border-white/10 bg-[#ffe100] px-6 py-8 text-black sm:px-10">
+            <p className="text-xs font-black uppercase tracking-[0.45em]">Admin</p>
+            <h1 className="mt-4 max-w-4xl text-4xl font-black uppercase leading-[0.9] tracking-[-0.06em] sm:text-6xl">
+              Управление сайтом и заявками
             </h1>
+            <p className="mt-4 max-w-2xl text-sm font-medium leading-6 text-black/70">
+              Здесь можно открыть публичные страницы, изменить контент в JSON и посмотреть последние заявки.
+            </p>
           </div>
-          <p className="max-w-xl text-sm leading-6 text-slate-400">
-            Если переменная DATABASE_URL не настроена, сайт берет контент из встроенного JSON. После подключения базы правки из admin будут сохраняться в PostgreSQL.
-          </p>
-        </div>
 
-        <section className="mt-10 grid gap-5 lg:grid-cols-3">
-          {pages.map(({ slug, content }) => (
-            <article key={slug} className="rounded-[1.75rem] border border-white/10 bg-white/5 p-6">
-              <div className="text-xs font-semibold uppercase tracking-[0.32em] text-[#c8a36a]">
-                {slug}
+          <div className="grid gap-8 px-6 py-8 sm:px-10">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.38em] text-[#ffe100]">Разделы</p>
+                <h2 className="mt-3 text-3xl font-black uppercase tracking-[-0.04em]">Страницы сайта</h2>
               </div>
-              <h2 className="mt-3 text-2xl font-semibold">{content.hero.title}</h2>
-              <p className="mt-3 text-sm leading-6 text-slate-300">{content.seoDescription}</p>
-              <div className="mt-6 flex gap-3">
-                <Link
-                  href={`/admin/${slug}`}
-                  className="rounded-full bg-[#c8a36a] px-4 py-2 text-sm font-semibold text-[#0b1220]"
-                >
-                  Редактировать
-                </Link>
-                <Link
-                  href={slug === "home" ? "/" : `/${slug}`}
-                  className="rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-white"
-                >
-                  Открыть
-                </Link>
-              </div>
-            </article>
-          ))}
-        </section>
+              <p className="max-w-xl text-sm font-medium leading-6 text-white/60">
+                Если подключен PostgreSQL в Railway, изменения контента и заявки сохраняются в базе. Без базы сайт работает на встроенном контенте.
+              </p>
+            </div>
 
-        <section className="mt-12 rounded-[2rem] border border-white/10 bg-white/5 p-6">
-          <h2 className="text-2xl font-semibold">Последние заявки</h2>
-          <p className="mt-2 text-sm text-slate-400">
-            {process.env.DATABASE_URL
-              ? "Форма на страницах сохраняет все заявки сюда."
-              : "Для хранения заявок подключите DATABASE_URL в .env.local и на Railway."}
-          </p>
-          <div className="mt-6 overflow-hidden rounded-[1.5rem] border border-white/10">
-            <table className="min-w-full divide-y divide-white/10 text-left text-sm">
-              <thead className="bg-white/5 text-slate-300">
-                <tr>
-                  <th className="px-4 py-3 font-medium">Страница</th>
-                  <th className="px-4 py-3 font-medium">Имя</th>
-                  <th className="px-4 py-3 font-medium">Контакт</th>
-                  <th className="px-4 py-3 font-medium">Дата</th>
-                  <th className="px-4 py-3 font-medium">Комментарий</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/10">
-                {inquiries.length ? (
-                  inquiries.map((inquiry) => (
-                    <tr key={inquiry.id} className="align-top text-slate-200">
-                      <td className="px-4 py-4">{inquiry.pageSlug}</td>
-                      <td className="px-4 py-4">{inquiry.name}</td>
-                      <td className="px-4 py-4">{inquiry.contact}</td>
-                      <td className="px-4 py-4">{inquiry.eventDate || "-"}</td>
-                      <td className="px-4 py-4 text-slate-400">{inquiry.message || "-"}</td>
+            <section className="grid gap-5 lg:grid-cols-3">
+              {pages.map(({ slug, content }) => (
+                <article
+                  key={slug}
+                  className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.25)]"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="text-xs font-black uppercase tracking-[0.32em] text-[#ffe100]">{slug}</div>
+                    <div className="h-3 w-3 rounded-full bg-[#ffe100]" />
+                  </div>
+                  <h3 className="mt-4 text-2xl font-black uppercase tracking-[-0.04em]">{content.hero.title}</h3>
+                  <p className="mt-3 text-sm font-medium leading-6 text-white/65">{content.seoDescription}</p>
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    <Link
+                      href={`/admin/${slug}`}
+                      className="rounded-full bg-[#ffe100] px-4 py-2 text-sm font-black text-black transition hover:bg-white"
+                    >
+                      Редактировать
+                    </Link>
+                    <Link
+                      href={slug === "home" ? "/" : `/${slug}`}
+                      className="rounded-full border border-white/15 px-4 py-2 text-sm font-black text-white transition hover:border-[#ffe100] hover:text-[#ffe100]"
+                    >
+                      Открыть
+                    </Link>
+                  </div>
+                </article>
+              ))}
+            </section>
+
+            <section className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-6">
+              <h2 className="text-2xl font-black uppercase tracking-[-0.04em]">Последние заявки</h2>
+              <p className="mt-2 text-sm font-medium text-white/60">
+                {process.env.DATABASE_URL
+                  ? "Формы на страницах отправляют заявки сюда."
+                  : "Чтобы хранить заявки, подключите DATABASE_URL в Railway или локально."}
+              </p>
+              <div className="mt-6 overflow-hidden rounded-[1.25rem] border border-white/10">
+                <table className="min-w-full divide-y divide-white/10 text-left text-sm">
+                  <thead className="bg-white/[0.04] text-white/70">
+                    <tr>
+                      <th className="px-4 py-3 font-semibold">Страница</th>
+                      <th className="px-4 py-3 font-semibold">Имя</th>
+                      <th className="px-4 py-3 font-semibold">Контакт</th>
+                      <th className="px-4 py-3 font-semibold">Дата</th>
+                      <th className="px-4 py-3 font-semibold">Комментарий</th>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={5} className="px-4 py-6 text-slate-400">
-                      Заявок пока нет или база не подключена.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                  </thead>
+                  <tbody className="divide-y divide-white/10">
+                    {inquiries.length ? (
+                      inquiries.map((inquiry) => (
+                        <tr key={inquiry.id} className="align-top text-white/90">
+                          <td className="px-4 py-4">{inquiry.pageSlug}</td>
+                          <td className="px-4 py-4">{inquiry.name}</td>
+                          <td className="px-4 py-4">{inquiry.contact}</td>
+                          <td className="px-4 py-4">{inquiry.eventDate || "-"}</td>
+                          <td className="px-4 py-4 text-white/60">{inquiry.message || "-"}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={5} className="px-4 py-6 text-white/55">
+                          Заявок пока нет или база еще не подключена.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </section>
           </div>
-        </section>
+        </div>
       </div>
     </main>
   );
