@@ -10,25 +10,23 @@ const navItems = [
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0b1220]/80 backdrop-blur-xl">
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
-        <Link href="/" className="text-sm font-semibold uppercase tracking-[0.32em] text-white">
-          Roman Shumilov
+    <header className="tilda-nav fixed left-0 right-0 top-0 z-[100] px-3 py-3 sm:px-4">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between gap-3 rounded-full border border-white/10 bg-black/88 px-3 py-3 text-white shadow-2xl backdrop-blur-xl sm:px-4 md:gap-4 md:px-6">
+        <Link href="/" className="flex items-center gap-3">
+          <span className="h-3 w-3 rounded-full bg-[#ffe100]" />
+          <span className="text-sm font-black uppercase tracking-[0.22em]">Шумилов</span>
         </Link>
-        <nav className="flex items-center gap-4 text-sm text-white/70 sm:gap-6">
+        <div className="hidden items-center gap-5 md:flex">
           {navItems.map((item) => (
-            <Link key={item.slug} href={pagePath(item.slug)} className="transition hover:text-white">
+            <Link key={item.slug} href={pagePath(item.slug)} className="text-xs font-bold uppercase tracking-[0.18em] text-white/72 transition hover:text-[#ffe100]">
               {item.label}
             </Link>
           ))}
-          <Link
-            href="/admin"
-            className="rounded-full border border-white/15 px-4 py-2 text-white transition hover:border-white/40"
-          >
-            Admin
-          </Link>
-        </nav>
-      </div>
+        </div>
+        <Link href="/wedding#contact" className="tilda-button tilda-button-yellow min-h-0 px-3 py-2 text-[0.68rem] sm:px-4 sm:text-xs">
+          Заявка
+        </Link>
+      </nav>
     </header>
   );
 }

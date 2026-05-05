@@ -18,122 +18,64 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="inline-flex items-center justify-center rounded-full bg-[#c8a36a] px-6 py-3 text-sm font-semibold text-[#0b1220] transition hover:bg-[#d8b981] disabled:cursor-not-allowed disabled:opacity-70"
+      className="tilda-button tilda-button-yellow w-full disabled:cursor-not-allowed disabled:opacity-70 sm:text-base"
     >
       {pending ? "Отправляем..." : "Отправить заявку"}
     </button>
   );
 }
 
-export function LeadForm({
-  pageSlug,
-  pageKind,
-  title,
-  subtitle,
-  gifts,
-  action,
-}: LeadFormProps) {
+export function LeadForm({ pageSlug, pageKind, title, subtitle, gifts, action }: LeadFormProps) {
   const isCorporate = pageSlug === "corporate";
 
   return (
-    <div className="rounded-[2rem] border border-black/10 bg-white p-6 shadow-[0_24px_80px_rgba(11,18,32,0.14)] sm:p-8">
-      <div className="max-w-2xl">
-        <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#9a7b4d]">
-          Заявка
-        </p>
-        <h2 className="mt-3 text-3xl font-semibold tracking-tight text-[#111827] sm:text-4xl">
+    <div className="grid gap-9 lg:grid-cols-[minmax(0,0.92fr)_minmax(460px,0.88fr)] lg:items-start lg:gap-12">
+      <div className="relative z-0 lg:sticky lg:top-8">
+        <p className="text-xs font-black uppercase tracking-[0.42em]">Стоимость</p>
+        <h2 className="mt-5 max-w-[700px] break-words text-[clamp(2.35rem,5.35vw,5.15rem)] font-black uppercase leading-[0.9] tracking-[-0.06em]">
           {title}
         </h2>
-        <p className="mt-3 text-base leading-7 text-[#4b5563]">{subtitle}</p>
+        <p className="mt-5 max-w-xl text-[clamp(1rem,1.5vw,1.12rem)] font-medium leading-7 text-black/70">
+          {subtitle}
+        </p>
+
+        {gifts?.length ? (
+          <div className="mt-7 grid gap-3">
+            {gifts.map((gift) => (
+              <div key={gift} className="flex items-center gap-3 rounded-full bg-black px-4 py-3 text-white sm:px-5">
+                <span className="h-2.5 w-2.5 rounded-full bg-[#ffe100]" />
+                <span className="text-xs font-semibold uppercase tracking-[0.08em] sm:text-sm">{gift}</span>
+              </div>
+            ))}
+          </div>
+        ) : null}
       </div>
 
-      <form action={action} className="mt-8 grid gap-5">
+      <form action={action} className="relative z-10 rounded-[1.5rem] bg-black p-5 text-white shadow-2xl sm:p-7">
         <input type="hidden" name="pageSlug" value={pageSlug} />
         <input type="hidden" name="pageKind" value={pageKind ?? ""} />
 
-        <div className="grid gap-5 md:grid-cols-2">
-          <label className="grid gap-2 text-sm font-medium text-[#111827]">
-            Имя
-            <input
-              required
-              name="name"
-              className="rounded-2xl border border-black/10 bg-[#f7f6f2] px-4 py-3 text-base outline-none transition focus:border-[#c8a36a]"
-              placeholder="Как к вам обращаться"
-            />
-          </label>
-          <label className="grid gap-2 text-sm font-medium text-[#111827]">
-            Телефон или мессенджер
-            <input
-              required
-              name="contact"
-              className="rounded-2xl border border-black/10 bg-[#f7f6f2] px-4 py-3 text-base outline-none transition focus:border-[#c8a36a]"
-              placeholder="+7..."
-            />
-          </label>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="Ваше имя" name="name" placeholder="Анна" required />
+          <Field label="Телефон или Telegram" name="contact" placeholder="+7..." required />
+          <Field label="Дата события" name="eventDate" placeholder="15.08.2026" />
+          <Field label="Город / площадка" name="location" placeholder="Владивосток" />
+          <Field label="Количество гостей" name="guestCount" placeholder="70" />
+          <Field label={isCorporate ? "Формат события" : "Формат"} name="format" placeholder={isCorporate ? "Корпоратив, форум, юбилей" : "Церемония + банкет"} />
+          {isCorporate ? <Field label="Компания" name="company" placeholder="Название компании" /> : null}
         </div>
-
-        <div className="grid gap-5 md:grid-cols-3">
-          <label className="grid gap-2 text-sm font-medium text-[#111827]">
-            Дата
-            <input
-              name="eventDate"
-              className="rounded-2xl border border-black/10 bg-[#f7f6f2] px-4 py-3 text-base outline-none transition focus:border-[#c8a36a]"
-              placeholder="Например, 14 августа"
-            />
-          </label>
-          <label className="grid gap-2 text-sm font-medium text-[#111827]">
-            Город / площадка
-            <input
-              name="location"
-              className="rounded-2xl border border-black/10 bg-[#f7f6f2] px-4 py-3 text-base outline-none transition focus:border-[#c8a36a]"
-              placeholder="Где пройдет событие"
-            />
-          </label>
-          <label className="grid gap-2 text-sm font-medium text-[#111827]">
-            Гостей
-            <select
-              name="guestCount"
-              className="rounded-2xl border border-black/10 bg-[#f7f6f2] px-4 py-3 text-base outline-none transition focus:border-[#c8a36a]"
-              defaultValue=""
-            >
-              <option value="">Выберите диапазон</option>
-              <option>10-30</option>
-              <option>30-50</option>
-              <option>50-100</option>
-              <option>100+</option>
-            </select>
-          </label>
-        </div>
-
-        {isCorporate ? (
-          <div className="grid gap-5 md:grid-cols-2">
-            <label className="grid gap-2 text-sm font-medium text-[#111827]">
-              Компания
-              <input
-                name="company"
-                className="rounded-2xl border border-black/10 bg-[#f7f6f2] px-4 py-3 text-base outline-none transition focus:border-[#c8a36a]"
-                placeholder="Название компании"
-              />
-            </label>
-            <label className="grid gap-2 text-sm font-medium text-[#111827]">
-              Формат события
-              <input
-                name="format"
-                className="rounded-2xl border border-black/10 bg-[#f7f6f2] px-4 py-3 text-base outline-none transition focus:border-[#c8a36a]"
-                placeholder="Корпоратив, форум, юбилей..."
-              />
-            </label>
-          </div>
-        ) : null}
 
         {gifts?.length ? (
-          <label className="grid gap-2 text-sm font-medium text-[#111827]">
+          <label className="mt-4 grid gap-2 text-sm font-semibold text-white/75">
             Подарок / бонус
             <select
               name="gift"
-              className="rounded-2xl border border-black/10 bg-[#f7f6f2] px-4 py-3 text-base outline-none transition focus:border-[#c8a36a]"
-              defaultValue={gifts[0]}
+              className="h-[52px] rounded-[1rem] border border-white/10 bg-white px-4 text-base text-black outline-none transition focus:border-[#ffe100]"
+              defaultValue=""
             >
+              <option value="" disabled>
+                Выберите вариант
+              </option>
               {gifts.map((gift) => (
                 <option key={gift} value={gift}>
                   {gift}
@@ -143,25 +85,48 @@ export function LeadForm({
           </label>
         ) : null}
 
-        <label className="grid gap-2 text-sm font-medium text-[#111827]">
-          Комментарий
+        <label className="mt-4 grid gap-2 text-sm font-semibold text-white/75">
+          Что важно учесть?
           <textarea
             name="message"
-            rows={4}
-            className="rounded-[1.5rem] border border-black/10 bg-[#f7f6f2] px-4 py-3 text-base outline-none transition focus:border-[#c8a36a]"
-            placeholder={
-              isCorporate
-                ? "Расскажите про задачу, аудиторию, тайминг или уровень продакшна"
-                : "Если есть пожелания по атмосфере, площадке или формату, напишите их здесь"
-            }
+            rows={5}
+            placeholder={isCorporate ? "Расскажите про задачу, аудиторию, тайминг или уровень продакшна" : "Расскажите пару слов о формате, гостях и пожеланиях"}
+            className="resize-none rounded-[1rem] border border-white/10 bg-white px-4 py-4 text-base text-black outline-none transition placeholder:text-black/35 focus:border-[#ffe100]"
           />
         </label>
 
-        <div className="flex flex-col gap-4 border-t border-black/10 pt-4 text-sm text-[#6b7280] sm:flex-row sm:items-center sm:justify-between">
-          <p>Отправляя заявку, вы соглашаетесь на обработку персональных данных.</p>
+        <div className="mt-6">
           <SubmitButton />
         </div>
+
+        <p className="mt-4 text-center text-xs leading-5 text-white/45">
+          Нажимая кнопку, вы соглашаетесь на обработку данных для связи по заявке.
+        </p>
       </form>
     </div>
+  );
+}
+
+function Field({
+  label,
+  name,
+  placeholder,
+  required,
+}: {
+  label: string;
+  name: string;
+  placeholder: string;
+  required?: boolean;
+}) {
+  return (
+    <label className="grid gap-2 text-sm font-semibold text-white/75">
+      {label}
+      <input
+        name={name}
+        placeholder={placeholder}
+        required={required}
+        className="h-[52px] rounded-[1rem] border border-white/10 bg-white px-4 text-base text-black outline-none transition placeholder:text-black/35 focus:border-[#ffe100]"
+      />
+    </label>
   );
 }
