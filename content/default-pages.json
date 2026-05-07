@@ -42,14 +42,14 @@
         "title": "Свадьбы",
         "description": "Теплая, живая и современная свадебная программа без неловких конкурсов и лишнего шума.",
         "href": "/wedding",
-        "image": "/media/7665b5075b34.jpg"
+        "image": "/media/imported/image_b4a3482890.png"
       },
       {
         "slug": "corporate",
         "title": "Корпоративы",
         "description": "Статусные, четкие и управляемые события для компаний, брендов и деловых команд.",
         "href": "/corporate",
-        "image": "/media/358c972a1d4d.jpg"
+        "image": "/media/imported/u0xnpEbFOLk21_0f44640ec8.jpg"
       }
     ],
     "highlights": [
@@ -184,12 +184,15 @@
       }
     ],
     "gallery": [
-      "/media/7665b5075b34.jpg",
-      "/media/5ebba5efe375.jpg",
-      "/media/dfae172e3354.jpg",
-      "/media/857a60f1aadd.jpg",
-      "/media/06959f15d210.jpg",
-      "/media/c7f5ffa0240f.jpg"
+      "/media/imported/image_8d63297ea3.png",
+      "/media/imported/photo_2025-05-06_14-_7665b5075b.jpg",
+      "/media/imported/image_b4a3482890.png",
+      "/media/imported/photo_2025-05-06_14-_dfae172e33.jpg",
+      "/media/imported/photo_2025-05-06_14-_5ebba5efe3.jpg",
+      "/media/imported/photo_2025-05-06_15-_2d0f408bb3.jpg",
+      "/media/imported/photo_2025-05-06_15-_39dd90c0e1.jpg",
+      "/media/imported/image_77019bded4.png",
+      "/media/imported/image_5e6bf4d8de.png"
     ],
     "testimonials": [
       {
@@ -256,7 +259,39 @@
       "telegram": "https://t.me/",
       "whatsapp": "https://wa.me/79949943640",
       "instagram": "https://instagram.com/"
-    }
+    },
+    "videos": [
+      {
+        "title": "Церемония",
+        "kinescopeId": "hE2AwBcBmhcujzkc6d2KYr",
+        "localSrc": "/media/wedding-videos/hE2AwBcBmhcujzkc6d2KYr.mp4"
+      },
+      {
+        "title": "Банкет",
+        "kinescopeId": "fZhhvaZAFnjQaGEo8mNp1H",
+        "localSrc": "/media/wedding-videos/fZhhvaZAFnjQaGEo8mNp1H.mp4"
+      },
+      {
+        "title": "Welcome",
+        "kinescopeId": "mgUNU16UU9ynYLnEuHmeKD",
+        "localSrc": "/media/wedding-videos/mgUNU16UU9ynYLnEuHmeKD.mp4"
+      },
+      {
+        "title": "Эмоции гостей",
+        "kinescopeId": "qXnDky4pmGhmqHV73Quvz6",
+        "localSrc": "/media/wedding-videos/qXnDky4pmGhmqHV73Quvz6.mp4"
+      },
+      {
+        "title": "Вечеринка",
+        "kinescopeId": "ekCMRGx7Uw5b8cdcmFWLHe",
+        "localSrc": "/media/wedding-videos/ekCMRGx7Uw5b8cdcmFWLHe.mp4"
+      },
+      {
+        "title": "Свадебный клип",
+        "kinescopeId": "local-wedding-highlight",
+        "localSrc": "/media/wedding-videos/0197c0e9-409d-7035-9c44-290207d89d27.mp4"
+      }
+    ]
   },
   "corporate": {
     "slug": "corporate",
@@ -368,12 +403,12 @@
       }
     ],
     "gallery": [
-      "/media/0b5f0eb3e3ca.png",
-      "/media/d2613e6777e9.png",
-      "/media/358c972a1d4d.jpg",
-      "/media/7f80c4815884.jpg",
-      "/media/24b3d226b1e9.jpg",
-      "/media/b2e29178a2f9.jpg"
+      "/media/imported/u0xnpEbFOLk21_0f44640ec8.jpg",
+      "/media/imported/IMG_20250115_1020550_23991ef5cb.jpg",
+      "/media/imported/IMG_20260326_000544__1bbbdd8d59.jpg",
+      "/media/imported/IMG_4326_3915bccd20.jpg",
+      "/media/imported/create_a_vibrant_and_10c2903bab.jpg",
+      "/media/imported/photo_2025-04-15_15-_536da028da.jpg"
     ],
     "testimonials": [
       {

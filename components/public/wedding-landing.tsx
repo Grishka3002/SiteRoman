@@ -33,8 +33,8 @@ export function WeddingLanding({ page, sentStatus }: WeddingLandingProps) {
       <Footer page={page} />
       <FloatingVideoWidget
         kinescopeId="rRLZxsrKyC8FoPCLSjbTNy"
-        localSrc="/media/uploads/1777365963613-99a907a7-4377-47a0-9427-019a0e5b532d.mp4"
-        posterSrc="/media/uploads/1777365935161-3f4cb2b8-388c-42f8-8c17-717dccc8a75c.webp"
+        localSrc="/media/videos/360p_f5fe27dad4.mp4"
+        posterSrc="/media/imported/u0xnpEbFOLk21_0f44640ec8.jpg"
       />
     </main>
   );

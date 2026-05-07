@@ -14,14 +14,15 @@ type VideoItem = WeddingPageContent["videos"][number] & {
 };
 
 const videoPosters = [
-  "/media/7665b5075b34.jpg",
-  "/media/857a60f1aadd.jpg",
-  "/media/5ebba5efe375.jpg",
-  "/media/06959f15d210.jpg",
-  "/media/c7f5ffa0240f.jpg",
+  "/media/imported/photo_2025-05-06_14-_7665b5075b.jpg",
+  "/media/imported/photo_2025-05-06_14-_dfae172e33.jpg",
+  "/media/imported/photo_2025-05-06_14-_5ebba5efe3.jpg",
+  "/media/imported/photo_2025-05-06_15-_2d0f408bb3.jpg",
+  "/media/imported/image_b4a3482890.png",
+  "/media/imported/photo_2025-05-06_15-_39dd90c0e1.jpg",
 ];
 
-const fallbackLocalVideo = "/media/uploads/1777365963613-99a907a7-4377-47a0-9427-019a0e5b532d.mp4";
+const fallbackLocalVideo = "/media/videos/360p_f5fe27dad4.mp4";
 
 function getEmbedUrl(kinescopeId: string, autoplay = false) {
   const params = new URLSearchParams({
