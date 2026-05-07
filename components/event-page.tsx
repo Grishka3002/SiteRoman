@@ -26,8 +26,7 @@ export function EventPage({ page }: EventPageProps) {
         </div>
         <div className="relative z-10 mx-auto grid min-h-[720px] max-w-[92rem] gap-8 px-4 pb-0 pt-24 sm:min-h-[760px] sm:px-6 sm:pt-28 lg:min-h-[820px] lg:grid-cols-[0.95fr_1.05fr] lg:items-start lg:pt-32">
           <div className="relative z-20 pb-10">
-            <p className="tilda-hero-kicker text-xs font-black uppercase tracking-[0.45em]">{page.hero.eyebrow}</p>
-            <h1 className="tilda-hero-title mt-5 max-w-[680px] text-[clamp(2.35rem,4.65vw,4.15rem)] font-black uppercase leading-[0.88] tracking-[-0.075em]">
+            <h1 className="tilda-hero-title max-w-[680px] text-[clamp(2.35rem,4.65vw,4.15rem)] font-black uppercase leading-[0.88] tracking-[-0.075em]">
               {page.hero.subtitle}
             </h1>
             <p className="tilda-hero-copy mt-6 max-w-2xl text-[clamp(1rem,1.55vw,1.18rem)] font-medium leading-7 text-black/70">
@@ -37,7 +36,6 @@ export function EventPage({ page }: EventPageProps) {
               {page.hero.stats.map((stat) => (
                 <div key={stat.label} className="rounded-[1rem] border border-black/10 bg-white/25 p-4 backdrop-blur">
                   <div className="text-[clamp(1.2rem,2.5vw,1.7rem)] font-black uppercase tracking-[-0.04em]">{stat.value}</div>
-                  <div className="mt-1 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-black/55">{stat.label}</div>
                 </div>
               ))}
             </div>

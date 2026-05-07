@@ -15,7 +15,7 @@ export const sitePages = {
       primaryHref: "#contact",
       secondaryLabel: "Свадьбы",
       secondaryHref: "/wedding",
-      image: "/media/d155ba152fd2.png",
+      image: "/media/hero-home.webp",
       stats: [
         { label: "Опыт", value: "с 2004" },
         { label: "География", value: "ДФО" },
@@ -90,7 +90,7 @@ export const sitePages = {
       primaryHref: "#contact",
       secondaryLabel: "Смотреть видео",
       secondaryHref: "#videos",
-      image: "/media/bf1271dba64d.png",
+      image: "/media/hero-event.webp",
       stats: [
         { label: "Опыт работы", value: "с 2004" },
         { label: "Формат", value: "церемония + банкет" },
@@ -260,7 +260,7 @@ export const sitePages = {
       primaryHref: "#contact",
       secondaryLabel: "Главная",
       secondaryHref: "/",
-      image: "/media/bf1271dba64d.png",
+      image: "/media/hero-event.webp",
       stats: [
         { label: "Опыт", value: "20+ лет" },
         { label: "Уровень", value: "VIP / B2B" },

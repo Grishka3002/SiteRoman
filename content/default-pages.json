@@ -12,7 +12,7 @@
       "primaryHref": "#contact",
       "secondaryLabel": "Смотреть свадьбы",
       "secondaryHref": "/wedding",
-      "image": "/media/d155ba152fd2.png",
+      "image": "/media/hero-home.webp",
       "stats": [
         {
           "label": "Лет опыта",
@@ -89,7 +89,7 @@
       "primaryHref": "#contact",
       "secondaryLabel": "Посмотреть фото",
       "secondaryHref": "#gallery",
-      "image": "/media/bf1271dba64d.png",
+      "image": "/media/hero-event.webp",
       "stats": [
         {
           "label": "Опыт",
@@ -307,7 +307,7 @@
       "primaryHref": "#contact",
       "secondaryLabel": "Посмотреть кейсы",
       "secondaryHref": "#gallery",
-      "image": "/media/78f081692e13.png",
+      "image": "/media/hero-corporate.webp",
       "stats": [
         {
           "label": "Опыт",
