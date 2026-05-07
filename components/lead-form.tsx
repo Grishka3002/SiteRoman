@@ -29,10 +29,9 @@ export function LeadForm({ pageSlug, pageKind, title, subtitle, gifts, action }:
   const isCorporate = pageSlug === "corporate";
 
   return (
-    <div className="grid gap-9 lg:grid-cols-[minmax(0,0.92fr)_minmax(460px,0.88fr)] lg:items-start lg:gap-12">
+    <div className="grid gap-9 lg:grid-cols-[minmax(0,1.08fr)_minmax(420px,0.78fr)] lg:items-start lg:gap-12 xl:gap-16">
       <div className="relative z-0 lg:sticky lg:top-8">
-        <p className="text-xs font-black uppercase tracking-[0.42em]">Стоимость</p>
-        <h2 className="mt-5 max-w-[700px] break-words text-[clamp(2.35rem,5.35vw,5.15rem)] font-black uppercase leading-[0.9] tracking-[-0.06em]">
+        <h2 className="max-w-[880px] text-balance text-[clamp(2.7rem,4.45vw,4.85rem)] font-black uppercase leading-[0.88] tracking-[-0.055em]">
           {title}
         </h2>
         <p className="mt-5 max-w-xl text-[clamp(1rem,1.5vw,1.12rem)] font-medium leading-7 text-black/70">

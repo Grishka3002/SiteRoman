@@ -85,15 +85,7 @@ export function EventPage({ page }: EventPageProps) {
 
       <section className={`${sectionClass} bg-[#050505] text-white`}>
         <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.42em] text-[#ffe100]">Пакеты</p>
-              <h2 className={sectionTitleClass}>Форматы</h2>
-            </div>
-            <p className="max-w-md text-[clamp(0.98rem,1.5vw,1.12rem)] font-medium leading-7 text-white/60">
-              Точная стоимость зависит от даты, города, тайминга и состава команды. Пакеты помогают быстро выбрать направление.
-            </p>
-          </div>
+          <h2 className={sectionTitleClass}>Форматы</h2>
 
           <div className="tilda-stagger mt-10 grid gap-5 lg:grid-cols-3">
             {page.packages.map((pkg) => (

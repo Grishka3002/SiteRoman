@@ -27,9 +27,6 @@ export default async function AdminPage() {
             <h1 className="mt-4 max-w-4xl text-4xl font-black uppercase leading-[0.9] tracking-[-0.06em] sm:text-6xl">
               Управление сайтом и заявками
             </h1>
-            <p className="mt-4 max-w-2xl text-sm font-medium leading-6 text-black/70">
-              Здесь можно открыть публичные страницы, изменить контент в JSON и посмотреть последние заявки.
-            </p>
           </div>
 
           <div className="grid gap-8 px-6 py-8 sm:px-10">
@@ -38,9 +35,6 @@ export default async function AdminPage() {
                 <p className="text-xs font-black uppercase tracking-[0.38em] text-[#ffe100]">Разделы</p>
                 <h2 className="mt-3 text-3xl font-black uppercase tracking-[-0.04em]">Страницы сайта</h2>
               </div>
-              <p className="max-w-xl text-sm font-medium leading-6 text-white/60">
-                Если подключен PostgreSQL в Railway, изменения контента и заявки сохраняются в базе. Без базы сайт работает на встроенном контенте.
-              </p>
             </div>
 
             <section className="grid gap-5 lg:grid-cols-3">
@@ -75,11 +69,6 @@ export default async function AdminPage() {
 
             <section className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-6">
               <h2 className="text-2xl font-black uppercase tracking-[-0.04em]">Последние заявки</h2>
-              <p className="mt-2 text-sm font-medium text-white/60">
-                {process.env.DATABASE_URL
-                  ? "Формы на страницах отправляют заявки сюда."
-                  : "Чтобы хранить заявки, подключите DATABASE_URL в Railway или локально."}
-              </p>
               <div className="mt-6 overflow-hidden rounded-[1.25rem] border border-white/10">
                 <table className="min-w-full divide-y divide-white/10 text-left text-sm">
                   <thead className="bg-white/[0.04] text-white/70">
@@ -105,7 +94,7 @@ export default async function AdminPage() {
                     ) : (
                       <tr>
                         <td colSpan={5} className="px-4 py-6 text-white/55">
-                          Заявок пока нет или база еще не подключена.
+                          Заявок пока нет.
                         </td>
                       </tr>
                     )}

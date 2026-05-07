@@ -81,8 +81,8 @@ export function HomePage({ page }: HomePageProps) {
 
       <section className={`${compactSectionClass} bg-[#050505] text-white`}>
         <div className="mx-auto max-w-7xl">
-          <p className="text-xs font-black uppercase tracking-[0.42em] text-[#ffe100]">Выберите формат</p>
-          <h2 className={sectionTitleClass}>Отдельные страницы под разные задачи</h2>
+          <p className="text-xs font-black uppercase tracking-[0.42em] text-[#ffe100]">Форматы</p>
+          <h2 className={sectionTitleClass}>Свадьбы и корпоративы</h2>
           <div className="tilda-stagger mt-10 grid gap-5 lg:grid-cols-2">
             {page.audiences.map((audience) => (
               <Link key={audience.slug} href={audience.href} className="group grid overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#151515] transition hover:-translate-y-1 hover:border-[#ffe100]/50 lg:grid-cols-[0.9fr_1.1fr]">
@@ -97,8 +97,7 @@ export function HomePage({ page }: HomePageProps) {
                 </div>
                 <div className="flex flex-col justify-between p-6 sm:p-8">
                   <div>
-                    <p className="text-xs font-black uppercase tracking-[0.36em] text-[#ffe100]">Направление</p>
-                    <h3 className="mt-4 text-[clamp(2.1rem,4vw,3.6rem)] font-black uppercase leading-[0.9] tracking-[-0.06em]">{audience.title}</h3>
+                    <h3 className="text-[clamp(2.1rem,4vw,3.6rem)] font-black uppercase leading-[0.9] tracking-[-0.06em]">{audience.title}</h3>
                     <p className="mt-5 text-base font-medium leading-7 text-white/62">{audience.description}</p>
                   </div>
                   <span className="tilda-button tilda-button-yellow mt-8 w-fit text-sm">

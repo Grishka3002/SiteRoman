@@ -137,15 +137,7 @@ function VideoSection({ page }: { page: WeddingPageContent }) {
   return (
     <section id="videos" className={`${sectionShellClass} overflow-hidden bg-black`}>
       <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[0.42em] text-[#ffe100]">Видео</p>
-            <h2 className={sectionTitleClass}>Живой ритм</h2>
-          </div>
-          <p className="max-w-md text-[clamp(0.98rem,1.5vw,1.12rem)] font-medium leading-7 text-white/60">
-            Видео зафиксированы в вертикальной рамке, поэтому плеер больше не прыгает по формату при загрузке.
-          </p>
-        </div>
+        <h2 className={sectionTitleClass}>Живой ритм</h2>
 
         <VideoGallery videos={page.videos} />
       </div>
@@ -218,15 +210,7 @@ function PackagesSection({ page }: { page: WeddingPageContent }) {
   return (
     <section className={`${sectionShellClass} bg-black text-white`}>
       <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[0.42em] text-[#ffe100]">Пакеты</p>
-            <h2 className={sectionTitleClass}>Форматы</h2>
-          </div>
-          <p className="max-w-md text-[clamp(0.98rem,1.5vw,1.12rem)] font-medium leading-7 text-white/60">
-            Точная стоимость зависит от даты, города, тайминга и состава команды. Пакеты помогают быстро выбрать направление.
-          </p>
-        </div>
+        <h2 className={sectionTitleClass}>Форматы</h2>
 
         <div className="tilda-stagger mt-10 grid gap-5 lg:grid-cols-3">
           {page.packages.map((item) => (

@@ -209,8 +209,7 @@ export function AdminContentForm({ slug, content, notice }: AdminContentFormProp
           <TextArea label="Описание" path={["contact", "subtitle"]} value={draft} onChange={setDraft} rows={3} />
         </EditorSection>
 
-        <div className="sticky bottom-4 z-10 flex flex-col gap-3 rounded-[1.25rem] border border-white/10 bg-black/90 p-4 shadow-[0_20px_70px_rgba(0,0,0,0.45)] backdrop-blur sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm font-medium text-white/60">Все поля сохраняются в тот же JSON внутри базы, но редактируются как нормальная админка.</p>
+        <div className="sticky bottom-4 z-10 flex justify-end rounded-[1.25rem] border border-white/10 bg-black/90 p-4 shadow-[0_20px_70px_rgba(0,0,0,0.45)] backdrop-blur">
           <button type="submit" className="rounded-full bg-[#ffe100] px-6 py-3 text-sm font-black uppercase tracking-[0.16em] text-black transition hover:bg-white">
             Сохранить изменения
           </button>
@@ -238,12 +237,11 @@ function useDraft(content: SitePage): [JsonRecord, (path: Array<string | number>
   return [draft, updateDraft];
 }
 
-function EditorSection({ title, hint, children }: { title: string; hint: string; children: ReactNode }) {
+function EditorSection({ title, children }: { title: string; hint?: string; children: ReactNode }) {
   return (
     <section className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 shadow-[0_16px_50px_rgba(0,0,0,0.22)] sm:p-6">
       <div className="mb-5">
         <p className="text-xs font-black uppercase tracking-[0.38em] text-[#ffe100]">{title}</p>
-        <p className="mt-2 text-sm font-medium leading-6 text-white/55">{hint}</p>
       </div>
       <div className="grid gap-4">{children}</div>
     </section>

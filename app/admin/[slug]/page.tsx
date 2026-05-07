@@ -48,17 +48,7 @@ export default async function AdminEditorPage({ params, searchParams }: AdminEdi
             </div>
           </div>
 
-          <div className="grid gap-6 px-6 py-8 sm:px-10 lg:grid-cols-[0.78fr_1.22fr]">
-            <aside className="h-fit rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-6 lg:sticky lg:top-6">
-              <h2 className="text-xl font-black uppercase tracking-[-0.04em]">Как редактировать</h2>
-              <ul className="mt-4 grid gap-3 text-sm font-medium leading-6 text-white/65">
-                <li>Меняйте тексты, ссылки, изображения, отзывы, FAQ, пакеты и контакты обычными полями.</li>
-                <li>Повторяемые блоки можно добавлять и удалять прямо в админке.</li>
-                <li>После сохранения данные попадут в базу Railway, если подключен `DATABASE_URL`.</li>
-                <li>Если базы нет, сайт продолжит работать на встроенном контенте.</li>
-              </ul>
-            </aside>
-
+          <div className="px-6 py-8 sm:px-10">
             <AdminContentForm slug={typedSlug} content={content} notice={notice} />
           </div>
         </div>
