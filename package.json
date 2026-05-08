@@ -1,0 +1,14 @@
+{
+  "name": "shymilovroman-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "clone": "node tools/clone-tilda.mjs",
+    "check": "node tools/check-assets.mjs",
+    "inject:cms": "node tools/inject-cms.mjs",
+    "start": "node server.js"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

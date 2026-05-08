@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Админ-панель сайта</title>
+  <link rel="stylesheet" href="/admin/styles.css?v=20260508-8">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">Site Admin</div>
+    <a data-page-link="home" class="nav" href="/admin/home">Главная</a>
+    <a data-page-link="wedding" class="nav" href="/admin/wedding">Свадьба</a>
+    <a data-page-link="corporate" class="nav" href="/admin/corporate">Корпоративы</a>
+    <button id="logout" class="nav hidden" type="button">Выйти</button>
+    <a class="site-link" href="/" target="_blank">Открыть сайт</a>
+  </aside>
+
+  <main class="main">
+    <section id="login" class="panel login">
+      <h1>Вход</h1>
+      <p>Введите пароль администратора. Локально по умолчанию: <code>admin123</code>.</p>
+      <form id="loginForm" class="row">
+        <input id="password" type="password" placeholder="Пароль">
+        <button id="savePassword" type="submit">Войти</button>
+      </form>
+      <p id="loginStatus" class="muted">Скрипт админки загружается...</p>
+      <p id="loginError" class="error hidden"></p>
+    </section>
+
+    <section id="app" class="hidden">
+      <div class="toolbar">
+        <div>
+          <h1 id="pageTitle">Главная</h1>
+          <p id="pageHint" class="muted">Выберите блок и измените контент внутри него.</p>
+        </div>
+        <button id="saveContentPage">Сохранить страницу</button>
+      </div>
+
+      <nav id="blockTabs" class="block-tabs"></nav>
+      <section id="blockEditor" class="panel block-panel"></section>
+      <p id="status" class="status"></p>
+    </section>
+  </main>
+
+  <script src="/admin/app.js?v=20260508-8"></script>
+</body>
+</html>
