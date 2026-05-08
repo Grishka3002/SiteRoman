@@ -174,25 +174,73 @@
     const carousel = document.createElement('section');
     carousel.className = 'cms-review-carousel';
     carousel.innerHTML = `
-      <div class="cms-review-carousel__track"></div>
+      <div class="cms-review-carousel__viewport">
+        <div class="cms-review-carousel__track"></div>
+      </div>
       <div class="cms-review-carousel__dots"></div>
     `;
     tildaBlock.append(carousel);
 
     const track = carousel.querySelector('.cms-review-carousel__track');
     const dots = carousel.querySelector('.cms-review-carousel__dots');
-    let active = Math.min(1, reviews.length - 1);
-    let switchTimer = null;
+    const visibleCount = Math.min(3, reviews.length);
+    const clones = reviews.slice(0, visibleCount);
+    let active = 0;
+    let trackIndex = 0;
+    let autoplay = null;
+
+    function getSlideStep() {
+      const card = track.querySelector('.cms-review-card');
+      if (!card) return 0;
+      const gap = parseFloat(window.getComputedStyle(track).columnGap || '0') || 0;
+      return card.getBoundingClientRect().width + gap;
+    }
+
+    function moveTrack(animate = true) {
+      track.classList.toggle('is-jump', !animate);
+      track.style.transform = `translate3d(${-trackIndex * getSlideStep()}px, 0, 0)`;
+      if (!animate) {
+        requestAnimationFrame(() => track.classList.remove('is-jump'));
+      }
+    }
+
+    function updateState() {
+      const realIndex = active % reviews.length;
+      track.querySelectorAll('.cms-review-card').forEach((card, index) => {
+        const isActive = Number(card.dataset.reviewIndex) === realIndex && index === trackIndex;
+        card.classList.toggle('cms-review-card_active', isActive);
+        card.classList.toggle('cms-review-card_side', !isActive);
+      });
+      dots.querySelectorAll('button').forEach((button, index) => {
+        button.classList.toggle('is-active', index === realIndex);
+      });
+    }
+
+    function setActive(index, animate = true) {
+      active = index;
+      trackIndex = index;
+      updateState();
+      moveTrack(animate);
+    }
+
+    function restartAutoplay() {
+      window.clearInterval(autoplay);
+      autoplay = window.setInterval(() => {
+        setActive(active + 1);
+      }, 4500);
+    }
 
     function render() {
+      const trackReviews = reviews.concat(clones);
       track.innerHTML = '';
       dots.innerHTML = '';
-      const visibleCount = Math.min(3, reviews.length);
-      const indexes = Array.from({ length: visibleCount }, (_, offset) => (active + offset) % reviews.length);
 
-      indexes.forEach((reviewIndex, position) => {
-        const state = position === 0 ? 'active' : 'side';
-        track.append(createReviewCard(reviews[reviewIndex], state));
+      trackReviews.forEach((review, index) => {
+        const realIndex = index % reviews.length;
+        const state = index === active ? 'active' : 'side';
+        const card = createReviewCard(review, state);
+        card.dataset.reviewIndex = String(realIndex);
+        track.append(card);
       });
 
       reviews.forEach((_, index) => {
@@ -200,25 +248,28 @@
         button.type = 'button';
         button.className = index === active ? 'is-active' : '';
         button.setAttribute('aria-label', `Отзыв ${index + 1}`);
-        button.addEventListener('click', () => switchTo(index));
+        button.addEventListener('click', () => {
+          setActive(index);
+          restartAutoplay();
+        });
         dots.append(button);
       });
+      setActive(active, false);
     }
 
-    function switchTo(index) {
-      window.clearTimeout(switchTimer);
-      carousel.classList.add('is-switching');
-      switchTimer = window.setTimeout(() => {
-        active = index;
-        render();
-        requestAnimationFrame(() => carousel.classList.remove('is-switching'));
-      }, 260);
-    }
+    track.addEventListener('transitionend', (event) => {
+      if (event.target !== track || event.propertyName !== 'transform') return;
+      if (active >= reviews.length) {
+        active = active % reviews.length;
+        trackIndex = active;
+        updateState();
+        moveTrack(false);
+      }
+    });
 
     render();
-    window.setInterval(() => {
-      switchTo((active + 1) % reviews.length);
-    }, 4500);
+    window.addEventListener('resize', () => moveTrack(false));
+    restartAutoplay();
     return true;
   }
 

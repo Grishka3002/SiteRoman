@@ -66,30 +66,33 @@
   max-width: 1680px;
   margin: 0 auto;
   padding: 20px 4vw 70px;
+  --cms-review-gap: 18px;
+}
+
+.cms-review-carousel__viewport {
+  overflow: hidden;
 }
 
 .cms-review-carousel__track {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  display: flex;
+  gap: var(--cms-review-gap);
   align-items: stretch;
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.55s ease, transform 0.55s ease;
+  will-change: transform;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cms-review-carousel__track.is-jump {
+  transition: none;
 }
 
 .cms-review-carousel .cms-review-card {
+  flex: 0 0 calc((100% - 36px) / 3);
   height: 360px;
   min-height: 360px;
   border: 1px solid rgba(255, 255, 255, 0.06);
   cursor: pointer;
   overflow: hidden;
-  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.7s ease, border-color 0.7s ease, opacity 0.7s ease, box-shadow 0.7s ease;
-}
-
-.cms-review-carousel.is-switching .cms-review-carousel__track {
-  opacity: 0.18;
-  transform: translateY(12px);
+  transition: background-color 0.7s ease, border-color 0.7s ease, opacity 0.7s ease, box-shadow 0.7s ease;
 }
 
 .cms-review-carousel .cms-review-card_side {
@@ -361,15 +364,11 @@ iframe[src*="lp9.ru"],
   }
 
   .cms-review-carousel__track {
-    grid-template-columns: 1fr;
+    gap: 14px;
   }
 
-  .cms-review-carousel .cms-review-card_side {
-    display: block;
-  }
-
-  .cms-review-carousel .cms-review-card_active {
-    transform: none;
+  .cms-review-carousel .cms-review-card {
+    flex-basis: 100%;
   }
 
   .cms-corner-video {
