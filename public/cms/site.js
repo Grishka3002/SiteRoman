@@ -1,5 +1,7 @@
 (function () {
   const route = window.location.pathname.replace(/\/$/, '') || '/';
+  const routeName = route === '/' ? 'home' : route.replace(/[^\w-]+/g, '-').replace(/^-|-$/g, '') || 'home';
+  document.documentElement.classList.add(`cms-route-${routeName}`);
 
   function matchesPage(item) {
     return item.page === 'all' || item.page === route || (route === '/' && item.page === 'home');
@@ -51,6 +53,34 @@
     }
 
     return figure;
+  }
+
+  function preloadHeroImage() {
+    const heroImage = document.querySelector('.t396__artboard img[data-original], img[data-original], img[src]');
+    const href = heroImage?.getAttribute('data-original') || heroImage?.getAttribute('src');
+    if (!href || Array.from(document.querySelectorAll('link[rel="preload"]')).some((link) => link.href.endsWith(href))) return;
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.as = 'image';
+    link.href = href;
+    document.head.append(link);
+  }
+
+  function optimizeNativeMedia() {
+    Array.from(document.images).forEach((img, index) => {
+      img.decoding = 'async';
+      if (index < 3) {
+        img.loading = 'eager';
+        img.fetchPriority = 'high';
+      } else {
+        img.loading = 'lazy';
+      }
+    });
+
+    document.querySelectorAll('video').forEach((video) => {
+      video.playsInline = true;
+      video.preload = video.hasAttribute('autoplay') ? 'metadata' : 'none';
+    });
   }
 
   function createReviewCard(item, state) {
@@ -366,6 +396,8 @@
     });
   }
 
+  optimizeNativeMedia();
+  preloadHeroImage();
   mountLocalForms();
 
   fetch('/api/cms')

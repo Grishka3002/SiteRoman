@@ -17,6 +17,13 @@
   text-transform: uppercase;
 }
 
+.cms-route-home #rec2172565291,
+.cms-route-home #nav2172565291,
+.cms-route-home #nav2172565291marker,
+.cms-route-home .t450__overlay {
+  display: none !important;
+}
+
 .cms-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
