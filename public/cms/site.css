@@ -233,20 +233,43 @@ iframe[src*="lp9.ru"],
   display: block !important;
 }
 
+.video-widget {
+  display: none !important;
+}
+
 .cms-corner-video__button {
-  width: 92px;
-  height: 92px;
-  border: 0;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 108px;
+  height: 108px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 50%;
-  background: #ffe40f;
-  box-shadow: 0 18px 54px rgba(0, 0, 0, 0.35);
+  background: radial-gradient(circle at 50% 42%, #fff06a 0 18%, #ffe40f 19% 58%, #b99f00 100%);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.48), 0 0 0 9px rgba(255, 228, 15, 0.13);
   cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.cms-corner-video__button::before {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  border: 1px solid rgba(255, 228, 15, 0.42);
+  border-radius: 50%;
+  opacity: 0.75;
+  animation: cms-corner-video-pulse 2.4s ease-out infinite;
+}
+
+.cms-corner-video__button:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.52), 0 0 0 11px rgba(255, 228, 15, 0.16);
 }
 
 .cms-corner-video__play {
   display: block;
-  width: 58px;
-  height: 58px;
+  width: 62px;
+  height: 62px;
   margin: 0 auto;
   border-radius: 50%;
   background: #000;
@@ -256,27 +279,44 @@ iframe[src*="lp9.ru"],
 .cms-corner-video__play::after {
   content: '';
   position: absolute;
-  left: 23px;
-  top: 16px;
+  left: 25px;
+  top: 17px;
   border-left: 20px solid #ffe40f;
   border-top: 13px solid transparent;
   border-bottom: 13px solid transparent;
+}
+
+.cms-corner-video__label {
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  transform: translateX(-50%);
+  padding: 4px 10px;
+  border: 1px solid rgba(255, 228, 15, 0.7);
+  border-radius: 999px;
+  background: #090909;
+  color: #ffe40f;
+  font: 700 11px/1 Arial, sans-serif;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .cms-corner-video__panel {
   position: absolute;
   right: 0;
   bottom: 0;
-  width: min(320px, calc(100vw - 32px));
+  width: min(350px, calc(100vw - 32px));
   border: 2px solid #ffe40f;
-  border-radius: 16px;
+  border-radius: 20px;
   background: #000;
   overflow: hidden;
   opacity: 0;
   transform: scale(0.86);
   transform-origin: right bottom;
   pointer-events: none;
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  box-shadow: 0 26px 80px rgba(0, 0, 0, 0.65);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .cms-corner-video.is-open .cms-corner-video__button {
@@ -311,6 +351,23 @@ iframe[src*="lp9.ru"],
   font-size: 22px;
   font-weight: 700;
   cursor: pointer;
+}
+
+@keyframes cms-corner-video-pulse {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.78;
+  }
+
+  70% {
+    transform: scale(1.16);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1.16);
+    opacity: 0;
+  }
 }
 
 .cms-form-message {

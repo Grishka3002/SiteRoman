@@ -79,7 +79,40 @@
 
     document.querySelectorAll('video').forEach((video) => {
       video.playsInline = true;
-      video.preload = video.hasAttribute('autoplay') ? 'metadata' : 'none';
+      if (video.hasAttribute('autoplay')) {
+        video.preload = 'metadata';
+        return;
+      }
+      const src = video.getAttribute('src');
+      if (src) {
+        video.dataset.cmsSrc = src;
+        video.removeAttribute('src');
+      }
+      video.querySelectorAll('source[src]').forEach((source) => {
+        source.dataset.cmsSrc = source.getAttribute('src');
+        source.removeAttribute('src');
+      });
+      video.preload = 'none';
+    });
+
+    const loadVideo = (video) => {
+      if (!video || video.dataset.cmsLoaded === 'true') return;
+      if (video.dataset.cmsSrc) video.src = video.dataset.cmsSrc;
+      video.querySelectorAll('source[data-cms-src]').forEach((source) => {
+        source.src = source.dataset.cmsSrc;
+      });
+      video.dataset.cmsLoaded = 'true';
+      video.load();
+    };
+
+    const lazyVideos = Array.from(document.querySelectorAll('video[data-cms-src], video source[data-cms-src]'))
+      .map((node) => node.tagName === 'SOURCE' ? node.closest('video') : node)
+      .filter(Boolean);
+
+    lazyVideos.forEach((video) => {
+      video.addEventListener('click', () => loadVideo(video), { once: true });
+      video.addEventListener('mouseenter', () => loadVideo(video), { once: true });
+      video.addEventListener('focus', () => loadVideo(video), { once: true });
     });
   }
 
@@ -183,8 +216,8 @@
 
     const track = carousel.querySelector('.cms-review-carousel__track');
     const dots = carousel.querySelector('.cms-review-carousel__dots');
-    const visibleCount = Math.min(3, reviews.length);
-    const clones = reviews.slice(0, visibleCount);
+    const getSideSlots = () => reviews.length > 1 && !window.matchMedia('(max-width: 900px)').matches ? 1 : 0;
+    let sideSlots = getSideSlots();
     let active = 0;
     let trackIndex = 0;
     let autoplay = null;
@@ -207,7 +240,7 @@
     function updateState() {
       const realIndex = active % reviews.length;
       track.querySelectorAll('.cms-review-card').forEach((card, index) => {
-        const isActive = Number(card.dataset.reviewIndex) === realIndex && index === trackIndex;
+        const isActive = Number(card.dataset.reviewIndex) === realIndex && index === trackIndex + sideSlots;
         card.classList.toggle('cms-review-card_active', isActive);
         card.classList.toggle('cms-review-card_side', !isActive);
       });
@@ -217,6 +250,7 @@
     }
 
     function setActive(index, animate = true) {
+      if (index > reviews.length) index = index % reviews.length;
       active = index;
       trackIndex = index;
       updateState();
@@ -231,12 +265,14 @@
     }
 
     function render() {
-      const trackReviews = reviews.concat(clones);
+      const before = sideSlots ? reviews.slice(-sideSlots) : [];
+      const after = reviews.slice(0, sideSlots ? 2 : 1);
+      const trackReviews = before.concat(reviews, after);
       track.innerHTML = '';
       dots.innerHTML = '';
 
       trackReviews.forEach((review, index) => {
-        const realIndex = index % reviews.length;
+        const realIndex = (index - sideSlots + reviews.length) % reviews.length;
         const state = index === active ? 'active' : 'side';
         const card = createReviewCard(review, state);
         card.dataset.reviewIndex = String(realIndex);
@@ -268,7 +304,15 @@
     });
 
     render();
-    window.addEventListener('resize', () => moveTrack(false));
+    window.addEventListener('resize', () => {
+      const nextSideSlots = getSideSlots();
+      if (nextSideSlots !== sideSlots) {
+        sideSlots = nextSideSlots;
+        render();
+        return;
+      }
+      moveTrack(false);
+    });
     restartAutoplay();
     return true;
   }
@@ -307,7 +351,8 @@
       'iframe[src*="lp9.ru"]',
       '[src*="lp9.ru/widget"]',
       '[id*="lp9"]',
-      '[class*="lp9"]'
+      '[class*="lp9"]',
+      '.video-widget'
     ].join(',');
     document.querySelectorAll(selectors).forEach((node) => {
       if (!node.closest('.cms-corner-video')) node.style.display = 'none';
@@ -317,17 +362,18 @@
   function mountCornerVideo() {
     hideExternalVideoWidget();
     if (document.querySelector('.cms-corner-video')) return;
-    const source = document.querySelector('video source[src], video[src]');
-    const src = source?.getAttribute('src') || source?.parentElement?.getAttribute('src') || '/assets/360p.f5fe27dad4.mp4';
+    const source = document.querySelector('video source[data-cms-src], video[data-cms-src], video source[src], video[src]');
+    const src = source?.getAttribute('data-cms-src') || source?.getAttribute('src') || source?.parentElement?.getAttribute('data-cms-src') || source?.parentElement?.getAttribute('src') || '/assets/360p.f5fe27dad4.mp4';
     const widget = document.createElement('div');
     widget.className = 'cms-corner-video';
     widget.innerHTML = `
       <button class="cms-corner-video__button" type="button" aria-label="Открыть видео">
         <span class="cms-corner-video__play"></span>
+        <span class="cms-corner-video__label">Видео</span>
       </button>
       <div class="cms-corner-video__panel">
         <button class="cms-corner-video__close" type="button" aria-label="Свернуть видео">×</button>
-        <video src="${escapeHtml(src)}" playsinline controls></video>
+        <video data-cms-src="${escapeHtml(src)}" playsinline controls preload="none"></video>
       </div>
     `;
     document.body.append(widget);
@@ -336,6 +382,10 @@
     const video = widget.querySelector('video');
     button.addEventListener('click', () => {
       widget.classList.add('is-open');
+      if (!video.src) {
+        video.src = video.dataset.cmsSrc;
+        video.load();
+      }
       video.play().catch(() => {});
     });
     close.addEventListener('click', () => {
