@@ -303,6 +303,20 @@ iframe[src*="lp9.ru"],
   cursor: pointer;
 }
 
+.cms-form-message {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: rgba(255, 228, 15, 0.14);
+  color: #ffe40f;
+  font: 15px/1.4 Arial, sans-serif;
+}
+
+.cms-form-message_error {
+  background: rgba(255, 85, 85, 0.16);
+  color: #ff7676;
+}
+
 .cms-review-card__top {
   display: flex;
   gap: 14px;

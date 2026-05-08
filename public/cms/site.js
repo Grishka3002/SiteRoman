@@ -265,6 +265,109 @@
     window.setTimeout(hideExternalVideoWidget, 1800);
   }
 
+  function collectFormFields(form) {
+    const fields = {};
+    const formData = new FormData(form);
+    formData.forEach((value, key) => {
+      if (!key || key.startsWith('formservices') || key === 'form-spec-comments') return;
+      if (value instanceof File) return;
+      const cleanValue = String(value || '').trim();
+      if (!cleanValue) return;
+      if (fields[key]) fields[key] = Array.isArray(fields[key]) ? fields[key].concat(cleanValue) : [fields[key], cleanValue];
+      else fields[key] = cleanValue;
+    });
+    return fields;
+  }
+
+  function showFormMessage(form, message, isError) {
+    let box = form.querySelector('.cms-form-message');
+    if (!box) {
+      box = document.createElement('div');
+      box.className = 'cms-form-message';
+      form.append(box);
+    }
+    box.textContent = message;
+    box.classList.toggle('cms-form-message_error', Boolean(isError));
+  }
+
+  function isRequiredFieldFilled(input, form) {
+    if (input.disabled || input.type === 'hidden') return true;
+    if (input.type === 'checkbox' || input.type === 'radio') {
+      return Boolean(form.querySelector(`[name="${CSS.escape(input.name)}"]:checked`));
+    }
+    return Boolean(String(input.value || '').trim());
+  }
+
+  function validateLocalForm(form) {
+    const required = Array.from(form.querySelectorAll('[data-tilda-req="1"], [aria-required="true"], [required]'));
+    const invalid = required.find((input) => !isRequiredFieldFilled(input, form));
+    if (invalid) {
+      invalid.closest('.t-input-group')?.classList.add('js-error-control-box');
+      invalid.focus?.();
+      showFormMessage(form, 'Заполните обязательные поля.', true);
+      return false;
+    }
+    form.querySelectorAll('.js-error-control-box').forEach((node) => node.classList.remove('js-error-control-box'));
+    return true;
+  }
+
+  function handleLocalFormSuccess(form) {
+    showFormMessage(form, 'Заявка отправлена. Мы свяжемся с вами в ближайшее время.');
+    const successBox = form.querySelector('.js-successbox');
+    if (successBox) {
+      successBox.textContent = 'Спасибо! Заявка отправлена.';
+      successBox.style.display = 'block';
+    }
+    const callback = form.dataset.successCallback;
+    const quiz = form.closest('.t-quiz');
+    if (callback && typeof window[callback] === 'function' && quiz) {
+      window[callback](quiz);
+    }
+    form.reset();
+  }
+
+  function mountLocalForms() {
+    document.querySelectorAll('form.t-form, form.js-form-proccess').forEach((form) => {
+      if (form.dataset.cmsLocalForm === 'true') return;
+      form.dataset.cmsLocalForm = 'true';
+      form.setAttribute('action', '/api/inquiry');
+      form.querySelectorAll('[name="formservices[]"]').forEach((node) => node.remove());
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (!validateLocalForm(form)) return;
+
+        const submitButton = form.querySelector('[type="submit"]');
+        const previousDisabled = submitButton?.disabled;
+        if (submitButton) submitButton.disabled = true;
+        showFormMessage(form, 'Отправляем заявку...');
+
+        try {
+          const response = await fetch('/api/inquiry', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              page: route,
+              formId: form.id || form.name || '',
+              title: document.title,
+              fields: collectFormFields(form)
+            })
+          });
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok) throw new Error(payload.error || 'Не удалось отправить заявку');
+          handleLocalFormSuccess(form);
+        } catch (error) {
+          showFormMessage(form, error.message, true);
+        } finally {
+          if (submitButton) submitButton.disabled = previousDisabled || false;
+        }
+      }, true);
+    });
+  }
+
+  mountLocalForms();
+
   fetch('/api/cms')
     .then((response) => response.json())
     .then((cms) => {

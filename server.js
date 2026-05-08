@@ -7,6 +7,7 @@ import { basename, extname, join, normalize } from 'node:path';
 const publicDir = join(process.cwd(), 'public');
 const dataDir = join(process.cwd(), 'data');
 const cmsPath = join(dataDir, 'cms.json');
+const inquiriesPath = join(dataDir, 'inquiries.json');
 const uploadsDir = join(publicDir, 'uploads');
 const port = Number(process.env.PORT || 3000);
 const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
@@ -69,6 +70,43 @@ async function saveCms(cms) {
   await writeFile(cmsPath, JSON.stringify(cms, null, 2), 'utf8');
 }
 
+async function readInquiries() {
+  try {
+    const inquiries = JSON.parse(await readFile(inquiriesPath, 'utf8'));
+    return Array.isArray(inquiries) ? inquiries : [];
+  } catch {
+    return [];
+  }
+}
+
+async function saveInquiries(inquiries) {
+  await mkdir(dataDir, { recursive: true });
+  await writeFile(inquiriesPath, JSON.stringify(inquiries, null, 2), 'utf8');
+}
+
+function sanitizeInquiry(payload, request) {
+  const fields = payload && typeof payload.fields === 'object' && payload.fields !== null
+    ? payload.fields
+    : {};
+
+  return {
+    id: randomUUID(),
+    createdAt: new Date().toISOString(),
+    page: String(payload.page || ''),
+    formId: String(payload.formId || ''),
+    title: String(payload.title || ''),
+    userAgent: request.headers['user-agent'] || '',
+    fields: Object.fromEntries(Object.entries(fields)
+      .filter(([key]) => !key.startsWith('formservices') && key !== 'form-spec-comments')
+      .map(([key, value]) => [
+        String(key).slice(0, 120),
+        Array.isArray(value)
+          ? value.map((item) => String(item).slice(0, 2000))
+          : String(value).slice(0, 4000)
+      ]))
+  };
+}
+
 function parseMultipart(buffer, boundary) {
   const boundaryText = `--${boundary}`;
   const body = buffer.toString('binary');
@@ -122,6 +160,18 @@ async function handleApi(request, response, pathname) {
     return sendJson(response, 200, await readCms());
   }
 
+  if (request.method === 'POST' && pathname === '/api/inquiry') {
+    const payload = await readJson(request);
+    const inquiry = sanitizeInquiry(payload, request);
+    if (!Object.keys(inquiry.fields).length) {
+      return sendJson(response, 400, { error: 'Нет данных заявки' });
+    }
+    const inquiries = await readInquiries();
+    inquiries.push(inquiry);
+    await saveInquiries(inquiries);
+    return sendJson(response, 200, { ok: true, id: inquiry.id });
+  }
+
   if (request.method === 'POST' && pathname === '/api/login') {
     return isAuthorized(request)
       ? sendJson(response, 200, { ok: true })
@@ -143,6 +193,10 @@ async function handleApi(request, response, pathname) {
 
   if (request.method === 'POST' && pathname === '/api/upload') {
     return handleUpload(request, response);
+  }
+
+  if (request.method === 'GET' && pathname === '/api/inquiries') {
+    return sendJson(response, 200, await readInquiries());
   }
 
   if (pathname === '/api/page') {
