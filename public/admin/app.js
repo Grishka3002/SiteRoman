@@ -289,7 +289,9 @@ function uniqueNodes(nodes) {
 }
 
 function collectSubBlocks(block) {
-  const reviews = uniqueNodes($$('.t958__card, .t958__card_preview, .t958__item', block));
+  const reviews = uniqueNodes(
+    $$('.t958__slidecontainer .t958__card, .t958__card:not(.t958__card_preview)', block)
+  );
   if (reviews.length) {
     return reviews.map((node, index) => {
       const avatar = $('.t958__avatar', node);
@@ -306,7 +308,11 @@ function collectSubBlocks(block) {
     });
   }
 
-  const tariffCards = uniqueNodes($$('.t774__content, .t774__col, .t-card', block));
+  const tariffCards = uniqueNodes(
+    $$('.t774__col', block).length
+      ? $$('.t774__col', block)
+      : $$('.t774__content', block)
+  );
   if (tariffCards.length > 1) {
     return tariffCards.map((node, index) => ({
       id: `card-${index}`,
