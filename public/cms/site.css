@@ -51,6 +51,50 @@
   line-height: 1.4;
 }
 
+.cms-video-slider {
+  background: #000;
+  color: #fff;
+  padding: 44px max(20px, 5vw) 70px;
+}
+
+.cms-video-slider__head {
+  max-width: 1680px;
+  margin: 0 auto 22px;
+}
+
+.cms-video-slider__head h2 {
+  margin: 0;
+  color: #fff;
+  font-family: 'Druk-Mont', Arial, sans-serif;
+  font-size: clamp(38px, 6vw, 92px);
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.cms-video-slider__track {
+  max-width: 1680px;
+  margin: 0 auto;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(280px, 42%);
+  gap: 18px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-color: #ffe40f #1b1b1b;
+  padding-bottom: 14px;
+}
+
+.cms-video-slider .cms-media-card {
+  scroll-snap-align: start;
+  border: 1px solid rgba(255, 228, 15, 0.26);
+}
+
+.cms-video-slider .cms-media-card video {
+  aspect-ratio: 16 / 9;
+  background: #080808;
+}
+
 .cms-review-card {
   border-radius: 14px;
   background: #171717;
@@ -448,6 +492,14 @@ video {
 
   .cms-review-carousel {
     padding: 10px 16px 48px;
+  }
+
+  .cms-video-slider {
+    padding: 34px 16px 50px;
+  }
+
+  .cms-video-slider__track {
+    grid-auto-columns: 88%;
   }
 
   .cms-review-carousel__track {

@@ -15,6 +15,41 @@ let blocks = [];
 let activeBlockId = '';
 let activeSubByBlock = {};
 
+const pageBlockNames = {
+  home: {
+    rec2172565301: { title: 'Первый экран', order: 10 },
+    rec2172565751: { title: 'Контакты', order: 90 }
+  },
+  wedding: {
+    rec1025539341: { title: 'Первый экран', order: 10 },
+    rec1025539376: { title: 'О ведущем', order: 25 },
+    rec1025539386: { title: 'Фото / портфолио', order: 30 },
+    rec1025539441: { title: 'Сервис и этапы работы', order: 50 },
+    rec1025539446: { title: 'Команда и оборудование', order: 55 },
+    rec1025539481: { title: 'Тарифы', order: 60 },
+    rec1025539496: { title: 'Отзывы', kind: 'reviews', order: 70 },
+    rec1025539516: { title: 'Вопросы и ответы', order: 80 },
+    rec1025539531: { title: 'Кнопка заявки', order: 85 },
+    rec1025539536: { title: 'Контакты', order: 90 }
+  },
+  corporate: {
+    rec2171225631: { title: 'Первый экран', order: 10 },
+    rec2171225751: { title: 'О подходе', order: 25 },
+    rec2171225771: { title: 'Фото / портфолио', order: 30 },
+    rec2171225801: { title: 'Дополнительные фото', order: 35 },
+    rec2171225881: { title: 'Процессы и этапы', order: 50 },
+    rec2171225891: { title: 'Команда и оборудование', order: 55 },
+    rec2171225901: { title: 'Мне доверяют', order: 58 },
+    rec2171225961: { title: 'Тарифы', order: 60 },
+    rec2171225991: { title: 'Отзывы', kind: 'reviews', order: 70 },
+    rec2171226031: { title: 'Вопросы и ответы', order: 80 },
+    rec2171226061: { title: 'Кнопка заявки', order: 85 },
+    rec2171226071: { title: 'Контакты', order: 90 }
+  }
+};
+
+const ignoredRecordTypes = new Set(['875', '450', '657', '131', '113', '270', '106']);
+
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
 
@@ -149,6 +184,43 @@ function blockTitle(block, index) {
   return manual[recordType] || `Блок ${index + 1}`;
 }
 
+function semanticBlockInfo(block, index) {
+  const id = block.id || '';
+  const configured = pageBlockNames[currentPageKey]?.[id];
+  if (configured) {
+    return {
+      title: configured.title,
+      kind: configured.kind || '',
+      order: configured.order || index + 100
+    };
+  }
+
+  const recordType = block.getAttribute('data-record-type') || '';
+  const text = block.textContent.trim().replace(/\s+/g, ' ');
+  const hasVideo = Boolean($('video', block));
+
+  if (hasVideo || /видео с мероприятий|видео/i.test(text)) return null;
+  if (ignoredRecordTypes.has(recordType)) return null;
+  if (/политика конфиденциальности|разработка сайта|огрнип|инн|instagram принадлежит|cookie|яндекс метрика/i.test(text)) return null;
+
+  const fallbackByType = {
+    '396': 'Текстовый блок',
+    '958': 'Отзывы',
+    '979': 'Фото / портфолио',
+    '774': 'Тарифы',
+    '585': 'Вопросы и ответы',
+    '1040': 'Расчет стоимости',
+    '702': 'Форма заявки',
+    '862': 'Квиз'
+  };
+
+  return {
+    title: fallbackByType[recordType] || blockTitle(block, index),
+    kind: recordType === '958' ? 'reviews' : '',
+    order: index + 100
+  };
+}
+
 function nodeLabel(node) {
   if (node.matches('h1, h2, h3, .t-title')) return 'Заголовок';
   if (node.matches('a, button, .tn-atom__button-text, .t-btnflex__text')) return 'Кнопка';
@@ -273,25 +345,40 @@ function collectSubBlocks(block) {
 }
 
 function collectBlocks() {
-  blocks = [{
-    id: 'cms-settings',
-    node: null,
-    title: 'Настройки сайта',
-    subBlocks: [],
-    items: []
-  }].concat($$('.r.t-rec[id]', contentDoc)
+  const pageBlocks = $$('.r.t-rec[id]', contentDoc)
     .map((block, index) => {
+      const info = semanticBlockInfo(block, index);
+      if (!info) return null;
       const subBlocks = collectSubBlocks(block);
       const items = collectEditableItems(block, block.id || `block-${index}`);
       return {
         id: block.id,
         node: block,
-        title: blockTitle(block, index),
+        title: info.title,
+        kind: info.kind || '',
+        order: info.order || index + 100,
         subBlocks,
         items
       };
     })
-    .filter((block) => block.items.length || block.subBlocks.length));
+    .filter((block) => block && (block.items.length || block.subBlocks.length))
+    .sort((a, b) => a.order - b.order);
+
+  blocks = [{
+    id: 'cms-settings',
+    node: null,
+    title: 'Настройки сайта',
+    kind: 'settings',
+    subBlocks: [],
+    items: []
+  }, {
+    id: 'cms-video',
+    node: null,
+    title: 'Видео',
+    kind: 'video',
+    subBlocks: [],
+    items: []
+  }].concat(pageBlocks);
 
   if (!activeBlockId || !blocks.some((block) => block.id === activeBlockId)) {
     activeBlockId = blocks[0]?.id || '';
@@ -376,6 +463,15 @@ function cmsPageValue() {
   return currentPage.publicPath === '/' ? 'home' : currentPage.publicPath;
 }
 
+function mediaMatchesCurrentPage(item) {
+  const page = item.page || 'home';
+  return page === cmsPageValue() || page === currentPage.publicPath || (currentPage.publicPath === '/' && page === 'home');
+}
+
+function isVideoItem(item) {
+  return String(item.type || '').startsWith('video');
+}
+
 function renderAddReview(panel) {
   if (!currentPage.publicPath.includes('wedding') && !currentPage.publicPath.includes('corporate') && currentPage.publicPath !== '/') return;
   const form = document.createElement('form');
@@ -413,12 +509,77 @@ function renderAddReview(panel) {
       cmsData.reviews = [...(cmsData.reviews || []), review];
       await saveCmsData();
       form.reset();
+      renderBlockEditor();
       status('Отзыв добавлен. Он появится в слайдере отзывов.');
     } catch (error) {
       status(error.message, true);
     }
   });
   panel.append(form);
+}
+
+function renderCmsReviews(panel) {
+  const currentReviews = (cmsData.reviews || []).filter(mediaMatchesCurrentPage);
+  const section = document.createElement('section');
+  section.className = 'cms-add-form';
+  section.innerHTML = `
+    <h3>Отзывы, добавленные через админку</h3>
+    <p class="muted">Эти отзывы автоматически добавляются в слайдер отзывов на текущей странице.</p>
+    <div class="editor-list" data-cms-review-list></div>
+  `;
+  const list = $('[data-cms-review-list]', section);
+
+  currentReviews.forEach((review) => {
+    const realIndex = cmsData.reviews.indexOf(review);
+    const row = document.createElement('div');
+    row.className = 'editor-item';
+    row.innerHTML = `
+      <div class="form-grid">
+        <label>Имя автора
+          <input data-review-name value="${escapeHtml(review.name || '')}">
+        </label>
+        <label>Фото автора
+          <input data-review-avatar-file type="file" accept="image/*">
+          <small>${escapeHtml(review.avatar || 'Фото не выбрано')}</small>
+        </label>
+        <label class="wide">Текст отзыва
+          <textarea data-review-text rows="5">${escapeHtml(review.text || '')}</textarea>
+        </label>
+      </div>
+      <button type="button" class="secondary" data-review-delete>Удалить отзыв</button>
+    `;
+
+    $('[data-review-name]', row).addEventListener('input', (event) => {
+      cmsData.reviews[realIndex].name = event.target.value;
+    });
+    $('[data-review-text]', row).addEventListener('input', (event) => {
+      cmsData.reviews[realIndex].text = event.target.value;
+    });
+    $('[data-review-avatar-file]', row).addEventListener('change', async (event) => {
+      try {
+        const uploadedUrl = await upload(event.target.files[0]);
+        cmsData.reviews[realIndex].avatar = uploadedUrl;
+        $('small', row).textContent = uploadedUrl;
+        await saveCmsData();
+        status('Фото отзыва загружено.');
+      } catch (error) {
+        status(error.message, true);
+      }
+    });
+    $('[data-review-delete]', row).addEventListener('click', async () => {
+      cmsData.reviews.splice(realIndex, 1);
+      await saveCmsData();
+      renderBlockEditor();
+      status('Отзыв удален.');
+    });
+    list.append(row);
+  });
+
+  if (!currentReviews.length) {
+    list.innerHTML = '<p class="muted">Пока нет отзывов, добавленных через админку.</p>';
+  }
+
+  panel.append(section);
 }
 
 function ensureCmsSettings() {
@@ -442,27 +603,22 @@ function collectPageVideos() {
 
 function renderCmsSettings(panel) {
   ensureCmsSettings();
-  const videos = collectPageVideos();
   const corner = cmsData.settings.cornerVideo;
   panel.innerHTML = `
     <div class="block-panel__head">
       <div>
-        <h2>Общие настройки сайта</h2>
-        <p class="muted">Единое угловое видео для всех страниц и превью для видео на текущей странице.</p>
+        <h2>Настройки сайта</h2>
+        <p class="muted">Общие настройки, которые работают на всех страницах. Превью обычных видео теперь находятся во вкладке «Видео».</p>
       </div>
     </div>
-    <div class="settings-grid">
+    <div class="settings-grid settings-grid_single">
       <section class="settings-card">
         <h3>Видео в углу сайта</h3>
+        <p class="muted">Один ролик и одно превью для главной, свадьбы и корпоративов.</p>
         <div class="editor-list">
           <div class="editor-item" data-setting="corner-video"></div>
           <div class="editor-item" data-setting="corner-poster"></div>
         </div>
-      </section>
-      <section class="settings-card">
-        <h3>Превью видео на странице</h3>
-        <p class="muted">${videos.length ? 'Загрузите картинку-превью для каждого ролика.' : 'На этой странице видео не найдены.'}</p>
-        <div class="editor-list" data-video-posters></div>
       </section>
     </div>
   `;
@@ -474,26 +630,11 @@ function renderCmsSettings(panel) {
     onUpload: (url) => { corner.url = url; }
   });
   renderSettingsUpload($('[data-setting="corner-poster"]', panel), {
-    title: 'Превью углового видео',
+    title: 'Превью видео в углу',
     accept: 'image/*',
     url: corner.poster,
     isImage: true,
     onUpload: (url) => { corner.poster = url; }
-  });
-
-  const posterList = $('[data-video-posters]', panel);
-  videos.forEach((video) => {
-    const row = document.createElement('div');
-    row.className = 'editor-item';
-    renderSettingsUpload(row, {
-      title: video.label,
-      accept: 'image/*',
-      url: cmsData.settings.videoPosters[video.url] || '',
-      note: video.url,
-      isImage: true,
-      onUpload: (url) => { cmsData.settings.videoPosters[video.url] = url; }
-    });
-    posterList.append(row);
   });
 }
 
@@ -525,10 +666,210 @@ function renderSettingsUpload(row, config) {
   });
 }
 
+function collectVideoTextItems() {
+  if (!contentDoc) return [];
+  return $$('.r.t-rec[id]', contentDoc).flatMap((block, index) => {
+    const text = block.textContent.trim().replace(/\s+/g, ' ');
+    if (!$('video', block) && !/видео с мероприятий|видео/i.test(text)) return [];
+    return collectEditableItems(block, `video-text-${index}`).filter((item) => item.type === 'text');
+  });
+}
+
+function renderCmsVideoList(list) {
+  const videos = (cmsData.media || []).filter((item) => mediaMatchesCurrentPage(item) && isVideoItem(item));
+  list.innerHTML = '';
+
+  videos.forEach((item) => {
+    const realIndex = cmsData.media.indexOf(item);
+    const row = document.createElement('div');
+    row.className = 'editor-item';
+    row.innerHTML = `
+      <div class="editor-media">
+        <video src="${escapeHtml(item.url || '')}" ${item.poster ? `poster="${escapeHtml(item.poster)}"` : ''} controls></video>
+        <div class="form-grid">
+          <label>Название / подпись
+            <input data-video-caption value="${escapeHtml(item.caption || '')}">
+          </label>
+          <label>Заменить видео
+            <input data-video-file type="file" accept="video/*">
+            <small>${escapeHtml(item.url || '')}</small>
+          </label>
+          <label>Превью
+            <input data-video-poster type="file" accept="image/*">
+            <small>${escapeHtml(item.poster || 'Превью не выбрано')}</small>
+          </label>
+        </div>
+      </div>
+      <button type="button" class="secondary" data-video-delete>Удалить видео</button>
+    `;
+
+    $('[data-video-caption]', row).addEventListener('input', (event) => {
+      cmsData.media[realIndex].caption = event.target.value;
+    });
+    $('[data-video-file]', row).addEventListener('change', async (event) => {
+      try {
+        const uploadedUrl = await upload(event.target.files[0]);
+        cmsData.media[realIndex].url = uploadedUrl;
+        $('video', row).src = uploadedUrl;
+        $('[data-video-file]', row).nextElementSibling.textContent = uploadedUrl;
+        await saveCmsData();
+        status('Видео обновлено.');
+      } catch (error) {
+        status(error.message, true);
+      }
+    });
+    $('[data-video-poster]', row).addEventListener('change', async (event) => {
+      try {
+        const uploadedUrl = await upload(event.target.files[0]);
+        cmsData.media[realIndex].poster = uploadedUrl;
+        $('video', row).poster = uploadedUrl;
+        $('[data-video-poster]', row).nextElementSibling.textContent = uploadedUrl;
+        await saveCmsData();
+        status('Превью видео загружено.');
+      } catch (error) {
+        status(error.message, true);
+      }
+    });
+    $('[data-video-delete]', row).addEventListener('click', async () => {
+      cmsData.media.splice(realIndex, 1);
+      await saveCmsData();
+      renderBlockEditor();
+      status('Видео удалено.');
+    });
+    list.append(row);
+  });
+
+  if (!videos.length) {
+    list.innerHTML = '<p class="muted">Пока нет дополнительных видео, добавленных через админку.</p>';
+  }
+}
+
+function renderVideoManager(panel) {
+  ensureCmsSettings();
+  const pageVideos = collectPageVideos();
+  const textItems = collectVideoTextItems();
+  const corner = cmsData.settings.cornerVideo;
+
+  panel.innerHTML = `
+    <div class="block-panel__head">
+      <div>
+        <h2>Видео</h2>
+        <p class="muted">Здесь меняются ролики страницы, превью и общее видео в углу сайта.</p>
+      </div>
+    </div>
+    <div class="settings-grid">
+      <section class="settings-card">
+        <h3>Видео в углу сайта</h3>
+        <div class="editor-list">
+          <div class="editor-item" data-setting="corner-video"></div>
+          <div class="editor-item" data-setting="corner-poster"></div>
+        </div>
+      </section>
+      <section class="settings-card">
+        <h3>Превью видео на странице</h3>
+        <p class="muted">${pageVideos.length ? 'Загрузите обложку для каждого ролика, который уже есть на странице.' : 'На этой странице встроенные видео не найдены.'}</p>
+        <div class="editor-list" data-video-posters></div>
+      </section>
+    </div>
+    <section class="settings-card">
+      <h3>Заголовки и тексты блока видео</h3>
+      <div class="editor-list" data-video-texts></div>
+    </section>
+    <section class="settings-card">
+      <h3>Добавленные видео</h3>
+      <p class="muted">Если видео несколько, на сайте они показываются как слайдер.</p>
+      <div class="editor-list" data-cms-video-list></div>
+    </section>
+    <form class="cms-add-form" data-add-video-form>
+      <h3>Добавить видео</h3>
+      <div class="form-grid">
+        <label>Видео
+          <input name="videoFile" type="file" accept="video/*" required>
+        </label>
+        <label>Превью
+          <input name="posterFile" type="file" accept="image/*">
+        </label>
+        <label class="wide">Название / подпись
+          <input name="caption" placeholder="Например: Свадьба в ресторане">
+        </label>
+      </div>
+      <button type="submit">Добавить видео</button>
+    </form>
+  `;
+
+  renderSettingsUpload($('[data-setting="corner-video"]', panel), {
+    title: 'Общее видео',
+    accept: 'video/*',
+    url: corner.url,
+    onUpload: (url) => { corner.url = url; }
+  });
+  renderSettingsUpload($('[data-setting="corner-poster"]', panel), {
+    title: 'Превью видео в углу',
+    accept: 'image/*',
+    url: corner.poster,
+    isImage: true,
+    onUpload: (url) => { corner.poster = url; }
+  });
+
+  const posterList = $('[data-video-posters]', panel);
+  pageVideos.forEach((video) => {
+    const row = document.createElement('div');
+    row.className = 'editor-item';
+    renderSettingsUpload(row, {
+      title: video.label,
+      accept: 'image/*',
+      url: cmsData.settings.videoPosters[video.url] || '',
+      note: video.url,
+      isImage: true,
+      onUpload: (url) => { cmsData.settings.videoPosters[video.url] = url; }
+    });
+    posterList.append(row);
+  });
+
+  const textList = $('[data-video-texts]', panel);
+  if (textItems.length) renderItems(textList, textItems);
+  else textList.innerHTML = '<p class="muted">Текстовые поля блока видео не найдены.</p>';
+
+  renderCmsVideoList($('[data-cms-video-list]', panel));
+
+  $('[data-add-video-form]', panel).addEventListener('submit', async (event) => {
+    event.preventDefault();
+    try {
+      const form = event.currentTarget;
+      const formData = new FormData(form);
+      const videoFile = formData.get('videoFile');
+      const posterFile = formData.get('posterFile');
+      const url = videoFile?.size ? await upload(videoFile) : '';
+      const poster = posterFile?.size ? await upload(posterFile) : '';
+      if (!url) {
+        status('Выберите видеофайл.', true);
+        return;
+      }
+      cmsData.media = [...(cmsData.media || []), {
+        page: cmsPageValue(),
+        type: videoFile.type || 'video/mp4',
+        url,
+        poster,
+        caption: String(formData.get('caption') || '').trim()
+      }];
+      await saveCmsData();
+      form.reset();
+      renderBlockEditor();
+      status('Видео добавлено. Оно появится в видеослайдере на странице.');
+    } catch (error) {
+      status(error.message, true);
+    }
+  });
+}
+
 function renderBlockEditor() {
   const panel = $('#blockEditor');
   if (activeBlockId === 'cms-settings') {
     renderCmsSettings(panel);
+    return;
+  }
+  if (activeBlockId === 'cms-video') {
+    renderVideoManager(panel);
     return;
   }
   const block = blocks.find((item) => item.id === activeBlockId);
@@ -573,7 +914,8 @@ function renderBlockEditor() {
     renderItems(list, block.items);
   }
 
-  if ((block.title || '').toLowerCase().includes('отзыв') || block.node.querySelector('.t958')) {
+  if (block.kind === 'reviews' || (block.title || '').toLowerCase().includes('отзыв') || block.node.querySelector('.t958')) {
+    renderCmsReviews(panel);
     renderAddReview(panel);
   }
 }

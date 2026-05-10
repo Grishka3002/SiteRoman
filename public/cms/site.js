@@ -359,9 +359,39 @@
 
   function appendMediaToPortfolio(items) {
     if (!items.length) return false;
+    const videos = items.filter((item) => item.type && item.type.startsWith('video'));
+    const images = items.filter((item) => !item.type || !item.type.startsWith('video'));
     const grid = document.querySelector('.t979__grid');
-    if (!grid) return false;
-    items.forEach((item) => grid.append(createMediaCard(item)));
+    let mounted = false;
+    if (grid && images.length) {
+      images.forEach((item) => grid.append(createMediaCard(item)));
+      mounted = true;
+    }
+    if (videos.length) {
+      appendVideoSlider(videos, grid?.closest('.r, .t-rec') || grid || document.querySelector('#allrecords') || document.body);
+      mounted = true;
+    }
+    return mounted;
+  }
+
+  function appendVideoSlider(items, anchor) {
+    if (!items.length || document.querySelector('.cms-video-slider')) return false;
+    const section = document.createElement('section');
+    section.className = 'cms-video-slider';
+    section.innerHTML = `
+      <div class="cms-video-slider__head">
+        <h2>Видео</h2>
+      </div>
+      <div class="cms-video-slider__track"></div>
+    `;
+    const track = section.querySelector('.cms-video-slider__track');
+    items.forEach((item) => track.append(createMediaCard(item)));
+
+    if (anchor && anchor.parentNode) {
+      anchor.parentNode.insertBefore(section, anchor.nextSibling);
+    } else {
+      document.body.append(section);
+    }
     return true;
   }
 

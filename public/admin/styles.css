@@ -230,11 +230,16 @@ label {
   gap: 16px;
 }
 
+.settings-grid_single {
+  grid-template-columns: minmax(280px, 720px);
+}
+
 .settings-card {
   border: 1px solid var(--border);
   border-radius: 8px;
   background: #101010;
   padding: 16px;
+  margin-bottom: 16px;
 }
 
 .settings-card h3 {
