@@ -152,6 +152,11 @@ label {
   flex-wrap: wrap;
   max-width: 1180px;
   margin: 18px 0;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  padding: 12px 0;
+  background: var(--bg);
 }
 
 .block-tabs button {
@@ -217,6 +222,23 @@ label {
   display: grid;
   gap: 12px;
   margin-top: 20px;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(320px, 1.1fr);
+  gap: 16px;
+}
+
+.settings-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #101010;
+  padding: 16px;
+}
+
+.settings-card h3 {
+  margin: 0 0 10px;
 }
 
 .cms-add-form {
@@ -384,7 +406,25 @@ label {
   .form-grid,
   .toolbar,
   .row,
-  .block-panel__head {
+  .block-panel__head,
+  .settings-grid,
+  .editor-media {
     display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .main {
+    padding: 16px;
+  }
+
+  .block-tabs {
+    position: static;
+  }
+
+  .editor-media img,
+  .editor-media video {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
   }
 }

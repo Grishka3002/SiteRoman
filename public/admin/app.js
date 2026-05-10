@@ -10,7 +10,7 @@ if (!adminPages[currentPageKey]) currentPageKey = 'home';
 const currentPage = adminPages[currentPageKey];
 let password = localStorage.getItem('adminPassword') || '';
 let contentDoc = null;
-let cmsData = { media: [], reviews: [] };
+let cmsData = { media: [], reviews: [], settings: {} };
 let blocks = [];
 let activeBlockId = '';
 let activeSubByBlock = {};
@@ -94,8 +94,12 @@ function setBackgroundImage(node, url) {
 
 function setVideoSource(video, url) {
   if (!video || !url) return;
-  video.setAttribute('src', url);
-  $$('source', video).forEach((source) => source.setAttribute('src', url));
+  video.removeAttribute('src');
+  video.setAttribute('data-cms-src', url);
+  $$('source', video).forEach((source) => {
+    source.removeAttribute('src');
+    source.setAttribute('data-cms-src', url);
+  });
 }
 
 function setPlainTextKeepingWrapper(node, value) {
@@ -163,7 +167,7 @@ function fieldValue(node, type) {
     const style = node.getAttribute('style') || '';
     return /url\(["']?([^"')]+)["']?\)/i.exec(style)?.[1] || node.getAttribute('data-original') || '';
   }
-  if (type === 'video') return node.getAttribute('src') || $('source', node)?.getAttribute('src') || '';
+  if (type === 'video') return node.getAttribute('data-cms-src') || node.getAttribute('src') || $('source', node)?.getAttribute('data-cms-src') || $('source', node)?.getAttribute('src') || '';
   return node.textContent.trim().replace(/\n{3,}/g, '\n\n');
 }
 
@@ -193,7 +197,7 @@ function collectEditableItems(root, prefix = 'item') {
     seen.add(node);
     if (node.closest('.t-popup') && !root.matches('.t-popup')) return false;
     if (node.matches('img')) return !!node.getAttribute('src') && !node.getAttribute('src').startsWith('data:');
-    if (node.matches('video')) return !!node.getAttribute('src') || !!$('source', node);
+    if (node.matches('video')) return !!node.getAttribute('data-cms-src') || !!node.getAttribute('src') || !!$('source', node);
     return node.textContent.trim().length > 0;
   }).map((node, index) => ({
     id: `${prefix}-${index}`,
@@ -269,7 +273,13 @@ function collectSubBlocks(block) {
 }
 
 function collectBlocks() {
-  blocks = $$('.r.t-rec[id]', contentDoc)
+  blocks = [{
+    id: 'cms-settings',
+    node: null,
+    title: 'Настройки сайта',
+    subBlocks: [],
+    items: []
+  }].concat($$('.r.t-rec[id]', contentDoc)
     .map((block, index) => {
       const subBlocks = collectSubBlocks(block);
       const items = collectEditableItems(block, block.id || `block-${index}`);
@@ -281,7 +291,7 @@ function collectBlocks() {
         items
       };
     })
-    .filter((block) => block.items.length || block.subBlocks.length);
+    .filter((block) => block.items.length || block.subBlocks.length));
 
   if (!activeBlockId || !blocks.some((block) => block.id === activeBlockId)) {
     activeBlockId = blocks[0]?.id || '';
@@ -411,8 +421,116 @@ function renderAddReview(panel) {
   panel.append(form);
 }
 
+function ensureCmsSettings() {
+  cmsData.settings = cmsData.settings && typeof cmsData.settings === 'object' ? cmsData.settings : {};
+  cmsData.settings.cornerVideo = cmsData.settings.cornerVideo && typeof cmsData.settings.cornerVideo === 'object'
+    ? cmsData.settings.cornerVideo
+    : { url: '/assets/360p.f5fe27dad4.mp4', poster: '' };
+  cmsData.settings.videoPosters = cmsData.settings.videoPosters && typeof cmsData.settings.videoPosters === 'object'
+    ? cmsData.settings.videoPosters
+    : {};
+}
+
+function collectPageVideos() {
+  if (!contentDoc) return [];
+  return uniqueNodes($$('video', contentDoc)).map((video, index) => ({
+    id: `video-${index}`,
+    url: fieldValue(video, 'video'),
+    label: `Видео ${index + 1}`
+  })).filter((item) => item.url);
+}
+
+function renderCmsSettings(panel) {
+  ensureCmsSettings();
+  const videos = collectPageVideos();
+  const corner = cmsData.settings.cornerVideo;
+  panel.innerHTML = `
+    <div class="block-panel__head">
+      <div>
+        <h2>Общие настройки сайта</h2>
+        <p class="muted">Единое угловое видео для всех страниц и превью для видео на текущей странице.</p>
+      </div>
+    </div>
+    <div class="settings-grid">
+      <section class="settings-card">
+        <h3>Видео в углу сайта</h3>
+        <div class="editor-list">
+          <div class="editor-item" data-setting="corner-video"></div>
+          <div class="editor-item" data-setting="corner-poster"></div>
+        </div>
+      </section>
+      <section class="settings-card">
+        <h3>Превью видео на странице</h3>
+        <p class="muted">${videos.length ? 'Загрузите картинку-превью для каждого ролика.' : 'На этой странице видео не найдены.'}</p>
+        <div class="editor-list" data-video-posters></div>
+      </section>
+    </div>
+  `;
+
+  renderSettingsUpload($('[data-setting="corner-video"]', panel), {
+    title: 'Общее видео',
+    accept: 'video/*',
+    url: corner.url,
+    onUpload: (url) => { corner.url = url; }
+  });
+  renderSettingsUpload($('[data-setting="corner-poster"]', panel), {
+    title: 'Превью углового видео',
+    accept: 'image/*',
+    url: corner.poster,
+    isImage: true,
+    onUpload: (url) => { corner.poster = url; }
+  });
+
+  const posterList = $('[data-video-posters]', panel);
+  videos.forEach((video) => {
+    const row = document.createElement('div');
+    row.className = 'editor-item';
+    renderSettingsUpload(row, {
+      title: video.label,
+      accept: 'image/*',
+      url: cmsData.settings.videoPosters[video.url] || '',
+      note: video.url,
+      isImage: true,
+      onUpload: (url) => { cmsData.settings.videoPosters[video.url] = url; }
+    });
+    posterList.append(row);
+  });
+}
+
+function renderSettingsUpload(row, config) {
+  const preview = config.isImage
+    ? `<img src="${escapeHtml(config.url || '')}" alt="">`
+    : `<video src="${escapeHtml(config.url || '')}" controls></video>`;
+  row.innerHTML = `
+    <div class="editor-media">
+      ${preview}
+      <label>${escapeHtml(config.title)}
+        <input type="file" accept="${escapeHtml(config.accept)}">
+        <small>${escapeHtml(config.note || config.url || 'Файл не выбран')}</small>
+      </label>
+    </div>
+  `;
+  $('input', row).addEventListener('change', async (event) => {
+    try {
+      const uploadedUrl = await upload(event.target.files[0]);
+      config.onUpload(uploadedUrl);
+      const media = config.isImage ? $('img', row) : $('video', row);
+      media.src = uploadedUrl;
+      $('small', row).textContent = uploadedUrl;
+      await saveCmsData();
+      status('Настройки сохранены.');
+    } catch (error) {
+      status(error.message, true);
+    }
+  });
+}
+
 function renderBlockEditor() {
   const panel = $('#blockEditor');
+  if (activeBlockId === 'cms-settings') {
+    renderCmsSettings(panel);
+    return;
+  }
   const block = blocks.find((item) => item.id === activeBlockId);
   if (!block) {
     panel.innerHTML = '<p class="muted">На странице нет редактируемых блоков.</p>';
@@ -467,6 +585,7 @@ async function loadContent() {
     api('/api/cms')
   ]);
   cmsData = cmsPayload || { media: [], reviews: [] };
+  ensureCmsSettings();
   contentDoc = new DOMParser().parseFromString(pagePayload.html, 'text/html');
   collectBlocks();
   renderBlockTabs();
@@ -484,7 +603,8 @@ async function saveCmsData() {
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       media: Array.isArray(cmsData.media) ? cmsData.media : [],
-      reviews: Array.isArray(cmsData.reviews) ? cmsData.reviews : []
+      reviews: Array.isArray(cmsData.reviews) ? cmsData.reviews : [],
+      settings: cmsData.settings && typeof cmsData.settings === 'object' ? cmsData.settings : {}
     })
   });
 }

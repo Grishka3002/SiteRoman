@@ -36,9 +36,12 @@
     const media = document.createElement(isVideo ? 'video' : 'img');
     media.src = item.url;
     if (isVideo) {
+      media.removeAttribute('src');
+      media.dataset.cmsSrc = item.url;
       media.controls = true;
       media.playsInline = true;
-      media.preload = 'metadata';
+      media.preload = 'none';
+      if (item.poster) media.poster = item.poster;
     } else {
       media.loading = 'lazy';
       media.alt = item.caption || '';
@@ -113,6 +116,43 @@
       video.addEventListener('click', () => loadVideo(video), { once: true });
       video.addEventListener('mouseenter', () => loadVideo(video), { once: true });
       video.addEventListener('focus', () => loadVideo(video), { once: true });
+    });
+  }
+
+  function hydrateLazyMedia(root = document) {
+    root.querySelectorAll('img[data-original]').forEach((img) => {
+      const original = img.getAttribute('data-original');
+      if (!original || img.getAttribute('src') === original) return;
+      img.src = original;
+      img.decoding = 'async';
+      img.loading = 'lazy';
+    });
+
+    root.querySelectorAll('.t-bgimg[data-original], [data-original].t-slds__bgimg').forEach((node) => {
+      const original = node.getAttribute('data-original');
+      if (!original) return;
+      const current = node.style.backgroundImage || '';
+      if (!current.includes(original)) node.style.backgroundImage = `url("${original}")`;
+    });
+  }
+
+  function bindLoadMoreHydration() {
+    document.addEventListener('click', (event) => {
+      const trigger = event.target.closest('button, a, .t-btn, .t-feed__showmore-btn, .t-store__load-more-btn');
+      if (!trigger) return;
+      const text = (trigger.textContent || '').toLowerCase();
+      if (!/еще|ещё|more|show|показ/.test(text)) return;
+      window.setTimeout(() => hydrateLazyMedia(document), 120);
+      window.setTimeout(() => hydrateLazyMedia(document), 650);
+    });
+  }
+
+  function applyVideoPosters(settings = {}) {
+    const posters = settings.videoPosters || {};
+    document.querySelectorAll('video').forEach((video) => {
+      const src = video.dataset.cmsSrc || video.getAttribute('src') || video.querySelector('source')?.dataset.cmsSrc || video.querySelector('source')?.getAttribute('src') || '';
+      const poster = posters[src];
+      if (poster) video.poster = poster;
     });
   }
 
@@ -359,11 +399,13 @@
     });
   }
 
-  function mountCornerVideo() {
+  function mountCornerVideo(settings = {}) {
     hideExternalVideoWidget();
     if (document.querySelector('.cms-corner-video')) return;
+    const cornerVideo = settings.cornerVideo || {};
     const source = document.querySelector('video source[data-cms-src], video[data-cms-src], video source[src], video[src]');
-    const src = source?.getAttribute('data-cms-src') || source?.getAttribute('src') || source?.parentElement?.getAttribute('data-cms-src') || source?.parentElement?.getAttribute('src') || '/assets/360p.f5fe27dad4.mp4';
+    const src = cornerVideo.url || source?.getAttribute('data-cms-src') || source?.getAttribute('src') || source?.parentElement?.getAttribute('data-cms-src') || source?.parentElement?.getAttribute('src') || '/assets/360p.f5fe27dad4.mp4';
+    const poster = cornerVideo.poster || '';
     const widget = document.createElement('div');
     widget.className = 'cms-corner-video';
     widget.innerHTML = `
@@ -373,7 +415,7 @@
       </button>
       <div class="cms-corner-video__panel">
         <button class="cms-corner-video__close" type="button" aria-label="Свернуть видео">×</button>
-        <video data-cms-src="${escapeHtml(src)}" playsinline controls preload="none"></video>
+        <video data-cms-src="${escapeHtml(src)}" ${poster ? `poster="${escapeHtml(poster)}"` : ''} playsinline controls preload="none"></video>
       </div>
     `;
     document.body.append(widget);
@@ -498,6 +540,7 @@
   }
 
   optimizeNativeMedia();
+  bindLoadMoreHydration();
   preloadHeroImage();
   mountLocalForms();
 
@@ -506,6 +549,8 @@
     .then((cms) => {
       const media = (cms.media || []).filter(matchesPage);
       const reviews = (cms.reviews || []).filter(matchesPage);
+      const settings = cms.settings || {};
+      applyVideoPosters(settings);
       const mediaMounted = appendMediaToPortfolio(media);
       const reviewsMounted = renderReviewCarousel(reviews);
 
@@ -513,7 +558,7 @@
         mediaMounted ? null : renderFallbackSection('Портфолио', media, createMediaCard),
         reviewsMounted ? null : renderFallbackSection('Отзывы', reviews, createReviewCard)
       ]);
-      mountCornerVideo();
+      mountCornerVideo(settings);
     })
     .catch(() => {
       mountCornerVideo();

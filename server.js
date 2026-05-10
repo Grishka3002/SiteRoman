@@ -59,9 +59,14 @@ async function readJson(request) {
 
 async function readCms() {
   try {
-    return JSON.parse(await readFile(cmsPath, 'utf8'));
+    const cms = JSON.parse(await readFile(cmsPath, 'utf8'));
+    return {
+      media: Array.isArray(cms.media) ? cms.media : [],
+      reviews: Array.isArray(cms.reviews) ? cms.reviews : [],
+      settings: cms.settings && typeof cms.settings === 'object' ? cms.settings : {}
+    };
   } catch {
-    return { media: [], reviews: [] };
+    return { media: [], reviews: [], settings: {} };
   }
 }
 
@@ -186,7 +191,8 @@ async function handleApi(request, response, pathname) {
     const cms = await readJson(request);
     await saveCms({
       media: Array.isArray(cms.media) ? cms.media : [],
-      reviews: Array.isArray(cms.reviews) ? cms.reviews : []
+      reviews: Array.isArray(cms.reviews) ? cms.reviews : [],
+      settings: cms.settings && typeof cms.settings === 'object' ? cms.settings : {}
     });
     return sendJson(response, 200, { ok: true });
   }
