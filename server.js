@@ -1,12 +1,17 @@
 import { createServer } from 'node:http';
 import { createReadStream, statSync } from 'node:fs';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
 import { basename, extname, join, normalize } from 'node:path';
+import { tmpdir } from 'node:os';
+import { spawn } from 'node:child_process';
+import { createRequire } from 'node:module';
 import sharp from 'sharp';
 import pg from 'pg';
 
 const { Pool } = pg;
+const require = createRequire(import.meta.url);
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 
 const publicDir = join(process.cwd(), 'public');
 const dataDir = join(process.cwd(), 'data');
@@ -128,6 +133,83 @@ async function readBody(request) {
 async function readJson(request) {
   const body = await readBody(request);
   return body.length ? JSON.parse(body.toString('utf8')) : {};
+}
+
+function parseRange(range, size) {
+  const match = /^bytes=(\d*)-(\d*)$/.exec(range || '');
+  if (!match) return null;
+
+  let start = match[1] ? Number(match[1]) : 0;
+  let end = match[2] ? Number(match[2]) : size - 1;
+  if (!match[1] && match[2]) start = Math.max(size - Number(match[2]), 0);
+  if (!Number.isFinite(start) || !Number.isFinite(end) || start > end || start >= size) return null;
+  end = Math.min(end, size - 1);
+  return { start, end };
+}
+
+function sendBuffer(response, request, content, contentType, cacheControl) {
+  const size = content.length;
+  const range = parseRange(request.headers.range, size);
+
+  if (range) {
+    response.writeHead(206, {
+      'Content-Type': contentType,
+      'Content-Length': range.end - range.start + 1,
+      'Content-Range': `bytes ${range.start}-${range.end}/${size}`,
+      'Accept-Ranges': 'bytes',
+      'Cache-Control': cacheControl
+    });
+    response.end(content.subarray(range.start, range.end + 1));
+    return;
+  }
+
+  response.writeHead(200, {
+    'Content-Type': contentType,
+    'Content-Length': size,
+    'Accept-Ranges': 'bytes',
+    'Cache-Control': cacheControl
+  });
+  response.end(content);
+}
+
+function runFfmpeg(args) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(ffmpegPath, args, { windowsHide: true });
+    let stderr = '';
+    child.stderr.on('data', (chunk) => { stderr += chunk.toString(); });
+    child.on('error', reject);
+    child.on('close', (code) => {
+      if (code === 0) resolve();
+      else reject(new Error(stderr.split('\n').slice(-8).join('\n') || `ffmpeg exited with code ${code}`));
+    });
+  });
+}
+
+async function optimizeVideo(content, originalName) {
+  const tempDir = await mkdtemp(join(tmpdir(), 'site-video-'));
+  const inputPath = join(tempDir, originalName || 'input.mp4');
+  const outputPath = join(tempDir, 'output.mp4');
+
+  try {
+    await writeFile(inputPath, content);
+    await runFfmpeg([
+      '-y', '-i', inputPath,
+      '-map', '0:v:0', '-map', '0:a?',
+      '-c:v', 'libx264', '-preset', 'slow', '-crf', '34',
+      '-maxrate', '520k', '-bufsize', '1040k',
+      '-pix_fmt', 'yuv420p',
+      '-c:a', 'aac', '-b:a', '64k', '-ac', '1',
+      '-movflags', '+faststart',
+      outputPath
+    ]);
+    const optimized = await readFile(outputPath);
+    return optimized.length < content.length ? optimized : content;
+  } catch (error) {
+    console.error('Video optimization failed:', error.message);
+    return content;
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
 }
 
 async function readCms() {
@@ -280,13 +362,14 @@ async function handleUpload(request, response) {
     : originalName;
   const finalName = `${fileId}-${safeName}`;
   const filePath = join(uploadsDir, finalName);
-  const content = isImage
+  let content = isImage
     ? await sharp(file.content)
       .rotate()
       .resize({ width: 1800, height: 1800, fit: 'inside', withoutEnlargement: true })
       .webp({ quality: 78, effort: 4 })
       .toBuffer()
     : file.content;
+  if (isVideo) content = await optimizeVideo(content, originalName);
   const finalContentType = isImage ? 'image/webp' : file.contentType;
   const savedToDatabase = await saveUploadToDatabase({
     finalName,
@@ -410,7 +493,7 @@ function resolveRequest(url) {
   return join(publicDir, 'index.html');
 }
 
-async function handleUploadRequest(response, pathname) {
+async function handleUploadRequest(request, response, pathname) {
   const name = basename(decodeURIComponent(pathname.replace(/^\/uploads\//, '')));
   if (!name) return false;
 
@@ -425,12 +508,7 @@ async function handleUploadRequest(response, pathname) {
   const file = await readUploadFromDatabase(name);
   if (!file) return false;
 
-  response.writeHead(200, {
-    'Content-Type': file.content_type,
-    'Content-Length': file.size,
-    'Cache-Control': 'public, max-age=31536000, immutable'
-  });
-  response.end(file.content);
+  sendBuffer(response, request, file.content, file.content_type, 'public, max-age=31536000, immutable');
   return true;
 }
 
@@ -443,7 +521,7 @@ createServer(async (request, response) => {
       return;
     }
 
-    if (url.pathname.startsWith('/uploads/') && await handleUploadRequest(response, url.pathname)) {
+    if (url.pathname.startsWith('/uploads/') && await handleUploadRequest(request, response, url.pathname)) {
       return;
     }
   } catch (error) {
@@ -457,8 +535,24 @@ createServer(async (request, response) => {
     filePath.includes(`${join('public', 'admin')}`) ||
     filePath.includes(`${join('public', 'cms')}`);
 
+  const stats = statSync(filePath);
+  const range = parseRange(request.headers.range, stats.size);
+  if (range) {
+    response.writeHead(206, {
+      'Content-Type': type,
+      'Content-Length': range.end - range.start + 1,
+      'Content-Range': `bytes ${range.start}-${range.end}/${stats.size}`,
+      'Accept-Ranges': 'bytes',
+      'Cache-Control': noCache ? 'no-store, max-age=0' : 'public, max-age=31536000, immutable'
+    });
+    createReadStream(filePath, { start: range.start, end: range.end }).pipe(response);
+    return;
+  }
+
   response.writeHead(200, {
     'Content-Type': type,
+    'Content-Length': stats.size,
+    'Accept-Ranges': 'bytes',
     'Cache-Control': noCache ? 'no-store, max-age=0' : 'public, max-age=31536000, immutable'
   });
 
