@@ -31,6 +31,57 @@
     return match?.[1] || '';
   }
 
+  function posterFromVideoSrc(src) {
+    const clean = String(src || '').split('?')[0];
+    if (!clean.startsWith('/assets/') || !/\.mp4$/i.test(clean)) return '';
+    return clean.replace(/\.mp4$/i, '.poster.webp');
+  }
+
+  function videoSourceFrom(video) {
+    return video?.dataset.cmsSrc
+      || video?.getAttribute('src')
+      || video?.querySelector('source')?.dataset.cmsSrc
+      || video?.querySelector('source')?.getAttribute('src')
+      || '';
+  }
+
+  function ensureVideoPreview(video, poster) {
+    if (!video || !poster || video.dataset.cmsPreviewReady === 'true') return;
+    const parent = video.parentElement;
+    if (!parent) return;
+
+    parent.classList.add('cms-video-has-preview');
+    video.classList.add('cms-video-with-preview');
+    video.poster = poster;
+    video.dataset.cmsPreviewReady = 'true';
+
+    const preview = document.createElement('img');
+    preview.className = 'cms-video-preview';
+    preview.src = poster;
+    preview.alt = '';
+    preview.decoding = 'async';
+    preview.loading = 'lazy';
+    preview.setAttribute('aria-hidden', 'true');
+    parent.append(preview);
+
+    const hidePreview = () => preview.classList.add('is-hidden');
+    const showPreview = () => {
+      if (!video.currentTime || video.ended) preview.classList.remove('is-hidden');
+    };
+
+    preview.addEventListener('click', () => {
+      if (video.dataset.cmsSrc && !video.currentSrc) {
+        video.src = video.dataset.cmsSrc;
+        video.dataset.cmsLoaded = 'true';
+        video.load();
+      }
+      video.play().catch(() => {});
+    });
+    video.addEventListener('playing', hidePreview);
+    video.addEventListener('pause', showPreview);
+    video.addEventListener('ended', () => preview.classList.remove('is-hidden'));
+  }
+
   function createMediaCard(item) {
     const figure = document.createElement('figure');
     figure.className = 'cms-media-card';
@@ -44,12 +95,14 @@
       media.controls = true;
       media.playsInline = true;
       media.preload = 'none';
-      if (item.poster) media.poster = item.poster;
+      const poster = item.poster || posterFromVideoSrc(item.url);
+      if (poster) media.poster = poster;
     } else {
       media.loading = 'lazy';
       media.alt = item.caption || '';
     }
     figure.append(media);
+    if (isVideo) ensureVideoPreview(media, media.poster);
 
     if (item.caption) {
       const caption = document.createElement('figcaption');
@@ -173,9 +226,9 @@
   function applyVideoPosters(settings = {}) {
     const posters = settings.videoPosters || {};
     document.querySelectorAll('video').forEach((video) => {
-      const src = video.dataset.cmsSrc || video.getAttribute('src') || video.querySelector('source')?.dataset.cmsSrc || video.querySelector('source')?.getAttribute('src') || '';
-      const poster = posters[src];
-      if (poster) video.poster = poster;
+      const src = videoSourceFrom(video);
+      const poster = posters[src] || video.getAttribute('poster') || posterFromVideoSrc(src);
+      if (poster) ensureVideoPreview(video, poster);
     });
   }
 
@@ -487,7 +540,7 @@
     const cornerVideo = settings.cornerVideo || {};
     const source = document.querySelector('video source[data-cms-src], video[data-cms-src], video source[src], video[src]');
     const src = cornerVideo.url || source?.getAttribute('data-cms-src') || source?.getAttribute('src') || source?.parentElement?.getAttribute('data-cms-src') || source?.parentElement?.getAttribute('src') || DEFAULT_CORNER_VIDEO;
-    const poster = cornerVideo.poster || '';
+    const poster = cornerVideo.poster || posterFromVideoSrc(src);
     const widget = document.createElement('div');
     widget.className = 'cms-corner-video';
     widget.innerHTML = `
@@ -506,10 +559,13 @@
     const video = widget.querySelector('video');
     const loadCornerSource = (url) => {
       if (!url) return;
+      const nextPoster = cornerVideo.poster || posterFromVideoSrc(url);
+      if (nextPoster) video.poster = nextPoster;
       video.src = url;
       video.dataset.cmsLoadedSrc = url;
       video.load();
     };
+    ensureVideoPreview(video, poster);
     video.addEventListener('error', () => {
       if (video.dataset.cmsLoadedSrc !== DEFAULT_CORNER_VIDEO) {
         loadCornerSource(DEFAULT_CORNER_VIDEO);

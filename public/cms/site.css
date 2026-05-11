@@ -31,6 +31,7 @@
 }
 
 .cms-media-card {
+  position: relative;
   overflow: hidden;
   border-radius: 14px;
   background: #171717;
@@ -46,6 +47,35 @@
 
 .cms-media-card video {
   aspect-ratio: 9 / 16;
+  background: #000;
+}
+
+.cms-video-has-preview {
+  position: relative;
+}
+
+.cms-video-preview {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #000;
+  cursor: pointer;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.22s ease, visibility 0.22s ease;
+}
+
+.cms-video-preview.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.cms-video-with-preview {
   background: #000;
 }
 
@@ -431,11 +461,15 @@ iframe[src*="lp9.ru"],
   object-fit: cover;
 }
 
+.cms-corner-video__panel .cms-video-preview {
+  border-radius: inherit;
+}
+
 .cms-corner-video__close {
   position: absolute;
   top: 8px;
   right: 8px;
-  z-index: 1;
+  z-index: 5;
   width: 34px;
   height: 34px;
   border: 0;
