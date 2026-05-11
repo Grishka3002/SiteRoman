@@ -76,7 +76,7 @@
   margin: 0 auto;
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: minmax(280px, 42%);
+  grid-auto-columns: minmax(230px, 320px);
   gap: 18px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
@@ -88,11 +88,22 @@
 .cms-video-slider .cms-media-card {
   scroll-snap-align: start;
   border: 1px solid rgba(255, 228, 15, 0.26);
+  width: 100%;
 }
 
 .cms-video-slider .cms-media-card video {
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 9 / 16;
   background: #080808;
+  object-fit: cover;
+}
+
+.cms-video-slider .cms-media-card video:fullscreen,
+.cms-video-slider .cms-media-card video:-webkit-full-screen {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  background: #000;
 }
 
 .cms-bottom-block {

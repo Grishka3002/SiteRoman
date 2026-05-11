@@ -1,4 +1,5 @@
 (function () {
+  const DEFAULT_CORNER_VIDEO = '/assets/corner-video-roman.mp4';
   const route = window.location.pathname.replace(/\/$/, '') || '/';
   const routeName = route === '/' ? 'home' : route.replace(/[^\w-]+/g, '-').replace(/^-|-$/g, '') || 'home';
   document.documentElement.classList.add(`cms-route-${routeName}`);
@@ -485,7 +486,7 @@
     if (document.querySelector('.cms-corner-video')) return;
     const cornerVideo = settings.cornerVideo || {};
     const source = document.querySelector('video source[data-cms-src], video[data-cms-src], video source[src], video[src]');
-    const src = cornerVideo.url || source?.getAttribute('data-cms-src') || source?.getAttribute('src') || source?.parentElement?.getAttribute('data-cms-src') || source?.parentElement?.getAttribute('src') || '/assets/corner-video-roman.mp4';
+    const src = cornerVideo.url || source?.getAttribute('data-cms-src') || source?.getAttribute('src') || source?.parentElement?.getAttribute('data-cms-src') || source?.parentElement?.getAttribute('src') || DEFAULT_CORNER_VIDEO;
     const poster = cornerVideo.poster || '';
     const widget = document.createElement('div');
     widget.className = 'cms-corner-video';
@@ -503,13 +504,27 @@
     const button = widget.querySelector('.cms-corner-video__button');
     const close = widget.querySelector('.cms-corner-video__close');
     const video = widget.querySelector('video');
+    const loadCornerSource = (url) => {
+      if (!url) return;
+      video.src = url;
+      video.dataset.cmsLoadedSrc = url;
+      video.load();
+    };
+    video.addEventListener('error', () => {
+      if (video.dataset.cmsLoadedSrc !== DEFAULT_CORNER_VIDEO) {
+        loadCornerSource(DEFAULT_CORNER_VIDEO);
+        if (widget.classList.contains('is-open')) {
+          video.muted = true;
+          window.setTimeout(() => video.play().catch(() => {}), 80);
+        }
+      }
+    });
     button.addEventListener('click', () => {
       widget.classList.add('is-open');
-      if (!video.currentSrc) {
-        video.src = video.dataset.cmsSrc;
-        video.load();
+      if (!video.currentSrc && video.dataset.cmsLoadedSrc !== video.dataset.cmsSrc) {
+        loadCornerSource(video.dataset.cmsSrc || DEFAULT_CORNER_VIDEO);
       }
-      window.setTimeout(() => video.play().catch(() => {}), 60);
+      video.play().catch(() => {});
     });
     close.addEventListener('click', () => {
       widget.classList.remove('is-open');
