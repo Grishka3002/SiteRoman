@@ -596,6 +596,12 @@ function ensureCmsSettings() {
   cmsData.settings.videoPosters = cmsData.settings.videoPosters && typeof cmsData.settings.videoPosters === 'object'
     ? cmsData.settings.videoPosters
     : {};
+  cmsData.settings.typography = cmsData.settings.typography && typeof cmsData.settings.typography === 'object'
+    ? cmsData.settings.typography
+    : { minMobileFontSize: 16 };
+  cmsData.settings.bottomBlock = cmsData.settings.bottomBlock && typeof cmsData.settings.bottomBlock === 'object'
+    ? cmsData.settings.bottomBlock
+    : { text: '', fontSize: 22 };
 }
 
 function collectPageVideos() {
@@ -610,6 +616,8 @@ function collectPageVideos() {
 function renderCmsSettings(panel) {
   ensureCmsSettings();
   const corner = cmsData.settings.cornerVideo;
+  const typography = cmsData.settings.typography;
+  const bottomBlock = cmsData.settings.bottomBlock;
   panel.innerHTML = `
     <div class="block-panel__head">
       <div>
@@ -617,7 +625,7 @@ function renderCmsSettings(panel) {
         <p class="muted">Общие настройки, которые работают на всех страницах. Превью обычных видео теперь находятся во вкладке «Видео».</p>
       </div>
     </div>
-    <div class="settings-grid settings-grid_single">
+    <div class="settings-grid">
       <section class="settings-card">
         <h3>Видео в углу сайта</h3>
         <p class="muted">Один ролик и одно превью для главной, свадьбы и корпоративов.</p>
@@ -626,7 +634,28 @@ function renderCmsSettings(panel) {
           <div class="editor-item" data-setting="corner-poster"></div>
         </div>
       </section>
+      <section class="settings-card">
+        <h3>Размеры текста</h3>
+        <div class="form-grid">
+          <label>Минимальный мелкий шрифт на телефоне, px
+            <input data-setting-font-min type="number" min="14" max="24" value="${escapeHtml(typography.minMobileFontSize || 16)}">
+          </label>
+          <label>Размер текста нижнего блока, px
+            <input data-setting-bottom-font type="number" min="16" max="48" value="${escapeHtml(bottomBlock.fontSize || 22)}">
+          </label>
+        </div>
+        <p class="muted">Мелкий текст на мобильной версии будет автоматически увеличен до этого значения.</p>
+      </section>
     </div>
+    <section class="settings-card">
+      <h3>Нижний черный блок на всех страницах</h3>
+      <label>Текст блока
+        <textarea data-setting-bottom-text rows="6" placeholder="Введите текст, который должен быть внизу каждой страницы">${escapeHtml(bottomBlock.text || '')}</textarea>
+      </label>
+      <div class="row">
+        <button type="button" data-save-settings>Сохранить настройки</button>
+      </div>
+    </section>
   `;
 
   renderSettingsUpload($('[data-setting="corner-video"]', panel), {
@@ -641,6 +670,24 @@ function renderCmsSettings(panel) {
     url: corner.poster,
     isImage: true,
     onUpload: (url) => { corner.poster = url; }
+  });
+
+  $('[data-setting-font-min]', panel).addEventListener('input', (event) => {
+    typography.minMobileFontSize = Number(event.target.value || 16);
+  });
+  $('[data-setting-bottom-font]', panel).addEventListener('input', (event) => {
+    bottomBlock.fontSize = Number(event.target.value || 22);
+  });
+  $('[data-setting-bottom-text]', panel).addEventListener('input', (event) => {
+    bottomBlock.text = event.target.value;
+  });
+  $('[data-save-settings]', panel).addEventListener('click', async () => {
+    try {
+      await saveCmsData();
+      status('Настройки сохранены.');
+    } catch (error) {
+      status(error.message, true);
+    }
   });
 }
 

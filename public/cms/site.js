@@ -156,6 +156,35 @@
     });
   }
 
+  function applyTypographySettings(settings = {}) {
+    const minSize = Number(settings.typography?.minMobileFontSize || 16);
+    document.documentElement.style.setProperty('--cms-small-text-size', `${minSize}px`);
+    if (!window.matchMedia('(max-width: 640px)').matches) return;
+
+    document.querySelectorAll('.t-text, .t-descr, .t-name, .t-title, .t-card__descr, .t585__text, .t958__review-text, .tn-atom').forEach((node) => {
+      if (node.closest('.cms-corner-video, .cms-review-carousel__dots, .t-menuburger')) return;
+      const size = parseFloat(window.getComputedStyle(node).fontSize || '0');
+      if (size > 0 && size < minSize) node.style.fontSize = `${minSize}px`;
+    });
+  }
+
+  function mountBottomBlock(settings = {}) {
+    const config = settings.bottomBlock || {};
+    const text = String(config.text || '').trim();
+    if (!text || document.querySelector('.cms-bottom-block')) return;
+
+    const block = document.createElement('section');
+    block.className = 'cms-bottom-block';
+    block.style.setProperty('--cms-bottom-font-size', `${Number(config.fontSize || 22)}px`);
+    block.innerHTML = `<div class="cms-bottom-block__inner">${escapeHtml(text)}</div>`;
+
+    const footer = document.querySelector('[id^="rec2172565761"], [id^="rec2171226081"], [id^="rec1025539546"]');
+    const allRecords = document.querySelector('#allrecords');
+    if (footer && footer.parentNode) footer.parentNode.insertBefore(block, footer);
+    else if (allRecords) allRecords.append(block);
+    else document.body.append(block);
+  }
+
   function createReviewCard(item, state) {
     const card = document.createElement('article');
     card.className = `cms-review-card cms-review-card_${state}`;
@@ -580,6 +609,7 @@
       const media = (cms.media || []).filter(matchesPage);
       const reviews = (cms.reviews || []).filter(matchesPage);
       const settings = cms.settings || {};
+      applyTypographySettings(settings);
       applyVideoPosters(settings);
       const mediaMounted = appendMediaToPortfolio(media);
       const reviewsMounted = renderReviewCarousel(reviews);
@@ -588,9 +618,11 @@
         mediaMounted ? null : renderFallbackSection('Портфолио', media, createMediaCard),
         reviewsMounted ? null : renderFallbackSection('Отзывы', reviews, createReviewCard)
       ]);
+      mountBottomBlock(settings);
       mountCornerVideo(settings);
     })
     .catch(() => {
+      applyTypographySettings();
       mountCornerVideo();
     });
 })();

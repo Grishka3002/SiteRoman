@@ -95,6 +95,25 @@
   background: #080808;
 }
 
+.cms-bottom-block {
+  background: #000;
+  color: #fff;
+  padding: 70px 20px;
+  border-top: 1px solid rgba(255, 228, 15, 0.24);
+}
+
+.cms-bottom-block__inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  color: #fff;
+  font-family: 'Druk-Mont', Arial, sans-serif;
+  font-size: var(--cms-bottom-font-size, 22px);
+  font-weight: 300;
+  line-height: 1.35;
+  text-transform: uppercase;
+  white-space: pre-line;
+}
+
 .cms-review-card {
   border-radius: 14px;
   background: #171717;
@@ -514,12 +533,34 @@ video {
   }
 
   .cms-review-carousel .cms-review-card__name {
-    font-size: clamp(22px, 9vw, 36px);
+    font-size: clamp(20px, 7vw, 28px);
   }
 
   .cms-review-carousel .cms-review-card__text {
-    font-size: 15px;
+    font-size: var(--cms-small-text-size, 16px);
     -webkit-line-clamp: 8;
+  }
+
+  .t585__title {
+    font-size: clamp(22px, 7vw, 30px) !important;
+    line-height: 1.15 !important;
+  }
+
+  .t585__text,
+  .t-card__descr,
+  .t958__review-text,
+  .t-descr_xxs,
+  .t-text_xs {
+    font-size: var(--cms-small-text-size, 16px) !important;
+    line-height: 1.45 !important;
+  }
+
+  .cms-bottom-block {
+    padding: 44px 18px 56px;
+  }
+
+  .cms-bottom-block__inner {
+    font-size: max(var(--cms-bottom-font-size, 22px), 18px);
   }
 
   .cms-corner-video {
