@@ -3,6 +3,7 @@ import { createReadStream, statSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
 import { basename, extname, join, normalize } from 'node:path';
+import sharp from 'sharp';
 
 const publicDir = join(process.cwd(), 'public');
 const dataDir = join(process.cwd(), 'data');
@@ -147,16 +148,33 @@ async function handleUpload(request, response) {
   if (!file) return sendJson(response, 400, { error: 'No file uploaded' });
 
   await mkdir(uploadsDir, { recursive: true });
-  const safeName = basename(file.filename).replace(/[^\w.-]+/g, '_');
-  const finalName = `${Date.now()}-${randomUUID().slice(0, 8)}-${safeName}`;
+  const originalName = basename(file.filename).replace(/[^\w.-]+/g, '_');
+  const fileId = `${Date.now()}-${randomUUID().slice(0, 8)}`;
+  const isImage = /^image\//.test(file.contentType) && file.contentType !== 'image/svg+xml' && file.contentType !== 'image/gif';
+  const isVideo = /^video\//.test(file.contentType);
+  const safeName = isImage
+    ? originalName.replace(/\.[^.]+$/, '') + '.webp'
+    : originalName;
+  const finalName = `${fileId}-${safeName}`;
   const filePath = join(uploadsDir, finalName);
-  await writeFile(filePath, file.content);
+  const content = isImage
+    ? await sharp(file.content)
+      .rotate()
+      .resize({ width: 1800, height: 1800, fit: 'inside', withoutEnlargement: true })
+      .webp({ quality: 78, effort: 4 })
+      .toBuffer()
+    : file.content;
+
+  await writeFile(filePath, content);
 
   sendJson(response, 200, {
     url: `/uploads/${finalName}`,
     name: safeName,
-    type: file.contentType,
-    size: file.content.length
+    type: isImage ? 'image/webp' : file.contentType,
+    size: content.length,
+    originalSize: file.content.length,
+    optimized: isImage,
+    warning: isVideo ? 'Видео сохраняется как файл. Для сильного сжатия нужен ffmpeg или внешний storage/transcoder.' : undefined
   });
 }
 

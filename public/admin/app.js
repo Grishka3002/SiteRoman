@@ -601,7 +601,7 @@ function ensureCmsSettings() {
     : { minMobileFontSize: 16 };
   cmsData.settings.bottomBlock = cmsData.settings.bottomBlock && typeof cmsData.settings.bottomBlock === 'object'
     ? cmsData.settings.bottomBlock
-    : { text: '', fontSize: 22 };
+    : { text: '', fontSize: 16 };
 }
 
 function collectPageVideos() {
@@ -641,7 +641,7 @@ function renderCmsSettings(panel) {
             <input data-setting-font-min type="number" min="14" max="24" value="${escapeHtml(typography.minMobileFontSize || 16)}">
           </label>
           <label>Размер текста нижнего блока, px
-            <input data-setting-bottom-font type="number" min="16" max="48" value="${escapeHtml(bottomBlock.fontSize || 22)}">
+            <input data-setting-bottom-font type="number" min="12" max="28" value="${escapeHtml(bottomBlock.fontSize || 16)}">
           </label>
         </div>
         <p class="muted">Мелкий текст на мобильной версии будет автоматически увеличен до этого значения.</p>
@@ -676,7 +676,7 @@ function renderCmsSettings(panel) {
     typography.minMobileFontSize = Number(event.target.value || 16);
   });
   $('[data-setting-bottom-font]', panel).addEventListener('input', (event) => {
-    bottomBlock.fontSize = Number(event.target.value || 22);
+    bottomBlock.fontSize = Number(event.target.value || 16);
   });
   $('[data-setting-bottom-text]', panel).addEventListener('input', (event) => {
     bottomBlock.text = event.target.value;

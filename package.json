@@ -10,6 +10,7 @@
     "inject:cms": "node tools/inject-cms.mjs",
     "start": "node server.js"
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "sharp": "^0.34.5"
+  }
 }

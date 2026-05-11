@@ -97,19 +97,20 @@
 
 .cms-bottom-block {
   background: #000;
-  color: #fff;
-  padding: 70px 20px;
+  color: #6a6a6a;
+  padding: 48px 20px;
   border-top: 1px solid rgba(255, 228, 15, 0.24);
 }
 
 .cms-bottom-block__inner {
   max-width: 1180px;
   margin: 0 auto;
-  color: #fff;
+  color: #6a6a6a;
   font-family: 'Druk-Mont', Arial, sans-serif;
-  font-size: var(--cms-bottom-font-size, 22px);
+  font-size: var(--cms-bottom-font-size, 16px);
   font-weight: 300;
-  line-height: 1.35;
+  line-height: 1.45;
+  text-align: center;
   text-transform: uppercase;
   white-space: pre-line;
 }
@@ -556,11 +557,11 @@ video {
   }
 
   .cms-bottom-block {
-    padding: 44px 18px 56px;
+    padding: 34px 18px 46px;
   }
 
   .cms-bottom-block__inner {
-    font-size: max(var(--cms-bottom-font-size, 22px), 18px);
+    font-size: max(var(--cms-bottom-font-size, 16px), 14px);
   }
 
   .cms-corner-video {

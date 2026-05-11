@@ -474,7 +474,7 @@
       </button>
       <div class="cms-corner-video__panel">
         <button class="cms-corner-video__close" type="button" aria-label="Свернуть видео">×</button>
-        <video data-cms-src="${escapeHtml(src)}" ${poster ? `poster="${escapeHtml(poster)}"` : ''} playsinline controls preload="none"></video>
+        <video data-cms-src="${escapeHtml(src)}" ${poster ? `poster="${escapeHtml(poster)}"` : ''} playsinline webkit-playsinline controls preload="metadata"></video>
       </div>
     `;
     document.body.append(widget);
@@ -483,11 +483,11 @@
     const video = widget.querySelector('video');
     button.addEventListener('click', () => {
       widget.classList.add('is-open');
-      if (!video.src) {
+      if (!video.currentSrc) {
         video.src = video.dataset.cmsSrc;
         video.load();
       }
-      video.play().catch(() => {});
+      window.setTimeout(() => video.play().catch(() => {}), 60);
     });
     close.addEventListener('click', () => {
       widget.classList.remove('is-open');
