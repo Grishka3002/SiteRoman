@@ -174,16 +174,17 @@
 .cms-review-carousel .cms-review-card__name {
   color: #f6f6f6;
   font-family: 'Druk-Mont', Arial, sans-serif;
-  font-size: clamp(22px, 2.5vw, 42px);
+  font-size: clamp(20px, 2vw, 32px);
   font-weight: 600;
+  line-height: 1.08;
 }
 
 .cms-review-carousel .cms-review-card__text {
   color: #d9d9d9;
   font-family: 'Druk-Mont', Arial, sans-serif;
-  font-size: clamp(15px, 1.1vw, 18px);
+  font-size: clamp(16px, 1.2vw, 20px);
   font-weight: 300;
-  line-height: 1.5;
+  line-height: 1.45;
   display: -webkit-box;
   -webkit-line-clamp: 7;
   -webkit-box-orient: vertical;
@@ -534,11 +535,11 @@ video {
   }
 
   .cms-review-carousel .cms-review-card__name {
-    font-size: clamp(20px, 7vw, 28px);
+    font-size: clamp(18px, 5.8vw, 24px);
   }
 
   .cms-review-carousel .cms-review-card__text {
-    font-size: var(--cms-small-text-size, 16px);
+    font-size: max(var(--cms-small-text-size, 16px), 17px);
     -webkit-line-clamp: 8;
   }
 

@@ -23,9 +23,11 @@
 
   function avatarFrom(node) {
     if (!node) return '';
+    const original = node.getAttribute('data-original');
+    if (original) return original;
     const style = node.getAttribute('style') || '';
     const match = style.match(/url\(["']?([^"')]+)["']?\)/i);
-    return match?.[1] || node.getAttribute('data-original') || '';
+    return match?.[1] || '';
   }
 
   function createMediaCard(item) {
@@ -134,6 +136,26 @@
       const current = node.style.backgroundImage || '';
       if (!current.includes(original)) node.style.backgroundImage = `url("${original}")`;
     });
+  }
+
+  function bindLazyMediaObserver() {
+    const nodes = Array.from(document.querySelectorAll('img[data-original], .t-bgimg[data-original], [data-original].t-slds__bgimg'));
+    if (!nodes.length) return;
+
+    if (!('IntersectionObserver' in window)) {
+      hydrateLazyMedia(document);
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        hydrateLazyMedia(entry.target.parentElement || document);
+        observer.unobserve(entry.target);
+      });
+    }, { rootMargin: '900px 0px' });
+
+    nodes.forEach((node) => observer.observe(node));
   }
 
   function bindLoadMoreHydration() {
@@ -599,6 +621,7 @@
   }
 
   optimizeNativeMedia();
+  bindLazyMediaObserver();
   bindLoadMoreHydration();
   preloadHeroImage();
   mountLocalForms();
