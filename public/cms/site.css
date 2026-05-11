@@ -44,6 +44,11 @@
   object-fit: cover;
 }
 
+.cms-media-card video {
+  aspect-ratio: 9 / 16;
+  background: #000;
+}
+
 .cms-media-card__caption {
   padding: 14px;
   color: #d0d0d0;
@@ -99,11 +104,24 @@
 
 .cms-video-slider .cms-media-card video:fullscreen,
 .cms-video-slider .cms-media-card video:-webkit-full-screen {
-  width: auto;
-  height: 100%;
-  max-width: 100%;
-  object-fit: contain;
-  background: #000;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  max-height: none !important;
+  aspect-ratio: auto !important;
+  object-fit: contain !important;
+  background: #000 !important;
+}
+
+video:fullscreen,
+video:-webkit-full-screen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  max-height: none !important;
+  aspect-ratio: auto !important;
+  object-fit: contain !important;
+  background: #000 !important;
 }
 
 .cms-bottom-block {
