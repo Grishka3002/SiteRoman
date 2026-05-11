@@ -485,7 +485,7 @@
     if (document.querySelector('.cms-corner-video')) return;
     const cornerVideo = settings.cornerVideo || {};
     const source = document.querySelector('video source[data-cms-src], video[data-cms-src], video source[src], video[src]');
-    const src = cornerVideo.url || source?.getAttribute('data-cms-src') || source?.getAttribute('src') || source?.parentElement?.getAttribute('data-cms-src') || source?.parentElement?.getAttribute('src') || '/assets/360p.f5fe27dad4.mp4';
+    const src = cornerVideo.url || source?.getAttribute('data-cms-src') || source?.getAttribute('src') || source?.parentElement?.getAttribute('data-cms-src') || source?.parentElement?.getAttribute('src') || '/assets/corner-video-roman.mp4';
     const poster = cornerVideo.poster || '';
     const widget = document.createElement('div');
     widget.className = 'cms-corner-video';

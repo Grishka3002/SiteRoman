@@ -21,6 +21,8 @@ const uploadsDir = join(publicDir, 'uploads');
 const port = Number(process.env.PORT || 3000);
 const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
 const databaseUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL || '';
+const defaultCornerVideoUrl = '/assets/corner-video-roman.mp4';
+const legacyCornerVideoUrl = '/assets/360p.f5fe27dad4.mp4';
 const pool = databaseUrl
   ? new Pool({
     connectionString: databaseUrl,
@@ -56,10 +58,19 @@ const editablePages = {
 const defaultCms = { media: [], reviews: [], settings: {} };
 
 function normalizeCms(cms) {
+  const settings = cms?.settings && typeof cms.settings === 'object' ? { ...cms.settings } : {};
+  const cornerVideo = settings.cornerVideo && typeof settings.cornerVideo === 'object'
+    ? { ...settings.cornerVideo }
+    : {};
+  if (!cornerVideo.url || cornerVideo.url === legacyCornerVideoUrl) {
+    cornerVideo.url = defaultCornerVideoUrl;
+  }
+  settings.cornerVideo = cornerVideo;
+
   return {
     media: Array.isArray(cms?.media) ? cms.media : [],
     reviews: Array.isArray(cms?.reviews) ? cms.reviews : [],
-    settings: cms?.settings && typeof cms.settings === 'object' ? cms.settings : {}
+    settings
   };
 }
 

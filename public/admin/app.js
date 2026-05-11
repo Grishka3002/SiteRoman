@@ -592,7 +592,7 @@ function ensureCmsSettings() {
   cmsData.settings = cmsData.settings && typeof cmsData.settings === 'object' ? cmsData.settings : {};
   cmsData.settings.cornerVideo = cmsData.settings.cornerVideo && typeof cmsData.settings.cornerVideo === 'object'
     ? cmsData.settings.cornerVideo
-    : { url: '/assets/360p.f5fe27dad4.mp4', poster: '' };
+    : { url: '/assets/corner-video-roman.mp4', poster: '' };
   cmsData.settings.videoPosters = cmsData.settings.videoPosters && typeof cmsData.settings.videoPosters === 'object'
     ? cmsData.settings.videoPosters
     : {};
