@@ -627,10 +627,10 @@ video {
   }
 
   .cms-review-carousel .cms-review-card {
-    flex-basis: calc(100% - 28px);
-    height: 240px;
-    min-height: 240px;
-    padding: 14px;
+    flex-basis: calc(100% - 44px);
+    height: 210px;
+    min-height: 210px;
+    padding: 13px;
   }
 
   .cms-review-carousel .cms-review-card__top {
@@ -639,19 +639,19 @@ video {
   }
 
   .cms-review-carousel .cms-review-card__avatar {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
   }
 
   .cms-review-carousel .cms-review-card__name {
-    font-size: clamp(16px, 4.7vw, 20px);
+    font-size: clamp(15px, 4.3vw, 18px);
     overflow-wrap: anywhere;
   }
 
   .cms-review-carousel .cms-review-card__text {
-    font-size: max(var(--cms-small-text-size, 16px), 15px);
-    line-height: 1.32;
-    -webkit-line-clamp: 6;
+    font-size: max(var(--cms-small-text-size, 16px), 14px);
+    line-height: 1.28;
+    -webkit-line-clamp: 5;
   }
 
   .t585__title {
@@ -704,15 +704,15 @@ video {
   #rec2171225751 .t396__artboard,
   #rec2171225751 .t396__filter,
   #rec2171225751 .t396__carrier {
-    height: 1450px !important;
+    height: 1530px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1701371942122"] {
-    top: 875px !important;
+    top: 1050px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1700335086807"] {
-    top: 893px !important;
+    top: 1068px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1700335086807"] .tn-atom {
@@ -722,11 +722,11 @@ video {
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1701371942146"] {
-    top: 1280px !important;
+    top: 1455px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1701371942148"] {
-    top: 1292px !important;
+    top: 1467px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1701371942126"],
@@ -737,11 +737,11 @@ video {
   #rec2171225751 .tn-elem[data-elem-id="1701371942139"],
   #rec2171225751 .tn-elem[data-elem-id="1701371942141"],
   #rec2171225751 .tn-elem[data-elem-id="1701371942144"] {
-    top: 1305px !important;
+    top: 1480px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1703661412047"] {
-    top: 1325px !important;
+    top: 1500px !important;
   }
 
   #rec2171225881 .t396__artboard,
@@ -754,6 +754,6 @@ video {
   #rec2171225881 .tn-elem[data-elem-id="1700069244574"],
   #rec2171225881 .tn-elem[data-elem-id="1700069296007"],
   #rec2171225881 .tn-elem[data-elem-id="1700069296004"] {
-    transform: translateY(18px) !important;
+    transform: translateY(0) !important;
   }
 }
