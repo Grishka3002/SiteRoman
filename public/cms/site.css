@@ -269,9 +269,25 @@ video:-webkit-full-screen {
 .cms-review-carousel .cms-review-card__name {
   color: #f6f6f6;
   font-family: 'Druk-Mont', Arial, sans-serif;
-  font-size: clamp(20px, 2vw, 32px);
+  font-size: clamp(22px, 2.2vw, 34px);
   font-weight: 600;
   line-height: 1.08;
+}
+
+.cms-review-card__person,
+.cms-review-card__company {
+  display: block;
+}
+
+.cms-review-card__company {
+  margin-top: 4px;
+  color: #bdbdbd;
+  font-family: Arial, sans-serif;
+  font-size: 0.46em;
+  font-weight: 700;
+  line-height: 1.22;
+  letter-spacing: 0;
+  text-transform: uppercase;
 }
 
 .cms-review-carousel .cms-review-card__text {
@@ -646,6 +662,12 @@ video {
   .cms-review-carousel .cms-review-card__name {
     font-size: clamp(15px, 4.3vw, 18px);
     overflow-wrap: anywhere;
+  }
+
+  .cms-review-carousel .cms-review-card__company {
+    margin-top: 2px;
+    font-size: 0.6em;
+    line-height: 1.18;
   }
 
   .cms-review-carousel .cms-review-card__text {

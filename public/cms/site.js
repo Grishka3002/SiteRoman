@@ -277,16 +277,37 @@
     else document.body.append(block);
   }
 
+  function splitReviewName(value) {
+    const name = String(value || '').trim();
+    const match = name.match(/^(.+?)\s+[—–-]\s+(.+)$/);
+    if (!match) return { person: name, company: '' };
+    return {
+      person: match[1].trim(),
+      company: match[2].trim()
+    };
+  }
+
+  function reviewNameHtml(value) {
+    const parts = splitReviewName(value);
+    return `
+      <span class="cms-review-card__person">${escapeHtml(parts.person)}</span>
+      ${parts.company ? `<span class="cms-review-card__company">${escapeHtml(parts.company)}</span>` : ''}
+    `;
+  }
+
   function createReviewCard(item, state) {
+    const nameParts = splitReviewName(item.name);
     const card = document.createElement('article');
     card.className = `cms-review-card cms-review-card_${state}`;
     card.tabIndex = 0;
     card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', `Открыть отзыв: ${nameParts.person || item.name || 'без имени'}`);
     card.setAttribute('aria-label', `Открыть отзыв: ${item.name || 'без имени'}`);
+    card.setAttribute('aria-label', `Открыть отзыв: ${nameParts.person || item.name || 'без имени'}`);
     card.innerHTML = `
       <div class="cms-review-card__top">
         ${item.avatar ? `<img class="cms-review-card__avatar" src="${escapeHtml(item.avatar)}" alt="">` : '<div class="cms-review-card__avatar"></div>'}
-        <h3 class="cms-review-card__name">${escapeHtml(item.name)}</h3>
+        <h3 class="cms-review-card__name">${reviewNameHtml(item.name)}</h3>
       </div>
       <p class="cms-review-card__text">${escapeHtml(item.text)}</p>
     `;
@@ -335,7 +356,7 @@
     } else {
       avatar.innerHTML = '';
     }
-    name.textContent = item.name || '';
+    name.innerHTML = reviewNameHtml(item.name);
     text.textContent = item.text || '';
     modal.classList.add('is-open');
     document.body.classList.add('cms-modal-open');
