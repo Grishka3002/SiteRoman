@@ -46,9 +46,16 @@
   }
 
   function ensureVideoPreview(video, poster) {
-    if (!video || !poster || video.dataset.cmsPreviewReady === 'true') return;
+    if (!video || !poster) return;
     const parent = video.parentElement;
     if (!parent) return;
+
+    if (video.dataset.cmsPreviewReady === 'true') {
+      const preview = parent.querySelector('.cms-video-preview');
+      video.poster = poster;
+      if (preview && preview.getAttribute('src') !== poster) preview.src = poster;
+      return;
+    }
 
     parent.classList.add('cms-video-has-preview');
     video.classList.add('cms-video-with-preview');
@@ -64,9 +71,15 @@
     preview.setAttribute('aria-hidden', 'true');
     parent.append(preview);
 
-    const hidePreview = () => preview.classList.add('is-hidden');
+    const hidePreview = () => {
+      preview.classList.add('is-hidden');
+      parent.classList.add('cms-video-preview-hidden');
+    };
     const showPreview = () => {
-      if (!video.currentTime || video.ended) preview.classList.remove('is-hidden');
+      if (!video.currentTime || video.ended) {
+        preview.classList.remove('is-hidden');
+        parent.classList.remove('cms-video-preview-hidden');
+      }
     };
 
     preview.addEventListener('click', () => {
@@ -79,7 +92,10 @@
     });
     video.addEventListener('playing', hidePreview);
     video.addEventListener('pause', showPreview);
-    video.addEventListener('ended', () => preview.classList.remove('is-hidden'));
+    video.addEventListener('ended', () => {
+      preview.classList.remove('is-hidden');
+      parent.classList.remove('cms-video-preview-hidden');
+    });
   }
 
   function createMediaCard(item) {
@@ -692,6 +708,7 @@
   }
 
   optimizeNativeMedia();
+  applyVideoPosters();
   bindLazyMediaObserver();
   bindLoadMoreHydration();
   preloadHeroImage();

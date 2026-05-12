@@ -137,6 +137,39 @@ function setVideoSource(video, url) {
   });
 }
 
+function setMediaValue(item, url) {
+  if (!item || !url) return;
+  if (item.type === 'image') setImageSource(item.node, url);
+  else if (item.type === 'background') setBackgroundImage(item.node, url);
+  else if (item.type === 'video') setVideoSource(item.node, url);
+}
+
+function canReorderSubBlocks(block, sub) {
+  return Boolean(block?.subBlocks?.length > 1 && sub?.id?.startsWith('media-') && sub.items?.length === 1);
+}
+
+function swapMediaSubBlocks(block, currentSubId, direction) {
+  const currentIndex = block.subBlocks.findIndex((sub) => sub.id === currentSubId);
+  const targetIndex = currentIndex + direction;
+  const current = block.subBlocks[currentIndex];
+  const target = block.subBlocks[targetIndex];
+  if (!current || !target || !canReorderSubBlocks(block, current) || !canReorderSubBlocks(block, target)) return false;
+
+  const currentItem = current.items[0];
+  const targetItem = target.items[0];
+  if (currentItem.type !== targetItem.type) {
+    status('Можно менять местами только одинаковые типы медиа.', true);
+    return false;
+  }
+
+  const currentUrl = fieldValue(currentItem.node, currentItem.type);
+  const targetUrl = fieldValue(targetItem.node, targetItem.type);
+  setMediaValue(currentItem, targetUrl);
+  setMediaValue(targetItem, currentUrl);
+  activeSubByBlock[block.id] = target.id;
+  return true;
+}
+
 function setPlainTextKeepingWrapper(node, value) {
   if (!node) return;
   const target = node.querySelector('[data-customstyle]') || node;
@@ -961,6 +994,25 @@ function renderBlockEditor() {
       subTabs.append(button);
     });
     const activeSub = block.subBlocks.find((sub) => sub.id === currentSubId) || block.subBlocks[0];
+    const activeIndex = block.subBlocks.indexOf(activeSub);
+    if (canReorderSubBlocks(block, activeSub)) {
+      const controls = document.createElement('div');
+      controls.className = 'sub-order-controls';
+      controls.innerHTML = `
+        <span>Порядок фото</span>
+        <button type="button" class="secondary" data-move-sub="-1" ${activeIndex <= 0 ? 'disabled' : ''}>Выше</button>
+        <button type="button" class="secondary" data-move-sub="1" ${activeIndex >= block.subBlocks.length - 1 ? 'disabled' : ''}>Ниже</button>
+      `;
+      controls.querySelectorAll('[data-move-sub]').forEach((button) => {
+        button.addEventListener('click', () => {
+          if (swapMediaSubBlocks(block, activeSub.id, Number(button.dataset.moveSub))) {
+            renderBlockEditor();
+            status('Порядок фото изменен. Нажмите «Сохранить страницу».');
+          }
+        });
+      });
+      list.before(controls);
+    }
     renderItems(list, activeSub.items);
   } else {
     subTabs.remove();

@@ -224,6 +224,24 @@ label {
   margin-top: 20px;
 }
 
+.sub-order-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 16px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #141414;
+}
+
+.sub-order-controls span {
+  color: var(--muted);
+  font-size: 14px;
+  margin-right: auto;
+}
+
 .settings-grid {
   display: grid;
   grid-template-columns: minmax(280px, 0.9fr) minmax(320px, 1.1fr);
