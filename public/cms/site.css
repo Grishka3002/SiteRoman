@@ -279,7 +279,7 @@ video:-webkit-full-screen {
   display: block;
 }
 
-.cms-review-card__company {
+.cms-review-card__person {
   margin-top: 4px;
   color: #bdbdbd;
   font-family: Arial, sans-serif;
@@ -664,7 +664,7 @@ video {
     overflow-wrap: anywhere;
   }
 
-  .cms-review-carousel .cms-review-card__company {
+  .cms-review-carousel .cms-review-card__person {
     margin-top: 2px;
     font-size: 0.6em;
     line-height: 1.18;

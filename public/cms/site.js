@@ -289,9 +289,11 @@
 
   function reviewNameHtml(value) {
     const parts = splitReviewName(value);
+    const primary = parts.company || parts.person;
+    const secondary = parts.company ? parts.person : '';
     return `
-      <span class="cms-review-card__person">${escapeHtml(parts.person)}</span>
-      ${parts.company ? `<span class="cms-review-card__company">${escapeHtml(parts.company)}</span>` : ''}
+      <span class="cms-review-card__company">${escapeHtml(primary)}</span>
+      ${secondary ? `<span class="cms-review-card__person">${escapeHtml(secondary)}</span>` : ''}
     `;
   }
 
