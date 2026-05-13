@@ -218,6 +218,93 @@ video:-webkit-full-screen {
   white-space: pre-line;
 }
 
+.cms-contact-record {
+  padding-top: 78px !important;
+  padding-bottom: 34px !important;
+}
+
+.cms-contact-record .t396 {
+  display: none !important;
+}
+
+.cms-contact-panel {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 20px;
+  background: #000;
+  color: #fff;
+  font-family: var(--t-text-font, Arial), sans-serif;
+  text-align: center;
+}
+
+.cms-contact-panel__title {
+  margin: 0 0 30px;
+  color: #fff;
+  font-family: 'Druk-Mont', Arial, sans-serif;
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 600;
+  line-height: 1.08;
+  text-transform: uppercase;
+}
+
+.cms-contact-panel__buttons {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  gap: 14px;
+}
+
+.cms-contact-button {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 55px;
+  padding: 0 20px;
+  border-radius: 10px;
+  background: #1d1d1d;
+  color: #fff !important;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none !important;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.cms-contact-button:hover {
+  transform: scale(1.035);
+  background: #262626;
+}
+
+.cms-contact-button_primary {
+  grid-column: 1 / -1;
+  max-width: 374px;
+  margin: 0 auto 2px;
+  background: #ffe40f;
+  color: #000 !important;
+}
+
+.cms-contact-button_primary:hover {
+  background: #ffe40f;
+}
+
+.cms-contact-button__phone {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  margin-right: 16px;
+  line-height: 24px;
+}
+
+.cms-contact-button__phone::before {
+  content: '\260E';
+  color: #000;
+  font-family: Arial, sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+}
+
 .cms-review-card {
   border-radius: 14px;
   background: #171717;
@@ -702,7 +789,7 @@ video {
   .t396__elem[data-elem-type="video"].cms-native-video-preview .cms-video-has-preview {
     width: 100% !important;
     height: 100% !important;
-    aspect-ratio: 9 / 16;
+    display: block !important;
     overflow: hidden !important;
     border-radius: 12px !important;
     background: #000 !important;
@@ -833,21 +920,60 @@ video {
     border-top-width: 11px;
     border-bottom-width: 11px;
   }
+
+  .cms-contact-record {
+    padding-top: 54px !important;
+    padding-bottom: 18px !important;
+  }
+
+  .cms-contact-panel {
+    padding: 0 20px;
+  }
+
+  .cms-contact-panel__title {
+    font-size: 28px;
+  }
+
+  .cms-contact-panel__buttons {
+    grid-template-columns: 1fr;
+    max-width: 374px;
+    margin: 0 auto;
+    gap: 16px;
+  }
+
+  .cms-contact-button,
+  .cms-contact-button_primary {
+    width: 100%;
+    max-width: none;
+    min-height: 85px;
+    margin: 0;
+    font-size: 24px;
+    border-radius: 12px;
+  }
+
+  .cms-contact-button_primary {
+    min-height: 85px;
+    white-space: nowrap;
+  }
+
+  .cms-contact-button__phone {
+    margin-right: 18px;
+  }
 }
 
 @media (max-width: 479px) {
   #rec2171225751 .t396__artboard,
   #rec2171225751 .t396__filter,
   #rec2171225751 .t396__carrier {
-    height: 1530px !important;
+    height: 1790px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1701371942122"] {
-    top: 1050px !important;
+    top: 1310px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1700335086807"] {
-    top: 1068px !important;
+    top: 1328px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1700335086807"] .tn-atom {
@@ -857,11 +983,11 @@ video {
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1701371942146"] {
-    top: 1455px !important;
+    top: 1715px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1701371942148"] {
-    top: 1467px !important;
+    top: 1727px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1701371942126"],
@@ -872,11 +998,11 @@ video {
   #rec2171225751 .tn-elem[data-elem-id="1701371942139"],
   #rec2171225751 .tn-elem[data-elem-id="1701371942141"],
   #rec2171225751 .tn-elem[data-elem-id="1701371942144"] {
-    top: 1480px !important;
+    top: 1740px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1703661412047"] {
-    top: 1500px !important;
+    top: 1760px !important;
   }
 
   #rec2171225881 .t396__artboard,

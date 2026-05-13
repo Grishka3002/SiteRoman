@@ -291,6 +291,43 @@
     else document.body.append(block);
   }
 
+  function contactHrefFrom(record, match) {
+    return Array.from(record?.querySelectorAll('a[href]') || [])
+      .find((link) => match(link.href))?.getAttribute('href') || '';
+  }
+
+  function mountWeddingContacts() {
+    if (route !== '/wedding' || document.querySelector('.cms-contact-panel_wedding')) return;
+    const record = document.querySelector('#rec1025539536');
+    if (!record) return;
+
+    const phoneHref = contactHrefFrom(record, (href) => href.startsWith('tel:')) || 'tel:+79949943640';
+    const telegramHref = contactHrefFrom(record, (href) => href.includes('t.me/')) || 'https://t.me/Roman25art';
+    const maxHref = 'https://max.ru/u/f9LHodD0cOJGaGFA_leE-fZbKQ8LIXojc7B2NdYqBNJUdQI2xqFU_scLtIQ';
+    const instagramHref = contactHrefFrom(record, (href) => href.includes('instagram.com')) || 'https://instagram.com/shymilovroman';
+    const whatsappHref = contactHrefFrom(record, (href) => href.includes('wa.me/')) || 'https://wa.me/79949943640';
+
+    const panel = document.createElement('section');
+    panel.className = 'cms-contact-panel cms-contact-panel_wedding';
+    panel.innerHTML = `
+      <h2 class="cms-contact-panel__title">познакомимся?</h2>
+      <div class="cms-contact-panel__buttons">
+        <a class="cms-contact-button cms-contact-button_primary" href="${escapeHtml(phoneHref)}">
+          <span class="cms-contact-button__phone" aria-hidden="true"></span>
+          <span>8 (994) 994-36-40</span>
+        </a>
+        <a class="cms-contact-button" href="${escapeHtml(telegramHref)}" target="_blank" rel="noopener">Telegram*</a>
+        <a class="cms-contact-button" href="${escapeHtml(maxHref)}" target="_blank" rel="noopener">MAX</a>
+        <a class="cms-contact-button" href="${escapeHtml(instagramHref)}" target="_blank" rel="noopener">Instagram*</a>
+        <a class="cms-contact-button" href="${escapeHtml(whatsappHref)}" target="_blank" rel="noopener">WhatsApp*</a>
+      </div>
+    `;
+
+    record.classList.add('cms-contact-record');
+    record.querySelector('.t396')?.setAttribute('aria-hidden', 'true');
+    record.append(panel);
+  }
+
   function splitReviewName(value) {
     const name = String(value || '').trim();
     const match = name.match(/^(.+?)\s+[—–-]\s+(.+)$/);
@@ -761,6 +798,7 @@
   bindLoadMoreHydration();
   preloadHeroImage();
   mountLocalForms();
+  mountWeddingContacts();
 
   fetch('/api/cms')
     .then((response) => response.json())
