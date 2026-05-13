@@ -384,6 +384,15 @@
     document.body.classList.remove('cms-modal-open');
   }
 
+  function updateReviewMoreButtons(root = document) {
+    root.querySelectorAll('.cms-review-card').forEach((card) => {
+      const text = card.querySelector('.cms-review-card__text');
+      if (!text) return;
+      const overflowed = text.scrollHeight > text.clientHeight + 2 || text.scrollWidth > text.clientWidth + 2;
+      card.classList.toggle('cms-review-card_fit', !overflowed);
+    });
+  }
+
   function collectTildaReviews() {
     return Array.from(document.querySelectorAll('.t958__slidecontainer .t958__card')).map((card) => ({
       name: textFrom(card.querySelector('.t958__author-name')),
@@ -488,6 +497,7 @@
         dots.append(button);
       });
       setActive(active, false);
+      requestAnimationFrame(() => updateReviewMoreButtons(carousel));
     }
 
     track.addEventListener('transitionend', (event) => {
@@ -501,6 +511,7 @@
     });
 
     render();
+    window.setTimeout(() => updateReviewMoreButtons(carousel), 450);
     window.addEventListener('resize', () => {
       const nextSideSlots = getSideSlots();
       if (nextSideSlots !== sideSlots) {
@@ -509,6 +520,7 @@
         return;
       }
       moveTrack(false);
+      requestAnimationFrame(() => updateReviewMoreButtons(carousel));
     });
     restartAutoplay();
     return true;
