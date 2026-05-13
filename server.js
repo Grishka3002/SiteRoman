@@ -206,11 +206,11 @@ async function optimizeVideo(content, originalName) {
     await runFfmpeg([
       '-y', '-i', inputPath,
       '-map', '0:v:0', '-map', '0:a?',
-      '-vf', 'scale=if(gt(iw\\,720)\\,720\\,iw):-2',
-      '-c:v', 'libx264', '-preset', 'slow', '-crf', '29',
-      '-maxrate', '1400k', '-bufsize', '2800k',
+      '-vf', 'scale=if(gt(iw\\,900)\\,900\\,iw):-2',
+      '-c:v', 'libx264', '-preset', 'slow', '-crf', '27',
+      '-maxrate', '2200k', '-bufsize', '4400k',
       '-pix_fmt', 'yuv420p',
-      '-c:a', 'aac', '-b:a', '64k', '-ac', '1',
+      '-c:a', 'aac', '-b:a', '80k', '-ac', '1',
       '-movflags', '+faststart',
       outputPath
     ]);

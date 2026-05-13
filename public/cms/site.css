@@ -166,6 +166,7 @@
   scroll-snap-align: start;
   border: 1px solid rgba(255, 228, 15, 0.26);
   width: 100%;
+  contain: layout paint;
 }
 
 .cms-video-slider .cms-media-card video {
@@ -667,11 +668,25 @@ video {
   }
 
   .cms-video-slider {
-    padding: 34px 16px 50px;
+    padding: 30px 16px 44px;
   }
 
   .cms-video-slider__track {
-    grid-auto-columns: 88%;
+    grid-auto-columns: minmax(156px, 46vw);
+    gap: 12px;
+    align-items: start;
+    padding-bottom: 10px;
+  }
+
+  .cms-video-slider .cms-media-card video,
+  .cms-video-slider .cms-media-card .cms-video-preview {
+    height: clamp(250px, 82vw, 340px);
+    aspect-ratio: auto;
+    object-fit: cover;
+  }
+
+  .cms-video-slider .cms-media-card video {
+    min-height: 0;
   }
 
   .cms-review-carousel__track {
