@@ -291,6 +291,54 @@
     else document.body.append(block);
   }
 
+  function mountCorporateGuarantees() {
+    if (route !== '/corporate' || document.querySelector('.cms-guarantee-list')) return;
+    const record = document.querySelector('#rec2171225881');
+    if (!record) return;
+
+    const items = [
+      {
+        title: 'Фиксированная смета и сроки',
+        text: 'Никаких доплат после подписания договора. Соблюдение дедлайнов и ответственность за результат.'
+      },
+      {
+        title: 'Системный подход',
+        text: 'На вашем проекте работают только аккредитованные специалисты агентства.'
+      },
+      {
+        title: 'Безопасность и этика',
+        text: 'Сохранение конфиденциальности и соблюдение регламентов компании.'
+      },
+      {
+        title: 'Сценарий без клише',
+        text: 'Сценарий строится под цели компании и характер гостей. Без стандартных конкурсов: только уместные интерактивы, которые поддерживают смысл события.'
+      },
+      {
+        title: 'Управляемая атмосфера',
+        text: 'Каждый гость будет чувствовать себя уместно. Это не просто "ведение", это модерация эмоций в зале.'
+      }
+    ];
+
+    const section = document.createElement('section');
+    section.className = 'cms-guarantee-list';
+    section.innerHTML = `
+      <h2 class="cms-guarantee-list__title">Я вам гарантирую</h2>
+      <div class="cms-guarantee-list__items">
+        ${items.map((item, index) => `
+          <article class="cms-guarantee-list__item">
+            <span class="cms-guarantee-list__number">${index + 1}</span>
+            <div class="cms-guarantee-list__card">
+              <h3>${escapeHtml(item.title)}</h3>
+              <p>${escapeHtml(item.text)}</p>
+            </div>
+          </article>
+        `).join('')}
+      </div>
+    `;
+    record.classList.add('cms-guarantee-record');
+    record.append(section);
+  }
+
   function contactHrefFrom(record, match) {
     return Array.from(record?.querySelectorAll('a[href]') || [])
       .find((link) => match(link.href))?.getAttribute('href') || '';
@@ -635,8 +683,26 @@
     });
   }
 
+  function neutralizeLegacyVideoWidgets() {
+    document.querySelectorAll('.video-widget, .t657, [id*="lp9"], [class*="lp9"]').forEach((node) => {
+      if (!node.closest('.cms-corner-video')) {
+        node.style.setProperty('display', 'none', 'important');
+        node.setAttribute('aria-hidden', 'true');
+      }
+    });
+
+    document.querySelectorAll('.video-widget video, video.video-widget__video').forEach((video) => {
+      video.pause?.();
+      video.removeAttribute('autoplay');
+      video.removeAttribute('src');
+      video.querySelectorAll('source').forEach((source) => source.removeAttribute('src'));
+      video.load?.();
+    });
+  }
+
   function mountCornerVideo(settings = {}) {
     hideExternalVideoWidget();
+    neutralizeLegacyVideoWidgets();
     if (document.querySelector('.cms-corner-video')) return;
     const cornerVideo = settings.cornerVideo || {};
     const source = document.querySelector('video source[data-cms-src], video[data-cms-src], video source[src], video[src]');
@@ -687,8 +753,15 @@
       widget.classList.remove('is-open');
       video.pause();
     });
-    window.setTimeout(hideExternalVideoWidget, 600);
-    window.setTimeout(hideExternalVideoWidget, 1800);
+    window.setTimeout(() => {
+      hideExternalVideoWidget();
+      neutralizeLegacyVideoWidgets();
+    }, 600);
+    window.setTimeout(() => {
+      hideExternalVideoWidget();
+      neutralizeLegacyVideoWidgets();
+    }, 1800);
+    window.setInterval(neutralizeLegacyVideoWidgets, 5000);
   }
 
   function collectFormFields(form) {
@@ -799,6 +872,8 @@
   preloadHeroImage();
   mountLocalForms();
   mountWeddingContacts();
+  mountCorporateGuarantees();
+  neutralizeLegacyVideoWidgets();
 
   fetch('/api/cms')
     .then((response) => response.json())
