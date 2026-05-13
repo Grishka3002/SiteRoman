@@ -206,8 +206,9 @@ async function optimizeVideo(content, originalName) {
     await runFfmpeg([
       '-y', '-i', inputPath,
       '-map', '0:v:0', '-map', '0:a?',
-      '-c:v', 'libx264', '-preset', 'slow', '-crf', '34',
-      '-maxrate', '520k', '-bufsize', '1040k',
+      '-vf', 'scale=if(gt(iw\\,720)\\,720\\,iw):-2',
+      '-c:v', 'libx264', '-preset', 'slow', '-crf', '29',
+      '-maxrate', '1400k', '-bufsize', '2800k',
       '-pix_fmt', 'yuv420p',
       '-c:a', 'aac', '-b:a', '64k', '-ac', '1',
       '-movflags', '+faststart',
@@ -218,6 +219,29 @@ async function optimizeVideo(content, originalName) {
   } catch (error) {
     console.error('Video optimization failed:', error.message);
     return content;
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+}
+
+async function createVideoPoster(content, originalName) {
+  const tempDir = await mkdtemp(join(tmpdir(), 'site-poster-'));
+  const inputPath = join(tempDir, originalName || 'input.mp4');
+  const posterPath = join(tempDir, 'poster.webp');
+
+  try {
+    await writeFile(inputPath, content);
+    await runFfmpeg([
+      '-y', '-ss', '00:00:00.25', '-i', inputPath,
+      '-frames:v', '1',
+      '-vf', 'scale=720:-2',
+      '-q:v', '65',
+      posterPath
+    ]);
+    return await readFile(posterPath);
+  } catch (error) {
+    console.error('Video poster generation failed:', error.message);
+    return null;
   } finally {
     await rm(tempDir, { recursive: true, force: true });
   }
@@ -370,7 +394,9 @@ async function handleUpload(request, response) {
   const isVideo = /^video\//.test(file.contentType);
   const safeName = isImage
     ? originalName.replace(/\.[^.]+$/, '') + '.webp'
-    : originalName;
+    : isVideo
+      ? originalName.replace(/\.[^.]+$/, '') + '.mp4'
+      : originalName;
   const finalName = `${fileId}-${safeName}`;
   const filePath = join(uploadsDir, finalName);
   let content = isImage
@@ -381,7 +407,9 @@ async function handleUpload(request, response) {
       .toBuffer()
     : file.content;
   if (isVideo) content = await optimizeVideo(content, originalName);
-  const finalContentType = isImage ? 'image/webp' : file.contentType;
+  const finalContentType = isImage ? 'image/webp' : isVideo ? 'video/mp4' : file.contentType;
+  const posterName = isVideo ? finalName.replace(/\.[^.]+$/, '.poster.webp') : '';
+  const posterContent = isVideo ? await createVideoPoster(content, safeName) : null;
   const savedToDatabase = await saveUploadToDatabase({
     finalName,
     originalName,
@@ -397,9 +425,23 @@ async function handleUpload(request, response) {
       // Postgres is the durable source on Railway; this file is only a runtime cache.
     }
   }
+  if (posterName && posterContent) {
+    await saveUploadToDatabase({
+      finalName: posterName,
+      originalName: posterName,
+      contentType: 'image/webp',
+      content: posterContent
+    });
+    try {
+      await writeFile(join(uploadsDir, posterName), posterContent);
+    } catch {
+      // Postgres is enough on Railway.
+    }
+  }
 
   sendJson(response, 200, {
     url: `/uploads/${finalName}`,
+    poster: posterName && posterContent ? `/uploads/${posterName}` : '',
     name: safeName,
     type: finalContentType,
     size: content.length,

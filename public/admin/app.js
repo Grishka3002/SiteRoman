@@ -137,6 +137,11 @@ function setVideoSource(video, url) {
   });
 }
 
+function posterFromVideoUrl(url) {
+  const clean = String(url || '').split('?')[0];
+  return /\.(mp4|mov|webm)$/i.test(clean) ? clean.replace(/\.(mp4|mov|webm)$/i, '.poster.webp') : '';
+}
+
 function setMediaValue(item, url) {
   if (!item || !url) return;
   if (item.type === 'image') setImageSource(item.node, url);
@@ -173,7 +178,7 @@ function swapMediaSubBlocks(block, currentSubId, direction) {
 function setPlainTextKeepingWrapper(node, value) {
   if (!node) return;
   const target = node.querySelector('[data-customstyle]') || node;
-  target.textContent = value;
+  target.innerHTML = textToRichHtml(value);
 }
 
 function setReviewTextKeepingStyle(node, value) {
@@ -182,6 +187,46 @@ function setReviewTextKeepingStyle(node, value) {
   node.innerHTML = lines.length
     ? lines.map((line) => `<p style="text-align: left;">${escapeHtml(line).replace(/\n/g, '<br>')}</p>`).join('')
     : '<p style="text-align: left;"></p>';
+}
+
+function textToRichHtml(value) {
+  const normalized = String(value || '')
+    .replace(/\r/g, '')
+    .replace(/\u200b/g, '')
+    .trim();
+  if (!normalized) return '';
+  return normalized
+    .split(/\n{2,}/)
+    .map((part) => escapeHtml(part.trim()).replace(/\n/g, '<br>'))
+    .join('<br><br>');
+}
+
+function richTextToEditorValue(node) {
+  if (!node) return '';
+  const target = node.querySelector('[data-customstyle]') || node;
+  const chunkForNode = (child) => {
+    if (child.nodeType === Node.TEXT_NODE) {
+      return child.textContent
+        .replace(/\u00a0/g, ' ')
+        .replace(/\u200b/g, '');
+    }
+    if (child.nodeType !== Node.ELEMENT_NODE) return '';
+    if (child.tagName === 'BR') return '\n';
+
+    const inner = Array.from(child.childNodes).map(chunkForNode).join('');
+    if (child.tagName === 'P' || child.tagName === 'DIV' || child.tagName === 'LI') {
+      return `${inner}\n\n`;
+    }
+    return inner;
+  };
+
+  return Array.from(target.childNodes)
+    .map(chunkForNode)
+    .join('')
+    .replace(/\n[ \t]+/g, '\n')
+    .replace(/[ \t]+\n/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
 }
 
 async function upload(file) {
@@ -273,7 +318,7 @@ function fieldValue(node, type) {
     return /url\(["']?([^"')]+)["']?\)/i.exec(style)?.[1] || node.getAttribute('data-original') || '';
   }
   if (type === 'video') return node.getAttribute('data-cms-src') || node.getAttribute('src') || $('source', node)?.getAttribute('data-cms-src') || $('source', node)?.getAttribute('src') || '';
-  return node.textContent.trim().replace(/\n{3,}/g, '\n\n');
+  return richTextToEditorValue(node);
 }
 
 function collectEditableItems(root, prefix = 'item') {
@@ -632,6 +677,7 @@ function ensureCmsSettings() {
   cmsData.settings.typography = cmsData.settings.typography && typeof cmsData.settings.typography === 'object'
     ? cmsData.settings.typography
     : { minMobileFontSize: 16 };
+  if (!cmsData.settings.typography.textColor) cmsData.settings.typography.textColor = '#e6e6e6';
   cmsData.settings.bottomBlock = cmsData.settings.bottomBlock && typeof cmsData.settings.bottomBlock === 'object'
     ? cmsData.settings.bottomBlock
     : { text: '', fontSize: 16 };
@@ -676,6 +722,9 @@ function renderCmsSettings(panel) {
           <label>Размер текста нижнего блока, px
             <input data-setting-bottom-font type="number" min="12" max="28" value="${escapeHtml(bottomBlock.fontSize || 16)}">
           </label>
+          <label>Цвет основного текста
+            <input data-setting-text-color type="color" value="${escapeHtml(typography.textColor || '#e6e6e6')}">
+          </label>
         </div>
         <p class="muted">Мелкий текст на мобильной версии будет автоматически увеличен до этого значения.</p>
       </section>
@@ -695,7 +744,10 @@ function renderCmsSettings(panel) {
     title: 'Общее видео',
     accept: 'video/*',
     url: corner.url,
-    onUpload: (url) => { corner.url = url; }
+    onUpload: (url) => {
+      corner.url = url;
+      corner.poster = posterFromVideoUrl(url) || corner.poster;
+    }
   });
   renderSettingsUpload($('[data-setting="corner-poster"]', panel), {
     title: 'Превью видео в углу',
@@ -710,6 +762,9 @@ function renderCmsSettings(panel) {
   });
   $('[data-setting-bottom-font]', panel).addEventListener('input', (event) => {
     bottomBlock.fontSize = Number(event.target.value || 16);
+  });
+  $('[data-setting-text-color]', panel).addEventListener('input', (event) => {
+    typography.textColor = event.target.value || '#e6e6e6';
   });
   $('[data-setting-bottom-text]', panel).addEventListener('input', (event) => {
     bottomBlock.text = event.target.value;
@@ -796,7 +851,9 @@ function renderCmsVideoList(list) {
       try {
         const uploadedUrl = await upload(event.target.files[0]);
         cmsData.media[realIndex].url = uploadedUrl;
+        cmsData.media[realIndex].poster = cmsData.media[realIndex].poster || posterFromVideoUrl(uploadedUrl);
         $('video', row).src = uploadedUrl;
+        if (cmsData.media[realIndex].poster) $('video', row).poster = cmsData.media[realIndex].poster;
         $('[data-video-file]', row).nextElementSibling.textContent = uploadedUrl;
         await saveCmsData();
         status('Видео обновлено.');
@@ -935,7 +992,7 @@ function renderVideoManager(panel) {
         page: cmsPageValue(),
         type: videoFile.type || 'video/mp4',
         url,
-        poster,
+        poster: poster || posterFromVideoUrl(url),
         caption: String(formData.get('caption') || '').trim()
       }];
       await saveCmsData();

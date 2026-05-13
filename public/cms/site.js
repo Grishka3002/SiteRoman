@@ -33,8 +33,8 @@
 
   function posterFromVideoSrc(src) {
     const clean = String(src || '').split('?')[0];
-    if (!clean.startsWith('/assets/') || !/\.mp4$/i.test(clean)) return '';
-    return clean.replace(/\.mp4$/i, '.poster.webp');
+    if (!/^\/(?:assets|uploads)\//.test(clean) || !/\.(mp4|mov|webm)$/i.test(clean)) return '';
+    return clean.replace(/\.(mp4|mov|webm)$/i, '.poster.webp');
   }
 
   function videoSourceFrom(video) {
@@ -46,28 +46,39 @@
   }
 
   function ensureVideoPreview(video, poster) {
-    if (!video || !poster) return;
+    if (!video) return;
     const parent = video.parentElement;
     if (!parent) return;
 
     if (video.dataset.cmsPreviewReady === 'true') {
       const preview = parent.querySelector('.cms-video-preview');
-      video.poster = poster;
-      if (preview && preview.getAttribute('src') !== poster) preview.src = poster;
+      if (poster) video.poster = poster;
+      if (preview && poster && preview.getAttribute('src') !== poster) {
+        preview.classList.remove('cms-video-preview_placeholder');
+        preview.src = poster;
+      }
       return;
     }
 
     parent.classList.add('cms-video-has-preview');
     video.classList.add('cms-video-with-preview');
-    video.poster = poster;
+    if (poster) video.poster = poster;
     video.dataset.cmsPreviewReady = 'true';
 
-    const preview = document.createElement('img');
+    const preview = document.createElement(poster ? 'img' : 'div');
     preview.className = 'cms-video-preview';
-    preview.src = poster;
-    preview.alt = '';
-    preview.decoding = 'async';
-    preview.loading = 'lazy';
+    if (poster) {
+      preview.src = poster;
+      preview.alt = '';
+      preview.decoding = 'async';
+      preview.loading = 'lazy';
+      preview.addEventListener('error', () => {
+        preview.removeAttribute('src');
+        preview.classList.add('cms-video-preview_placeholder');
+      }, { once: true });
+    } else {
+      preview.classList.add('cms-video-preview_placeholder');
+    }
     preview.setAttribute('aria-hidden', 'true');
     parent.append(preview);
 
@@ -250,7 +261,9 @@
 
   function applyTypographySettings(settings = {}) {
     const minSize = Number(settings.typography?.minMobileFontSize || 16);
+    const textColor = settings.typography?.textColor || '#e6e6e6';
     document.documentElement.style.setProperty('--cms-small-text-size', `${minSize}px`);
+    document.documentElement.style.setProperty('--cms-readable-text-color', textColor);
     if (!window.matchMedia('(max-width: 640px)').matches) return;
 
     document.querySelectorAll('.t-text, .t-descr, .t-name, .t-title, .t-card__descr, .t585__text, .t958__review-text, .tn-atom').forEach((node) => {
@@ -304,14 +317,13 @@
     card.tabIndex = 0;
     card.setAttribute('role', 'button');
     card.setAttribute('aria-label', `Открыть отзыв: ${nameParts.person || item.name || 'без имени'}`);
-    card.setAttribute('aria-label', `Открыть отзыв: ${item.name || 'без имени'}`);
-    card.setAttribute('aria-label', `Открыть отзыв: ${nameParts.person || item.name || 'без имени'}`);
     card.innerHTML = `
       <div class="cms-review-card__top">
         ${item.avatar ? `<img class="cms-review-card__avatar" src="${escapeHtml(item.avatar)}" alt="">` : '<div class="cms-review-card__avatar"></div>'}
         <h3 class="cms-review-card__name">${reviewNameHtml(item.name)}</h3>
       </div>
       <p class="cms-review-card__text">${escapeHtml(item.text)}</p>
+      <span class="cms-review-card__more">Читать полностью</span>
     `;
     card.addEventListener('click', () => openReviewModal(item));
     card.addEventListener('keydown', (event) => {
