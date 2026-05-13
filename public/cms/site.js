@@ -61,6 +61,7 @@
     }
 
     parent.classList.add('cms-video-has-preview');
+    video.closest('.t396__elem[data-elem-type="video"]')?.classList.add('cms-native-video-preview');
     video.classList.add('cms-video-with-preview');
     if (poster) video.poster = poster;
     video.dataset.cmsPreviewReady = 'true';
