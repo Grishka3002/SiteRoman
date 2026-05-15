@@ -263,8 +263,10 @@
   function applyTypographySettings(settings = {}) {
     const minSize = Number(settings.typography?.minMobileFontSize || 16);
     const textColor = settings.typography?.textColor || '#e6e6e6';
+    const processTextScale = Math.min(1.6, Math.max(0.8, Number(settings.typography?.processTextScale || 1.15)));
     document.documentElement.style.setProperty('--cms-small-text-size', `${minSize}px`);
     document.documentElement.style.setProperty('--cms-readable-text-color', textColor);
+    document.documentElement.style.setProperty('--cms-process-text-scale', String(processTextScale));
     if (!window.matchMedia('(max-width: 640px)').matches) return;
 
     document.querySelectorAll('.t-text, .t-descr, .t-name, .t-title, .t-card__descr, .t585__text, .t958__review-text, .tn-atom').forEach((node) => {
@@ -306,7 +308,7 @@
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'cms-tariff-more';
-        button.textContent = 'Раскрыть';
+        button.textContent = 'Читать полностью';
         button.setAttribute('aria-expanded', 'false');
         text.after(button);
 
@@ -317,7 +319,7 @@
 
           const fullHeight = text.scrollHeight;
           const lineHeight = parseFloat(window.getComputedStyle(text).lineHeight) || 22;
-          const collapsedHeight = Math.max(lineHeight * 7, Math.round(fullHeight / 3));
+          const collapsedHeight = Math.max(lineHeight * 3, Math.round(fullHeight / 3));
           const needsToggle = fullHeight > collapsedHeight + lineHeight;
 
           if (!needsToggle) {
@@ -335,7 +337,7 @@
           event.stopPropagation();
           const expanded = !card.classList.contains('is-expanded');
           card.classList.toggle('is-expanded', expanded);
-          button.textContent = expanded ? 'Свернуть' : 'Раскрыть';
+          button.textContent = expanded ? 'Свернуть' : 'Читать полностью';
           button.setAttribute('aria-expanded', String(expanded));
           updateClamp();
         });

@@ -680,6 +680,7 @@ function ensureCmsSettings() {
     ? cmsData.settings.typography
     : { minMobileFontSize: 16 };
   if (!cmsData.settings.typography.textColor) cmsData.settings.typography.textColor = '#e6e6e6';
+  if (!cmsData.settings.typography.processTextScale) cmsData.settings.typography.processTextScale = 1.15;
   cmsData.settings.bottomBlock = cmsData.settings.bottomBlock && typeof cmsData.settings.bottomBlock === 'object'
     ? cmsData.settings.bottomBlock
     : { text: '', fontSize: 16 };
@@ -724,6 +725,9 @@ function renderCmsSettings(panel) {
           <label>Размер текста нижнего блока, px
             <input data-setting-bottom-font type="number" min="12" max="28" value="${escapeHtml(bottomBlock.fontSize || 16)}">
           </label>
+          <label>Масштаб текста в блоке «Прозрачность процессов»
+            <input data-setting-process-scale type="number" min="0.8" max="1.6" step="0.05" value="${escapeHtml(typography.processTextScale || 1.15)}">
+          </label>
           <label>Цвет основного текста
             <input data-setting-text-color type="color" value="${escapeHtml(typography.textColor || '#e6e6e6')}">
           </label>
@@ -764,6 +768,9 @@ function renderCmsSettings(panel) {
   });
   $('[data-setting-bottom-font]', panel).addEventListener('input', (event) => {
     bottomBlock.fontSize = Number(event.target.value || 16);
+  });
+  $('[data-setting-process-scale]', panel).addEventListener('input', (event) => {
+    typography.processTextScale = Number(event.target.value || 1.15);
   });
   $('[data-setting-text-color]', panel).addEventListener('input', (event) => {
     typography.textColor = event.target.value || '#e6e6e6';
