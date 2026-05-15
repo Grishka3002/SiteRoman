@@ -500,6 +500,19 @@ video:-webkit-full-screen {
   color: var(--cms-readable-text-color, #e6e6e6) !important;
 }
 
+.t585__text {
+  font-size: clamp(17px, 1.25vw, 20px) !important;
+  line-height: 1.55 !important;
+}
+
+#rec2171226031 .t585__text {
+  font-size: clamp(
+    calc(18px * var(--cms-process-text-scale, 1.15)),
+    calc(1.34vw * var(--cms-process-text-scale, 1.15)),
+    calc(22px * var(--cms-process-text-scale, 1.15))
+  ) !important;
+}
+
 .cms-review-carousel__dots {
   display: flex;
   justify-content: center;
