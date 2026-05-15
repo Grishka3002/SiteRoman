@@ -836,7 +836,7 @@
       </button>
       <div class="cms-corner-video__panel">
         <button class="cms-corner-video__close" type="button" aria-label="Свернуть видео">×</button>
-        <video data-cms-src="${escapeHtml(src)}" ${poster ? `poster="${escapeHtml(poster)}"` : ''} playsinline webkit-playsinline controls preload="metadata"></video>
+        <video data-cms-src="${escapeHtml(src)}" ${poster ? `poster="${escapeHtml(poster)}"` : ''} playsinline webkit-playsinline controls preload="auto"></video>
       </div>
     `;
     document.body.append(widget);
@@ -851,13 +851,19 @@
       video.dataset.cmsLoadedSrc = url;
       video.load();
     };
+    const playCornerVideo = () => {
+      video.muted = false;
+      video.defaultMuted = false;
+      video.removeAttribute('muted');
+      video.volume = 1;
+      video.play().catch(() => {});
+    };
     ensureVideoPreview(video, poster);
     video.addEventListener('error', () => {
       if (video.dataset.cmsLoadedSrc !== DEFAULT_CORNER_VIDEO) {
         loadCornerSource(DEFAULT_CORNER_VIDEO);
         if (widget.classList.contains('is-open')) {
-          video.muted = true;
-          window.setTimeout(() => video.play().catch(() => {}), 80);
+          window.setTimeout(playCornerVideo, 80);
         }
       }
     });
@@ -866,7 +872,7 @@
       if (!video.currentSrc && video.dataset.cmsLoadedSrc !== video.dataset.cmsSrc) {
         loadCornerSource(video.dataset.cmsSrc || DEFAULT_CORNER_VIDEO);
       }
-      video.play().catch(() => {});
+      playCornerVideo();
     });
     close.addEventListener('click', () => {
       widget.classList.remove('is-open');
