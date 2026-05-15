@@ -219,6 +219,71 @@ video:-webkit-full-screen {
   white-space: pre-line;
 }
 
+#rec2171225961 .t774__content,
+#rec1025539481 .t774__content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#rec2171225961 .t774__textwrapper,
+#rec1025539481 .t774__textwrapper {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+#rec2171225961 .t-card__descr,
+#rec1025539481 .t-card__descr {
+  position: relative;
+  margin-top: 10px;
+  color: #f2f2f2 !important;
+  font-size: clamp(16px, 1.2vw, 18px) !important;
+  line-height: 1.36 !important;
+  overflow: hidden;
+  transition: max-height 0.32s ease;
+}
+
+#rec2171225961 .cms-tariff-card:not(.is-expanded) .cms-tariff-text::after,
+#rec1025539481 .cms-tariff-card:not(.is-expanded) .cms-tariff-text::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 72px;
+  background: linear-gradient(180deg, rgba(23, 23, 23, 0), #171717 82%);
+  pointer-events: none;
+}
+
+.cms-tariff-more {
+  align-self: flex-start;
+  min-height: 38px;
+  margin-top: 16px;
+  padding: 0 18px;
+  border: 1px solid rgba(255, 228, 15, 0.64);
+  border-radius: 8px;
+  background: rgba(255, 228, 15, 0.08);
+  color: #ffe40f;
+  font-family: 'Druk-Mont', Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.cms-tariff-more:hover {
+  background: #ffe40f;
+  color: #000;
+  transform: translateY(-1px);
+}
+
+.cms-tariff-more[hidden] {
+  display: none;
+}
+
 .cms-contact-record {
   padding-top: 78px !important;
   padding-bottom: 34px !important;
@@ -954,6 +1019,19 @@ video {
   .t-text_xs {
     font-size: var(--cms-small-text-size, 16px) !important;
     line-height: 1.45 !important;
+  }
+
+  #rec2171225961 .t-card__descr,
+  #rec1025539481 .t-card__descr {
+    font-size: max(var(--cms-small-text-size, 16px), 15px) !important;
+    line-height: 1.35 !important;
+  }
+
+  .cms-tariff-more {
+    min-height: 36px;
+    margin-top: 13px;
+    padding: 0 15px;
+    font-size: 12px;
   }
 
   .cms-bottom-block {

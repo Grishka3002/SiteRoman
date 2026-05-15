@@ -291,6 +291,62 @@
     else document.body.append(block);
   }
 
+  function mountTariffReadMore() {
+    const tariffBlocks = document.querySelectorAll('#rec2171225961, #rec1025539481');
+    tariffBlocks.forEach((block) => {
+      block.querySelectorAll('.t774__content').forEach((card) => {
+        if (card.dataset.cmsTariffReady === 'true') return;
+        const text = card.querySelector('.t-card__descr');
+        if (!text) return;
+
+        card.dataset.cmsTariffReady = 'true';
+        card.classList.add('cms-tariff-card');
+        text.classList.add('cms-tariff-text');
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'cms-tariff-more';
+        button.textContent = 'Раскрыть';
+        button.setAttribute('aria-expanded', 'false');
+        text.after(button);
+
+        const updateClamp = () => {
+          const isExpanded = card.classList.contains('is-expanded');
+          text.style.maxHeight = 'none';
+          button.hidden = false;
+
+          const fullHeight = text.scrollHeight;
+          const lineHeight = parseFloat(window.getComputedStyle(text).lineHeight) || 22;
+          const collapsedHeight = Math.max(lineHeight * 7, Math.round(fullHeight / 3));
+          const needsToggle = fullHeight > collapsedHeight + lineHeight;
+
+          if (!needsToggle) {
+            text.style.maxHeight = 'none';
+            button.hidden = true;
+            return;
+          }
+
+          text.style.setProperty('--cms-tariff-collapsed-height', `${collapsedHeight}px`);
+          text.style.maxHeight = isExpanded ? `${fullHeight}px` : `${collapsedHeight}px`;
+        };
+
+        button.addEventListener('click', (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          const expanded = !card.classList.contains('is-expanded');
+          card.classList.toggle('is-expanded', expanded);
+          button.textContent = expanded ? 'Свернуть' : 'Раскрыть';
+          button.setAttribute('aria-expanded', String(expanded));
+          updateClamp();
+        });
+
+        updateClamp();
+        window.addEventListener('resize', updateClamp);
+        window.setTimeout(updateClamp, 450);
+      });
+    });
+  }
+
   function mountCorporateGuarantees() {
     if (route !== '/corporate' || document.querySelector('.cms-guarantee-list')) return;
     const record = document.querySelector('#rec2171225881');
@@ -873,6 +929,7 @@
   mountLocalForms();
   mountWeddingContacts();
   mountCorporateGuarantees();
+  mountTariffReadMore();
   neutralizeLegacyVideoWidgets();
 
   fetch('/api/cms')

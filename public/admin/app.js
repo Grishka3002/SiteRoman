@@ -493,9 +493,11 @@ function renderBlockTabs() {
 
 function renderTextField(item, row) {
   const label = item.label || nodeLabel(item.node);
+  const isLongCardText = item.node?.matches?.('.t-card__descr');
+  const rows = item.reviewText ? 7 : isLongCardText ? 10 : 3;
   row.innerHTML = `
     <label>${escapeHtml(label)}
-      <textarea rows="${item.reviewText ? 7 : 3}">${escapeHtml(fieldValue(item.node, item.type))}</textarea>
+      <textarea rows="${rows}">${escapeHtml(fieldValue(item.node, item.type))}</textarea>
     </label>
   `;
   $('textarea', row).addEventListener('input', (event) => {
