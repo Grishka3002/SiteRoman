@@ -753,6 +753,60 @@ video {
   line-height: 1.55;
 }
 
+@media (min-width: 901px) {
+  #rec2171225881 .tn-elem[data-elem-id="1700068202893"],
+  #rec2171225881 .tn-elem[data-elem-id="1700069276370"],
+  #rec2171225881 .tn-elem[data-elem-id="1700069285000"],
+  #rec2171225881 .tn-elem[data-elem-id="1776434845188000002"],
+  #rec2171225881 .tn-elem[data-elem-id="1700069296004"] {
+    margin-top: -34px !important;
+  }
+
+  #rec2171225881 .tn-elem[data-elem-id="1700068847460"] {
+    z-index: 3 !important;
+  }
+
+  #rec2171225881 .tn-elem[data-elem-id="1700068708797"] {
+    z-index: 30 !important;
+  }
+
+  #rec2171225881 .tn-elem[data-elem-id="1700069218662"] {
+    z-index: 30 !important;
+  }
+
+  #rec2171225881 .tn-elem[data-elem-id="1700069234827"] {
+    z-index: 30 !important;
+  }
+
+  #rec2171225881 .tn-elem[data-elem-id="1776434896291000004"] {
+    z-index: 30 !important;
+  }
+
+  #rec2171225881 .tn-elem[data-elem-id="1700069244574"] {
+    z-index: 30 !important;
+  }
+
+  #rec2171225881 .tn-elem[data-elem-id="1700068708797"] .tn-atom,
+  #rec2171225881 .tn-elem[data-elem-id="1700069218662"] .tn-atom,
+  #rec2171225881 .tn-elem[data-elem-id="1700069234827"] .tn-atom,
+  #rec2171225881 .tn-elem[data-elem-id="1776434896291000004"] .tn-atom,
+  #rec2171225881 .tn-elem[data-elem-id="1700069244574"] .tn-atom {
+    font-family: 'Druk-Mont', Arial, sans-serif !important;
+  }
+
+  #rec2171225881 .tn-elem[data-elem-id="1700069026851"] {
+    z-index: 9 !important;
+  }
+
+  #rec2171225881 .tn-elem[data-elem-id="1700076488373"] {
+    z-index: 10 !important;
+  }
+
+  #rec2171225881 .tn-elem[data-elem-id="1700076499185"] {
+    z-index: 27 !important;
+  }
+}
+
 @media (max-width: 900px) {
   .t-rec {
     max-width: 100vw;
