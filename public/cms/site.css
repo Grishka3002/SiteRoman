@@ -1142,29 +1142,33 @@ video {
   #rec2171225751 .t396__artboard,
   #rec2171225751 .t396__filter,
   #rec2171225751 .t396__carrier {
-    height: 1790px !important;
+    height: 1498px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1701371942122"] {
-    top: 1310px !important;
+    top: 987px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1700335086807"] {
-    top: 1328px !important;
+    top: 1005px !important;
+    width: 284px !important;
+    height: 369px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1700335086807"] .tn-atom {
-    background-size: contain !important;
+    background-size: cover !important;
     background-repeat: no-repeat !important;
     background-color: #000 !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1701371942146"] {
-    top: 1715px !important;
+    display: table !important;
+    top: 1392px !important;
+    width: 284px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1701371942148"] {
-    top: 1727px !important;
+    top: 1404px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1701371942126"],
@@ -1175,11 +1179,17 @@ video {
   #rec2171225751 .tn-elem[data-elem-id="1701371942139"],
   #rec2171225751 .tn-elem[data-elem-id="1701371942141"],
   #rec2171225751 .tn-elem[data-elem-id="1701371942144"] {
-    top: 1740px !important;
+    top: 1416px !important;
+    width: 42px !important;
+  }
+
+  #rec2171225751 .tn-elem[data-elem-id="1701371942141"],
+  #rec2171225751 .tn-elem[data-elem-id="1701371942144"] {
+    top: 1417px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1703661412047"] {
-    top: 1760px !important;
+    top: 1436px !important;
   }
 
   #rec2171225881 .t396__artboard,
@@ -1206,7 +1216,7 @@ video {
     width: 100%;
     max-width: 393px;
     margin: 0 auto;
-    padding: 0 12px;
+    padding: 0;
     box-sizing: border-box;
     background: #000;
     color: #000;
@@ -1231,8 +1241,8 @@ video {
 
   .cms-guarantee-list__item {
     display: grid;
-    grid-template-columns: 56px minmax(0, 1fr);
-    gap: 12px;
+    grid-template-columns: 74px minmax(0, 1fr);
+    gap: 0;
     align-items: start;
   }
 
@@ -1241,7 +1251,7 @@ video {
     place-items: center;
     width: 56px;
     height: 56px;
-    margin-top: 16px;
+    margin: 16px 0 0 6px;
     border-radius: 50%;
     background: #ffe40f;
     color: #000;
@@ -1249,8 +1259,8 @@ video {
   }
 
   .cms-guarantee-list__card {
-    min-height: 224px;
-    padding: 42px 24px 30px;
+    min-height: 285px;
+    padding: 34px 24px 30px;
     border-radius: 16px;
     background: #ffe40f;
     box-sizing: border-box;
