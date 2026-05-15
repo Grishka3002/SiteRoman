@@ -1161,6 +1161,11 @@ video {
     background-color: #000 !important;
   }
 
+  #rec2171225751 .tn-elem[data-elem-id="1700337416552"] .tn-atom {
+    font-size: max(var(--cms-small-text-size, 17px), calc(16px * var(--cms-mobile-text-scale, 1.1))) !important;
+    line-height: 1.55 !important;
+  }
+
   #rec2171225751 .tn-elem[data-elem-id="1701371942146"] {
     display: none !important;
     top: 1392px !important;
