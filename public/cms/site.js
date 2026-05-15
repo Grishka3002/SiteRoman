@@ -468,27 +468,30 @@
 
     const update = () => {
       if (!media.matches) {
+        badge.style.removeProperty('--cms-guarantee-number-y');
         section.classList.remove('has-active-number');
         return;
       }
 
       const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
       const targetY = viewportHeight * 0.48;
-      const active = items.reduce((best, item) => {
+      const visibleItems = items.map((item) => {
         const card = item.querySelector('.cms-guarantee-list__card');
         const rect = (card || item).getBoundingClientRect();
-        const distance = Math.abs((rect.top + rect.height / 2) - targetY);
-        return !best || distance < best.distance ? { item, distance } : best;
+        return { item, rect };
+      }).filter(({ rect }) => rect.top < viewportHeight * 0.84 && rect.bottom > viewportHeight * 0.16);
+      const active = visibleItems.reduce((best, entry) => {
+        const distance = Math.abs((entry.rect.top + entry.rect.height / 2) - targetY);
+        return !best || distance < best.distance ? { ...entry, distance } : best;
       }, null);
-      const hasVisibleCard = items.some((item) => {
-        const card = item.querySelector('.cms-guarantee-list__card');
-        const rect = (card || item).getBoundingClientRect();
-        return rect.top < viewportHeight * 0.84 && rect.bottom > viewportHeight * 0.16;
-      });
 
-      section.classList.toggle('has-active-number', hasVisibleCard);
-      if (!hasVisibleCard) return;
-      if (active?.item) badge.textContent = active.item.dataset.cmsGuaranteeIndex || '1';
+      section.classList.toggle('has-active-number', Boolean(active));
+      if (!active) return;
+
+      const cardCenter = active.rect.top + active.rect.height / 2;
+      const badgeCenter = Math.min(viewportHeight - 88, Math.max(88, cardCenter));
+      badge.style.setProperty('--cms-guarantee-number-y', `${badgeCenter}px`);
+      badge.textContent = active.item.dataset.cmsGuaranteeIndex || '1';
     };
 
     update();
