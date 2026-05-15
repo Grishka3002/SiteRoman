@@ -442,9 +442,10 @@
     section.className = 'cms-guarantee-list';
     section.innerHTML = `
       <h2 class="cms-guarantee-list__title">Я вам гарантирую</h2>
+      <span class="cms-guarantee-list__floating-number" aria-hidden="true">1</span>
       <div class="cms-guarantee-list__items">
         ${items.map((item, index) => `
-          <article class="cms-guarantee-list__item">
+          <article class="cms-guarantee-list__item" data-cms-guarantee-index="${index + 1}">
             <span class="cms-guarantee-list__number">${index + 1}</span>
             <div class="cms-guarantee-list__card">
               <h3>${escapeHtml(item.title)}</h3>
@@ -456,6 +457,44 @@
     `;
     record.classList.add('cms-guarantee-record');
     record.append(section);
+    mountCorporateGuaranteeNumber(section);
+  }
+
+  function mountCorporateGuaranteeNumber(section) {
+    const badge = section.querySelector('.cms-guarantee-list__floating-number');
+    const items = Array.from(section.querySelectorAll('.cms-guarantee-list__item'));
+    const media = window.matchMedia('(max-width: 479px)');
+    if (!badge || !items.length) return;
+
+    const update = () => {
+      if (!media.matches) {
+        section.classList.remove('has-active-number');
+        return;
+      }
+
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      const targetY = viewportHeight * 0.48;
+      const active = items.reduce((best, item) => {
+        const card = item.querySelector('.cms-guarantee-list__card');
+        const rect = (card || item).getBoundingClientRect();
+        const distance = Math.abs((rect.top + rect.height / 2) - targetY);
+        return !best || distance < best.distance ? { item, distance } : best;
+      }, null);
+      const hasVisibleCard = items.some((item) => {
+        const card = item.querySelector('.cms-guarantee-list__card');
+        const rect = (card || item).getBoundingClientRect();
+        return rect.top < viewportHeight * 0.84 && rect.bottom > viewportHeight * 0.16;
+      });
+
+      section.classList.toggle('has-active-number', hasVisibleCard);
+      if (!hasVisibleCard) return;
+      if (active?.item) badge.textContent = active.item.dataset.cmsGuaranteeIndex || '1';
+    };
+
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    media.addEventListener?.('change', update);
   }
 
   function contactHrefFrom(record, match) {

@@ -1217,6 +1217,7 @@ video {
   }
 
   .cms-guarantee-list {
+    position: relative;
     display: block;
     width: 100%;
     max-width: 393px;
@@ -1226,6 +1227,28 @@ video {
     background: #000;
     color: #000;
     font-family: Arial, sans-serif;
+  }
+
+  .cms-guarantee-list__floating-number {
+    position: fixed;
+    top: 46vh;
+    left: max(6px, calc((100vw - 393px) / 2 + 6px));
+    z-index: 20;
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #ffe40f;
+    color: #000;
+    font: 700 32px/1 Arial, sans-serif;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease;
+  }
+
+  .cms-guarantee-list.has-active-number .cms-guarantee-list__floating-number {
+    opacity: 1;
   }
 
   .cms-guarantee-list__title {
@@ -1252,7 +1275,7 @@ video {
   }
 
   .cms-guarantee-list__number {
-    display: grid;
+    display: none;
     place-items: center;
     width: 56px;
     height: 56px;
