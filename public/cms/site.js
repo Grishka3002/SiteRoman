@@ -295,6 +295,67 @@
 
   function mountTariffReadMore() {
     const tariffBlocks = document.querySelectorAll('#rec2171225961, #rec1025539481');
+    if (!window.cmsTariffCaptureReady) {
+      window.cmsTariffCaptureReady = 'true';
+      const closeTariffPopup = (button) => {
+        const scrollY = Number(button?.dataset.cmsScrollY || window.scrollY || 0);
+        document.querySelectorAll('.t-popup_show').forEach((popup) => {
+          popup.classList.remove('t-popup_show');
+          popup.style.display = 'none';
+        });
+        document.body.classList.remove('t-body_popupshowed', 't-quiz__body_popupshowed', 't-body_scroll-locked');
+        document.body.style.top = '';
+        document.body.removeAttribute('data-popup-scrolltop');
+        window.scrollTo(0, scrollY);
+      };
+
+      const toggleTariffButton = (button) => {
+        const card = button.closest('.cms-tariff-card');
+        const text = card?.querySelector('.cms-tariff-text');
+        if (!card || !text) return;
+        const expanded = !card.classList.contains('is-expanded');
+        card.classList.toggle('is-expanded', expanded);
+        button.textContent = expanded ? 'Свернуть' : 'Читать полностью';
+        button.setAttribute('aria-expanded', String(expanded));
+        text.style.maxHeight = expanded ? `${text.scrollHeight}px` : 'var(--cms-tariff-collapsed-height)';
+      };
+
+      window.addEventListener('pointerdown', (event) => {
+        const button = event.target?.closest?.('.cms-tariff-more');
+        if (!button) return;
+        button.dataset.cmsScrollY = String(window.scrollY || 0);
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation?.();
+      }, true);
+
+      window.addEventListener('pointerup', (event) => {
+        const button = event.target?.closest?.('.cms-tariff-more');
+        if (!button) return;
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation?.();
+        button.dataset.cmsPointerHandled = 'true';
+        toggleTariffButton(button);
+        closeTariffPopup(button);
+        window.setTimeout(() => closeTariffPopup(button), 0);
+        window.setTimeout(() => closeTariffPopup(button), 80);
+        window.setTimeout(() => { button.dataset.cmsPointerHandled = ''; }, 0);
+      }, true);
+
+      window.addEventListener('click', (event) => {
+        const button = event.target?.closest?.('.cms-tariff-more');
+        if (!button) return;
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation?.();
+        if (button.dataset.cmsPointerHandled !== 'true') toggleTariffButton(button);
+        closeTariffPopup(button);
+        window.setTimeout(() => closeTariffPopup(button), 0);
+        window.setTimeout(() => closeTariffPopup(button), 80);
+      }, true);
+    }
+
     tariffBlocks.forEach((block) => {
       block.querySelectorAll('.t774__content').forEach((card) => {
         if (card.dataset.cmsTariffReady === 'true') return;
