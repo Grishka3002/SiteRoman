@@ -1275,7 +1275,8 @@ video {
   }
 
   .cms-guarantee-list__number {
-    display: none;
+    display: grid;
+    visibility: hidden;
     place-items: center;
     width: 56px;
     height: 56px;
