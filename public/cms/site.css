@@ -1230,11 +1230,11 @@ video {
   }
 
   .cms-guarantee-list__floating-number {
-    display: none;
     position: fixed;
     top: 46vh;
     left: max(6px, calc((100vw - 393px) / 2 + 6px));
     z-index: 20;
+    display: grid;
     place-items: center;
     width: 56px;
     height: 56px;
@@ -1245,11 +1245,31 @@ video {
     opacity: 0;
     pointer-events: none;
     transform: translateY(-50%);
-    transition: opacity 0.18s ease;
+    transition: opacity 0.18s ease, transform 0.28s ease;
   }
 
   .cms-guarantee-list.has-active-number .cms-guarantee-list__floating-number {
     opacity: 1;
+  }
+
+  .cms-guarantee-list__number-window {
+    display: block;
+    width: 100%;
+    height: 1em;
+    overflow: hidden;
+  }
+
+  .cms-guarantee-list__number-track {
+    display: grid;
+    transition: transform 0.44s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  .cms-guarantee-list__number-track span {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 1em;
   }
 
   .cms-guarantee-list__title {
@@ -1276,7 +1296,7 @@ video {
   }
 
   .cms-guarantee-list__number {
-    display: grid;
+    display: none;
     place-items: center;
     width: 56px;
     height: 56px;

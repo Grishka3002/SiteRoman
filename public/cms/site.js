@@ -441,6 +441,13 @@
     const section = document.createElement('section');
     section.className = 'cms-guarantee-list';
     section.innerHTML = `
+      <div class="cms-guarantee-list__floating-number" aria-hidden="true">
+        <span class="cms-guarantee-list__number-window">
+          <span class="cms-guarantee-list__number-track">
+            ${items.map((item, index) => `<span>${index + 1}</span>`).join('')}
+          </span>
+        </span>
+      </div>
       <h2 class="cms-guarantee-list__title">Я вам гарантирую</h2>
       <div class="cms-guarantee-list__items">
         ${items.map((item, index) => `
@@ -456,36 +463,46 @@
     `;
     record.classList.add('cms-guarantee-record');
     record.append(section);
+    mountCorporateGuaranteeNumber(section);
   }
 
   function mountCorporateGuaranteeNumber(section) {
     const badge = section.querySelector('.cms-guarantee-list__floating-number');
+    const track = section.querySelector('.cms-guarantee-list__number-track');
     const items = Array.from(section.querySelectorAll('.cms-guarantee-list__item'));
     const media = window.matchMedia('(max-width: 479px)');
-    if (!badge || !items.length) return;
+    if (!badge || !track || !items.length) return;
+    let activeIndex = 1;
+
+    const setActiveIndex = (nextIndex) => {
+      const normalizedIndex = Math.max(1, Math.min(items.length, nextIndex));
+      if (normalizedIndex === activeIndex) return;
+      activeIndex = normalizedIndex;
+      track.style.transform = `translateY(${1 - activeIndex}em)`;
+    };
 
     const update = () => {
       if (!media.matches) {
         section.classList.remove('has-active-number');
+        track.style.transform = 'translateY(0)';
+        activeIndex = 1;
         return;
       }
 
       const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-      const targetY = viewportHeight * 0.48;
-      const visibleItems = items.map((item) => {
+      const sectionRect = section.getBoundingClientRect();
+      const isSectionVisible = sectionRect.top < viewportHeight * 0.86 && sectionRect.bottom > viewportHeight * 0.16;
+      section.classList.toggle('has-active-number', isSectionVisible);
+      if (!isSectionVisible) return;
+
+      const triggerY = viewportHeight * 0.42;
+      const active = items.reduce((current, item, index) => {
         const card = item.querySelector('.cms-guarantee-list__card');
         const rect = (card || item).getBoundingClientRect();
-        return { item, rect };
-      }).filter(({ rect }) => rect.top < viewportHeight * 0.84 && rect.bottom > viewportHeight * 0.16);
-      const active = visibleItems.reduce((best, entry) => {
-        const distance = Math.abs((entry.rect.top + entry.rect.height / 2) - targetY);
-        return !best || distance < best.distance ? { ...entry, distance } : best;
-      }, null);
+        return rect.top <= triggerY ? index + 1 : current;
+      }, 1);
 
-      section.classList.toggle('has-active-number', Boolean(active));
-      if (!active) return;
-
-      badge.textContent = active.item.dataset.cmsGuaranteeIndex || '1';
+      setActiveIndex(active);
     };
 
     update();
