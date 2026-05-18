@@ -1296,7 +1296,7 @@ video {
   }
 
   .cms-guarantee-list__number {
-    display: none;
+    display: grid;
     place-items: center;
     width: 56px;
     height: 56px;
@@ -1305,6 +1305,8 @@ video {
     background: #ffe40f;
     color: #000;
     font: 700 32px/1 Arial, sans-serif;
+    opacity: 0;
+    visibility: hidden;
   }
 
   .cms-guarantee-list__card {
