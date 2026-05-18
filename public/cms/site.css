@@ -1289,18 +1289,22 @@ video {
   }
 
   .cms-guarantee-list__item {
-    display: grid;
-    grid-template-columns: 74px minmax(0, 1fr);
-    gap: 0;
-    align-items: start;
+    position: relative;
+    display: block;
+    width: 100%;
+    padding-left: 74px;
+    box-sizing: border-box;
   }
 
   .cms-guarantee-list__number {
+    position: absolute;
+    top: 16px;
+    left: 6px;
     display: grid;
     place-items: center;
     width: 56px;
     height: 56px;
-    margin: 16px 0 0 6px;
+    margin: 0;
     border-radius: 50%;
     background: #ffe40f;
     color: #000;

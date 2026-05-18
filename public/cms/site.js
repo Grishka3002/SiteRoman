@@ -495,7 +495,8 @@
       section.classList.toggle('has-active-number', isSectionVisible);
       if (!isSectionVisible) return;
 
-      const triggerY = viewportHeight * 0.42;
+      const badgeRect = badge.getBoundingClientRect();
+      const triggerY = badgeRect.top + badgeRect.height / 2;
       const active = items.reduce((current, item, index) => {
         const card = item.querySelector('.cms-guarantee-list__card');
         const rect = (card || item).getBoundingClientRect();
