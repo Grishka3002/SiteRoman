@@ -442,7 +442,6 @@
     section.className = 'cms-guarantee-list';
     section.innerHTML = `
       <h2 class="cms-guarantee-list__title">Я вам гарантирую</h2>
-      <span class="cms-guarantee-list__floating-number" aria-hidden="true">1</span>
       <div class="cms-guarantee-list__items">
         ${items.map((item, index) => `
           <article class="cms-guarantee-list__item" data-cms-guarantee-index="${index + 1}">
@@ -457,7 +456,6 @@
     `;
     record.classList.add('cms-guarantee-record');
     record.append(section);
-    mountCorporateGuaranteeNumber(section);
   }
 
   function mountCorporateGuaranteeNumber(section) {

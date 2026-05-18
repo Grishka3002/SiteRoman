@@ -1230,11 +1230,11 @@ video {
   }
 
   .cms-guarantee-list__floating-number {
+    display: none;
     position: fixed;
     top: 46vh;
     left: max(6px, calc((100vw - 393px) / 2 + 6px));
     z-index: 20;
-    display: grid;
     place-items: center;
     width: 56px;
     height: 56px;
@@ -1277,7 +1277,6 @@ video {
 
   .cms-guarantee-list__number {
     display: grid;
-    visibility: hidden;
     place-items: center;
     width: 56px;
     height: 56px;
