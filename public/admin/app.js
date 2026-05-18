@@ -67,6 +67,11 @@ function status(message, isError = false) {
   const node = $('#status');
   node.textContent = message;
   node.classList.toggle('error', isError);
+  const pill = $('#pageStatusPill');
+  if (pill) {
+    pill.classList.toggle('error', isError);
+    pill.textContent = isError ? 'Нужна проверка' : 'Готово к работе';
+  }
 }
 
 function showLoginError(message) {
@@ -476,12 +481,26 @@ function collectBlocks() {
 
 function renderBlockTabs() {
   const tabs = $('#blockTabs');
+  const query = ($('#blockSearch')?.value || '').trim().toLowerCase();
+  const visibleBlocks = blocks.filter((block) => String(block.title || '').toLowerCase().includes(query));
   tabs.innerHTML = '';
-  blocks.forEach((block) => {
+  $('#blockCount').textContent = query
+    ? `${visibleBlocks.length} из ${blocks.length}`
+    : `${blocks.length} блоков`;
+
+  if (!visibleBlocks.length) {
+    tabs.innerHTML = '<p class="block-tabs__empty">Блоки не найдены. Попробуйте другое слово.</p>';
+    return;
+  }
+
+  visibleBlocks.forEach((block) => {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = block.id === activeBlockId ? 'active' : '';
-    button.textContent = block.title;
+    button.innerHTML = `
+      <span class="block-tabs__number">${blocks.indexOf(block) + 1}</span>
+      <span class="block-tabs__title">${escapeHtml(block.title)}</span>
+    `;
     button.addEventListener('click', () => {
       activeBlockId = block.id;
       renderBlockTabs();
@@ -1017,20 +1036,24 @@ function renderVideoManager(panel) {
 function renderBlockEditor() {
   const panel = $('#blockEditor');
   if (activeBlockId === 'cms-settings') {
+    $('#activeBlockName').textContent = 'Настройки сайта';
     renderCmsSettings(panel);
     return;
   }
   if (activeBlockId === 'cms-video') {
+    $('#activeBlockName').textContent = 'Видео';
     renderVideoManager(panel);
     return;
   }
   const block = blocks.find((item) => item.id === activeBlockId);
   if (!block) {
+    $('#activeBlockName').textContent = 'Блок не выбран';
     panel.innerHTML = '<p class="muted">На странице нет редактируемых блоков.</p>';
     return;
   }
 
   const hasSubBlocks = block.subBlocks.length > 0;
+  $('#activeBlockName').textContent = block.title;
   panel.innerHTML = `
     <div class="block-panel__head">
       <div>
@@ -1168,6 +1191,7 @@ $('#loginForm').addEventListener('submit', async (event) => {
 });
 
 $('#saveContentPage').addEventListener('click', saveContentPage);
+$('#blockSearch')?.addEventListener('input', renderBlockTabs);
 $('#logout').addEventListener('click', () => {
   localStorage.removeItem('adminPassword');
   location.reload();

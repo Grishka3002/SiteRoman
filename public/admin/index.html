@@ -4,23 +4,37 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Админ-панель сайта</title>
-  <link rel="stylesheet" href="/admin/styles.css?v=20260511-3">
+  <link rel="stylesheet" href="/admin/styles.css?v=20260518-1">
 </head>
 <body>
   <aside class="sidebar">
-    <div class="brand">Site Admin</div>
-    <a data-page-link="home" class="nav" href="/admin/home">Главная</a>
-    <a data-page-link="wedding" class="nav" href="/admin/wedding">Свадьба</a>
-    <a data-page-link="corporate" class="nav" href="/admin/corporate">Корпоративы</a>
-    <button id="logout" class="nav hidden" type="button">Выйти</button>
-    <a class="site-link" href="/" target="_blank">Открыть сайт</a>
+    <div class="brand">
+      <span class="brand__mark">SR</span>
+      <span>
+        <strong>Site Admin</strong>
+        <small>Управление контентом</small>
+      </span>
+    </div>
+
+    <div class="sidebar__section">
+      <p>Страницы</p>
+      <a data-page-link="home" class="nav" href="/admin/home">Главная</a>
+      <a data-page-link="wedding" class="nav" href="/admin/wedding">Свадьба</a>
+      <a data-page-link="corporate" class="nav" href="/admin/corporate">Корпоративы</a>
+    </div>
+
+    <div class="sidebar__section sidebar__footer">
+      <a class="site-link" href="/" target="_blank">Открыть сайт</a>
+      <button id="logout" class="nav hidden" type="button">Выйти</button>
+    </div>
   </aside>
 
   <main class="main">
     <section id="login" class="panel login">
-      <h1>Вход</h1>
-      <p>Введите пароль администратора. Локально по умолчанию: <code>admin123</code>.</p>
-      <form id="loginForm" class="row">
+      <p class="login__label">Админ-панель</p>
+      <h1>Вход в редактор</h1>
+      <p>Введите пароль администратора, чтобы открыть управление страницами и медиа.</p>
+      <form id="loginForm" class="login__form">
         <input id="password" type="password" placeholder="Пароль">
         <button id="savePassword" type="submit">Войти</button>
       </form>
@@ -31,18 +45,40 @@
     <section id="app" class="hidden">
       <div class="toolbar">
         <div>
+          <p class="toolbar__label">Редактор страницы</p>
           <h1 id="pageTitle">Главная</h1>
           <p id="pageHint" class="muted">Выберите блок и измените контент внутри него.</p>
         </div>
-        <button id="saveContentPage">Сохранить страницу</button>
+        <div class="toolbar__actions">
+          <span id="pageStatusPill" class="status-pill">Готово к работе</span>
+          <button id="saveContentPage">Сохранить страницу</button>
+        </div>
       </div>
 
-      <nav id="blockTabs" class="block-tabs"></nav>
-      <section id="blockEditor" class="panel block-panel"></section>
-      <p id="status" class="status"></p>
+      <div class="workspace-grid">
+        <aside class="block-nav-panel">
+          <div class="block-nav-panel__head">
+            <strong>Блоки страницы</strong>
+            <small id="blockCount"></small>
+          </div>
+          <input id="blockSearch" type="search" placeholder="Найти блок">
+          <nav id="blockTabs" class="block-tabs"></nav>
+        </aside>
+
+        <section class="editor-shell">
+          <div class="editor-shell__head">
+            <div>
+              <span>Сейчас редактируется</span>
+              <strong id="activeBlockName">Выберите блок</strong>
+            </div>
+            <p id="status" class="status"></p>
+          </div>
+          <section id="blockEditor" class="panel block-panel"></section>
+        </section>
+      </div>
     </section>
   </main>
 
-  <script src="/admin/app.js?v=20260511-3"></script>
+  <script src="/admin/app.js?v=20260518-1"></script>
 </body>
 </html>
