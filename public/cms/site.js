@@ -489,14 +489,17 @@
         return;
       }
 
-      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-      const sectionRect = section.getBoundingClientRect();
-      const isSectionVisible = sectionRect.top < viewportHeight * 0.86 && sectionRect.bottom > viewportHeight * 0.16;
-      section.classList.toggle('has-active-number', isSectionVisible);
-      if (!isSectionVisible) return;
-
       const badgeRect = badge.getBoundingClientRect();
       const triggerY = badgeRect.top + badgeRect.height / 2;
+      const firstCard = items[0].querySelector('.cms-guarantee-list__card') || items[0];
+      const lastCard = items[items.length - 1].querySelector('.cms-guarantee-list__card') || items[items.length - 1];
+      const firstRect = firstCard.getBoundingClientRect();
+      const lastRect = lastCard.getBoundingClientRect();
+      const isInItems = firstRect.top <= triggerY && lastRect.bottom >= triggerY;
+
+      section.classList.toggle('has-active-number', isInItems);
+      if (!isInItems) return;
+
       const active = items.reduce((current, item, index) => {
         const card = item.querySelector('.cms-guarantee-list__card');
         const rect = (card || item).getBoundingClientRect();
