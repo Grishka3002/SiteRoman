@@ -1231,7 +1231,7 @@ video {
 
   .cms-guarantee-list__floating-number {
     position: fixed;
-    top: var(--cms-guarantee-number-y, 46vh);
+    top: 46vh;
     left: max(6px, calc((100vw - 393px) / 2 + 6px));
     z-index: 20;
     display: grid;
@@ -1245,7 +1245,7 @@ video {
     opacity: 0;
     pointer-events: none;
     transform: translateY(-50%);
-    transition: opacity 0.18s ease, top 0.18s ease;
+    transition: opacity 0.18s ease;
   }
 
   .cms-guarantee-list.has-active-number .cms-guarantee-list__floating-number {

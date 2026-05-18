@@ -468,7 +468,6 @@
 
     const update = () => {
       if (!media.matches) {
-        badge.style.removeProperty('--cms-guarantee-number-y');
         section.classList.remove('has-active-number');
         return;
       }
@@ -488,9 +487,6 @@
       section.classList.toggle('has-active-number', Boolean(active));
       if (!active) return;
 
-      const cardCenter = active.rect.top + active.rect.height / 2;
-      const badgeCenter = Math.min(viewportHeight - 88, Math.max(88, cardCenter));
-      badge.style.setProperty('--cms-guarantee-number-y', `${badgeCenter}px`);
       badge.textContent = active.item.dataset.cmsGuaranteeIndex || '1';
     };
 
