@@ -1100,6 +1100,9 @@
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(payload.error || 'РќРµ СѓРґР°Р»РѕСЃСЊ РѕС‚РїСЂР°РІРёС‚СЊ Р·Р°СЏРІРєСѓ');
+      if (!payload.telegramNotified) {
+        console.warn('Telegram notification was not sent:', payload.telegramError || 'check server environment variables and logs');
+      }
       handleLocalFormSuccess(form);
     } catch (error) {
       showFormMessage(form, error.message, true);
@@ -1172,6 +1175,9 @@
           });
           const payload = await response.json().catch(() => ({}));
           if (!response.ok) throw new Error(payload.error || 'Не удалось отправить заявку');
+          if (!payload.telegramNotified) {
+            console.warn('Telegram notification was not sent:', payload.telegramError || 'check server environment variables and logs');
+          }
           handleLocalFormSuccess(form);
         } catch (error) {
           showFormMessage(form, error.message, true);

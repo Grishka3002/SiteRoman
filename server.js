@@ -21,8 +21,8 @@ const uploadsDir = join(publicDir, 'uploads');
 const port = Number(process.env.PORT || 3000);
 const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
 const databaseUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL || '';
-const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN || '';
-const telegramChatId = process.env.TELEGRAM_CHAT_ID || '';
+const telegramBotToken = String(process.env.TELEGRAM_BOT_TOKEN || '').trim();
+const telegramChatId = String(process.env.TELEGRAM_CHAT_ID || '').trim();
 const defaultCornerVideoUrl = '/assets/corner-video-roman.mp4';
 const legacyCornerVideoUrl = '/assets/360p.f5fe27dad4.mp4';
 const pool = databaseUrl
@@ -431,6 +431,7 @@ async function notifyTelegram(inquiry) {
     throw new Error(payload.description || `Telegram API error ${response.status}`);
   }
 
+  console.info('Telegram notification sent:', inquiry.id);
   return true;
 }
 
@@ -548,12 +549,19 @@ async function handleApi(request, response, pathname) {
     inquiries.push(inquiry);
     if (!await saveInquiryToDatabase(inquiry)) await saveInquiries(inquiries);
     let telegramNotified = false;
+    let telegramError = '';
     await notifyTelegram(inquiry).then((notified) => {
       telegramNotified = Boolean(notified);
     }).catch((error) => {
+      telegramError = error.message;
       console.error('Telegram notification failed:', error.message);
     });
-    return sendJson(response, 200, { ok: true, id: inquiry.id, telegramNotified });
+    return sendJson(response, 200, {
+      ok: true,
+      id: inquiry.id,
+      telegramNotified,
+      telegramError: telegramNotified ? undefined : telegramError || 'Telegram notification was not sent'
+    });
   }
 
   if (request.method === 'POST' && pathname === '/api/login') {
