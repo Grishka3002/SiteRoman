@@ -410,7 +410,10 @@ function formatInquiryForTelegram(inquiry) {
 }
 
 async function notifyTelegram(inquiry) {
-  if (!telegramBotToken || !telegramChatId) return false;
+  if (!telegramBotToken || !telegramChatId) {
+    console.warn('Telegram notification skipped: TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID is not configured');
+    return false;
+  }
 
   const response = await fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
     method: 'POST',
@@ -544,10 +547,13 @@ async function handleApi(request, response, pathname) {
     const inquiries = await readInquiries();
     inquiries.push(inquiry);
     if (!await saveInquiryToDatabase(inquiry)) await saveInquiries(inquiries);
-    notifyTelegram(inquiry).catch((error) => {
+    let telegramNotified = false;
+    await notifyTelegram(inquiry).then((notified) => {
+      telegramNotified = Boolean(notified);
+    }).catch((error) => {
       console.error('Telegram notification failed:', error.message);
     });
-    return sendJson(response, 200, { ok: true, id: inquiry.id });
+    return sendJson(response, 200, { ok: true, id: inquiry.id, telegramNotified });
   }
 
   if (request.method === 'POST' && pathname === '/api/login') {
