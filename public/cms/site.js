@@ -1076,6 +1076,39 @@
     form.reset();
   }
 
+  async function submitLocalForm(form, submitButton) {
+    removeFormHumanChecks();
+    if (form.dataset.cmsSubmitting === 'true') return;
+    if (!validateLocalForm(form)) return;
+
+    form.dataset.cmsSubmitting = 'true';
+    const button = submitButton || form.querySelector('[type="submit"]');
+    const previousDisabled = button?.disabled;
+    if (button) button.disabled = true;
+    showFormMessage(form, 'РћС‚РїСЂР°РІР»СЏРµРј Р·Р°СЏРІРєСѓ...');
+
+    try {
+      const response = await fetch('/api/inquiry', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          page: route,
+          formId: form.id || form.name || '',
+          title: document.title,
+          fields: collectFormFields(form)
+        })
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload.error || 'РќРµ СѓРґР°Р»РѕСЃСЊ РѕС‚РїСЂР°РІРёС‚СЊ Р·Р°СЏРІРєСѓ');
+      handleLocalFormSuccess(form);
+    } catch (error) {
+      showFormMessage(form, error.message, true);
+    } finally {
+      if (button) button.disabled = previousDisabled || false;
+      form.dataset.cmsSubmitting = 'false';
+    }
+  }
+
   function detachTildaForm(form) {
     if (form.dataset.cmsDetachedFromTilda === 'true') return form;
 
@@ -1107,6 +1140,14 @@
       const form = detachTildaForm(sourceForm);
       if (form.dataset.cmsLocalForm === 'true') return;
       form.dataset.cmsLocalForm = 'true';
+
+      form.querySelectorAll('.t-quiz__btn_submit').forEach((button) => {
+        button.addEventListener('click', async (event) => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          await submitLocalForm(form, button);
+        }, true);
+      });
 
       form.addEventListener('submit', async (event) => {
         event.preventDefault();
