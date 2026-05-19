@@ -1015,7 +1015,7 @@
       successBox.textContent = 'Спасибо! Заявка отправлена.';
       successBox.style.display = 'block';
     }
-    const callback = form.dataset.successCallback;
+    const callback = form.dataset.successCallback || form.dataset.cmsSuccessCallback;
     const quiz = form.closest('.t-quiz');
     if (callback && typeof window[callback] === 'function' && quiz) {
       window[callback](quiz);
@@ -1023,12 +1023,33 @@
     form.reset();
   }
 
+  function detachTildaForm(form) {
+    if (form.dataset.cmsDetachedFromTilda === 'true') return form;
+
+    const cleanForm = form.cloneNode(false);
+    while (form.firstChild) cleanForm.append(form.firstChild);
+    form.parentNode?.replaceChild(cleanForm, form);
+
+    cleanForm.dataset.cmsDetachedFromTilda = 'true';
+    cleanForm.dataset.cmsSuccessCallback = cleanForm.dataset.successCallback || '';
+    cleanForm.classList.remove('js-form-proccess');
+    cleanForm.removeAttribute('data-formactiontype');
+    cleanForm.removeAttribute('data-success-callback');
+    cleanForm.setAttribute('action', '/api/inquiry');
+    cleanForm.setAttribute('method', 'post');
+    cleanForm.querySelectorAll('[name="formservices[]"], [name="formservices"]').forEach((node) => node.remove());
+    cleanForm.querySelectorAll('.js-errorbox-all, .js-rule-error, .js-error-control-box').forEach((node) => {
+      node.classList.remove('js-rule-error', 'js-error-control-box');
+      if (node.classList.contains('js-errorbox-all')) node.style.display = 'none';
+    });
+    return cleanForm;
+  }
+
   function mountLocalForms() {
-    document.querySelectorAll('form.t-form, form.js-form-proccess').forEach((form) => {
+    document.querySelectorAll('form.t-form, form.js-form-proccess, form[action*="tilda"]').forEach((sourceForm) => {
+      const form = detachTildaForm(sourceForm);
       if (form.dataset.cmsLocalForm === 'true') return;
       form.dataset.cmsLocalForm = 'true';
-      form.setAttribute('action', '/api/inquiry');
-      form.querySelectorAll('[name="formservices[]"]').forEach((node) => node.remove());
 
       form.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -1070,6 +1091,8 @@
   bindLoadMoreHydration();
   preloadHeroImage();
   mountLocalForms();
+  window.setTimeout(mountLocalForms, 600);
+  window.setTimeout(mountLocalForms, 1800);
   mountWeddingContacts();
   mountCorporateGuarantees();
   mountTariffReadMore();
