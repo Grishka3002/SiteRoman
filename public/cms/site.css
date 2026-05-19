@@ -1142,11 +1142,12 @@ video {
   #rec2171225751 .t396__artboard,
   #rec2171225751 .t396__filter,
   #rec2171225751 .t396__carrier {
-    height: 1498px !important;
+    height: 1578px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1701371942122"] {
     top: 987px !important;
+    height: 540px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1700335086807"] {
@@ -1314,6 +1315,7 @@ video {
   }
 
   .cms-guarantee-list__card {
+    width: 100%;
     min-height: 285px;
     padding: 34px 24px 30px;
     border-radius: 16px;
@@ -1325,11 +1327,12 @@ video {
     margin: 0 0 54px;
     color: #000;
     font-family: 'Druk-Mont', Arial, sans-serif;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 600;
     line-height: 1.05;
     text-transform: uppercase;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
+    word-break: normal;
   }
 
   .cms-guarantee-list__card p {
