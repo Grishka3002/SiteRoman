@@ -260,19 +260,35 @@
     });
   }
 
+  function applyCustomTextFontSizes(root = document) {
+    root.querySelectorAll('[data-cms-font-size]').forEach((node) => {
+      const size = Number.parseFloat(node.dataset.cmsFontSize || '');
+      if (Number.isFinite(size)) node.style.setProperty('font-size', `${size}px`, 'important');
+    });
+  }
+
   function applyTypographySettings(settings = {}) {
-    const minSize = Number(settings.typography?.minMobileFontSize || 16);
+    const minSize = Number(settings.typography?.minMobileFontSize || 17);
     const textColor = settings.typography?.textColor || '#e6e6e6';
-    const processTextScale = Math.min(1.6, Math.max(0.8, Number(settings.typography?.processTextScale || 1.15)));
+    const mobileTextScale = Math.min(1.4, Math.max(0.9, Number(settings.typography?.mobileTextScale || 1.1)));
+    const processTextScale = Math.min(1.6, Math.max(0.8, Number(settings.typography?.processTextScale || 1.25)));
     document.documentElement.style.setProperty('--cms-small-text-size', `${minSize}px`);
     document.documentElement.style.setProperty('--cms-readable-text-color', textColor);
+    document.documentElement.style.setProperty('--cms-mobile-text-scale', String(mobileTextScale));
     document.documentElement.style.setProperty('--cms-process-text-scale', String(processTextScale));
     if (!window.matchMedia('(max-width: 640px)').matches) return;
 
     document.querySelectorAll('.t-text, .t-descr, .t-name, .t-title, .t-card__descr, .t585__text, .t958__review-text, .tn-atom').forEach((node) => {
       if (node.closest('.cms-corner-video, .cms-review-carousel__dots, .t-menuburger')) return;
-      const size = parseFloat(window.getComputedStyle(node).fontSize || '0');
-      if (size > 0 && size < minSize) node.style.fontSize = `${minSize}px`;
+      if (node.closest('[data-cms-custom-font-size="true"], [data-cms-font-size]')) return;
+      const computedSize = parseFloat(window.getComputedStyle(node).fontSize || '0');
+      const corporateIntro = node.matches('#rec2171225751 .tn-elem[data-elem-id="1700337416552"] .tn-atom');
+      const baseSize = corporateIntro ? 16 : Number(node.dataset.cmsOriginalFontSize || computedSize);
+      if (!node.dataset.cmsOriginalFontSize && baseSize > 0) node.dataset.cmsOriginalFontSize = String(baseSize);
+      if (baseSize > 0 && baseSize < 28) {
+        node.style.fontSize = `${Math.max(minSize, baseSize * mobileTextScale)}px`;
+        if (corporateIntro) node.style.lineHeight = '25px';
+      }
     });
   }
 
@@ -1048,6 +1064,7 @@
   }
 
   optimizeNativeMedia();
+  applyCustomTextFontSizes();
   applyVideoPosters();
   bindLazyMediaObserver();
   bindLoadMoreHydration();
@@ -1064,6 +1081,7 @@
       const media = (cms.media || []).filter(matchesPage);
       const reviews = (cms.reviews || []).filter(matchesPage);
       const settings = cms.settings || {};
+      applyCustomTextFontSizes();
       applyTypographySettings(settings);
       applyVideoPosters(settings);
       const mediaMounted = appendMediaToPortfolio(media);
@@ -1077,6 +1095,7 @@
       mountCornerVideo(settings);
     })
     .catch(() => {
+      applyCustomTextFontSizes();
       applyTypographySettings();
       mountCornerVideo();
     });

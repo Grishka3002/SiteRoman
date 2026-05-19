@@ -8,8 +8,9 @@
     },
     "videoPosters": {},
     "typography": {
-      "minMobileFontSize": 16,
-      "processTextScale": 1.15
+      "minMobileFontSize": 17,
+      "mobileTextScale": 1.1,
+      "processTextScale": 1.25
     },
     "bottomBlock": {
       "text": "",

@@ -182,8 +182,45 @@ function swapMediaSubBlocks(block, currentSubId, direction) {
 
 function setPlainTextKeepingWrapper(node, value) {
   if (!node) return;
-  const target = node.querySelector('[data-customstyle]') || node;
+  const target = textStyleTarget(node);
   target.innerHTML = textToRichHtml(value);
+}
+
+function textStyleTarget(node) {
+  return node?.querySelector?.('[data-customstyle]') || node;
+}
+
+function cleanFontSize(value) {
+  const size = Number.parseFloat(String(value || '').replace(',', '.'));
+  if (!Number.isFinite(size)) return '';
+  return String(Math.min(140, Math.max(8, Math.round(size * 10) / 10)));
+}
+
+function textFontSize(node) {
+  const target = textStyleTarget(node);
+  const inline = cleanFontSize(target?.style?.getPropertyValue('font-size'));
+  if (inline) return inline;
+  const saved = cleanFontSize(target?.dataset?.cmsFontSize);
+  if (saved) return saved;
+  const zeroBlockSize = cleanFontSize(node?.closest?.('.tn-elem[data-field-fontsize-value]')?.getAttribute('data-field-fontsize-value'));
+  return zeroBlockSize;
+}
+
+function setTextFontSize(node, value) {
+  const target = textStyleTarget(node);
+  if (!target) return;
+
+  const size = cleanFontSize(value);
+  if (!size) {
+    target.style.removeProperty('font-size');
+    delete target.dataset.cmsFontSize;
+    delete target.dataset.cmsCustomFontSize;
+    return;
+  }
+
+  target.style.setProperty('font-size', `${size}px`, 'important');
+  target.dataset.cmsFontSize = size;
+  target.dataset.cmsCustomFontSize = 'true';
 }
 
 function setReviewTextKeepingStyle(node, value) {
@@ -208,7 +245,7 @@ function textToRichHtml(value) {
 
 function richTextToEditorValue(node) {
   if (!node) return '';
-  const target = node.querySelector('[data-customstyle]') || node;
+  const target = textStyleTarget(node);
   const chunkForNode = (child) => {
     if (child.nodeType === Node.TEXT_NODE) {
       return child.textContent
@@ -514,14 +551,25 @@ function renderTextField(item, row) {
   const label = item.label || nodeLabel(item.node);
   const isLongCardText = item.node?.matches?.('.t-card__descr');
   const rows = item.reviewText ? 7 : isLongCardText ? 10 : 3;
+  const fontSize = textFontSize(item.node);
   row.innerHTML = `
-    <label>${escapeHtml(label)}
+    <div class="editor-text-toolbar">
+      <span>${escapeHtml(label)}</span>
+      <label class="editor-font-size">Размер, px
+        <input type="number" min="8" max="140" step="1" value="${escapeHtml(fontSize)}" placeholder="Авто">
+      </label>
+    </div>
+    <label class="editor-text-field">
       <textarea rows="${rows}">${escapeHtml(fieldValue(item.node, item.type))}</textarea>
     </label>
   `;
   $('textarea', row).addEventListener('input', (event) => {
     if (item.reviewText) setReviewTextKeepingStyle(item.node, event.target.value);
     else setPlainTextKeepingWrapper(item.node, event.target.value);
+  });
+  $('.editor-font-size input', row).addEventListener('input', (event) => {
+    setTextFontSize(item.node, event.target.value);
+    status('Размер шрифта изменен. Нажмите «Сохранить страницу».');
   });
 }
 
@@ -697,9 +745,10 @@ function ensureCmsSettings() {
     : {};
   cmsData.settings.typography = cmsData.settings.typography && typeof cmsData.settings.typography === 'object'
     ? cmsData.settings.typography
-    : { minMobileFontSize: 16 };
+    : { minMobileFontSize: 17 };
   if (!cmsData.settings.typography.textColor) cmsData.settings.typography.textColor = '#e6e6e6';
-  if (!cmsData.settings.typography.processTextScale) cmsData.settings.typography.processTextScale = 1.15;
+  if (!cmsData.settings.typography.mobileTextScale) cmsData.settings.typography.mobileTextScale = 1.1;
+  if (!cmsData.settings.typography.processTextScale) cmsData.settings.typography.processTextScale = 1.25;
   cmsData.settings.bottomBlock = cmsData.settings.bottomBlock && typeof cmsData.settings.bottomBlock === 'object'
     ? cmsData.settings.bottomBlock
     : { text: '', fontSize: 16 };
@@ -739,13 +788,16 @@ function renderCmsSettings(panel) {
         <h3>Размеры текста</h3>
         <div class="form-grid">
           <label>Минимальный мелкий шрифт на телефоне, px
-            <input data-setting-font-min type="number" min="14" max="24" value="${escapeHtml(typography.minMobileFontSize || 16)}">
+            <input data-setting-font-min type="number" min="14" max="24" value="${escapeHtml(typography.minMobileFontSize || 17)}">
           </label>
           <label>Размер текста нижнего блока, px
             <input data-setting-bottom-font type="number" min="12" max="28" value="${escapeHtml(bottomBlock.fontSize || 16)}">
           </label>
+          <label>Увеличение основного текста на телефоне
+            <input data-setting-mobile-scale type="number" min="0.9" max="1.4" step="0.05" value="${escapeHtml(typography.mobileTextScale || 1.1)}">
+          </label>
           <label>Масштаб текста в блоке «Прозрачность процессов»
-            <input data-setting-process-scale type="number" min="0.8" max="1.6" step="0.05" value="${escapeHtml(typography.processTextScale || 1.15)}">
+            <input data-setting-process-scale type="number" min="0.8" max="1.6" step="0.05" value="${escapeHtml(typography.processTextScale || 1.25)}">
           </label>
           <label>Цвет основного текста
             <input data-setting-text-color type="color" value="${escapeHtml(typography.textColor || '#e6e6e6')}">
@@ -783,13 +835,16 @@ function renderCmsSettings(panel) {
   });
 
   $('[data-setting-font-min]', panel).addEventListener('input', (event) => {
-    typography.minMobileFontSize = Number(event.target.value || 16);
+    typography.minMobileFontSize = Number(event.target.value || 17);
   });
   $('[data-setting-bottom-font]', panel).addEventListener('input', (event) => {
     bottomBlock.fontSize = Number(event.target.value || 16);
   });
+  $('[data-setting-mobile-scale]', panel).addEventListener('input', (event) => {
+    typography.mobileTextScale = Number(event.target.value || 1.1);
+  });
   $('[data-setting-process-scale]', panel).addEventListener('input', (event) => {
-    typography.processTextScale = Number(event.target.value || 1.15);
+    typography.processTextScale = Number(event.target.value || 1.25);
   });
   $('[data-setting-text-color]', panel).addEventListener('input', (event) => {
     typography.textColor = event.target.value || '#e6e6e6';

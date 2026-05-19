@@ -992,16 +992,19 @@ video {
   }
 
   .cms-review-carousel .cms-review-card__name {
-    font-size: clamp(14px, 4vw, 17px);
+    font-size: clamp(12px, 3.35vw, 14px);
     line-height: 1;
     overflow-wrap: anywhere;
   }
 
   .cms-review-carousel .cms-review-card__company {
-    display: -webkit-box;
+    display: block;
     overflow: hidden;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    max-width: 100%;
+    overflow-wrap: normal;
+    text-overflow: clip;
+    white-space: nowrap;
+    word-break: normal;
   }
 
   .cms-review-carousel .cms-review-card__person {
@@ -1011,7 +1014,7 @@ video {
   }
 
   .cms-review-carousel .cms-review-card__text {
-    font-size: max(var(--cms-small-text-size, 16px), 14px);
+    font-size: max(var(--cms-small-text-size, 17px), calc(14px * var(--cms-mobile-text-scale, 1.1)));
     line-height: 1.28;
     -webkit-line-clamp: 4;
   }
@@ -1034,13 +1037,13 @@ video {
   .t958__review-text,
   .t-descr_xxs,
   .t-text_xs {
-    font-size: var(--cms-small-text-size, 16px) !important;
+    font-size: max(var(--cms-small-text-size, 17px), calc(16px * var(--cms-mobile-text-scale, 1.1))) !important;
     line-height: 1.45 !important;
   }
 
   #rec2171225961 .t-card__descr,
   #rec1025539481 .t-card__descr {
-    font-size: max(var(--cms-small-text-size, 16px), 15px) !important;
+    font-size: max(var(--cms-small-text-size, 17px), calc(15px * var(--cms-mobile-text-scale, 1.1))) !important;
     line-height: 1.35 !important;
   }
 
@@ -1162,13 +1165,22 @@ video {
     background-color: #000 !important;
   }
 
-  #rec2171225751 .tn-elem[data-elem-id="1700337416552"] .tn-atom {
-    font-size: max(var(--cms-small-text-size, 17px), calc(16px * var(--cms-mobile-text-scale, 1.1))) !important;
-    line-height: 1.55 !important;
+  #rec2171225751 .tn-elem[data-elem-id="1701371942146"] {
+    display: none !important;
+  }
+
+  #rec1025539376 .tn-elem[data-elem-id="1700337775212"] {
+    left: calc(50% - 160px + 0px) !important;
+    width: 320px !important;
+  }
+
+  #rec1025539376 .tn-elem[data-elem-id="1700337775212"] .tn-atom {
+    font-size: 31px !important;
+    line-height: 1.05 !important;
+    white-space: nowrap !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1701371942146"] {
-    display: none !important;
     top: 1392px !important;
     width: 284px !important;
   }

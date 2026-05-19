@@ -613,6 +613,36 @@ small {
   font-size: 12px;
 }
 
+.editor-text-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: end;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.editor-text-toolbar > span {
+  min-width: 0;
+  padding-bottom: 12px;
+  line-height: 1.35;
+}
+
+.editor-font-size {
+  width: 118px;
+  flex: 0 0 118px;
+  gap: 6px;
+}
+
+.editor-font-size input {
+  min-height: 38px;
+  padding: 8px 10px;
+}
+
+.editor-text-field {
+  display: block;
+}
+
 .editor-item textarea {
   min-height: 110px;
 }
@@ -743,9 +773,19 @@ small {
   .login__form,
   .form-grid,
   .block-panel__head,
+  .editor-text-toolbar,
   .editor-media {
     display: grid;
     grid-template-columns: 1fr;
+  }
+
+  .editor-text-toolbar > span {
+    padding-bottom: 0;
+  }
+
+  .editor-font-size {
+    width: 100%;
+    flex: none;
   }
 
   .block-tabs {
