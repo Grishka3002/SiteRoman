@@ -21,6 +21,8 @@ const uploadsDir = join(publicDir, 'uploads');
 const port = Number(process.env.PORT || 3000);
 const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
 const databaseUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL || '';
+const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN || '';
+const telegramChatId = process.env.TELEGRAM_CHAT_ID || '';
 const defaultCornerVideoUrl = '/assets/corner-video-roman.mp4';
 const legacyCornerVideoUrl = '/assets/360p.f5fe27dad4.mp4';
 const pool = databaseUrl
@@ -353,6 +355,82 @@ function sanitizeInquiry(payload, request) {
   };
 }
 
+function escapeTelegramHtml(value) {
+  return String(value || '').replace(/[&<>]/g, (char) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;'
+  })[char]);
+}
+
+function pageLabel(page) {
+  const labels = {
+    '/': 'Главная',
+    home: 'Главная',
+    '/wedding': 'Свадьба',
+    '/corporate': 'Корпоративы',
+    '/privacy': 'Политика конфиденциальности'
+  };
+  return labels[page] || page || 'Не указана';
+}
+
+function fieldValueText(value) {
+  if (Array.isArray(value)) return value.filter(Boolean).join(', ');
+  return String(value || '').trim();
+}
+
+function formatInquiryForTelegram(inquiry) {
+  const fields = Object.entries(inquiry.fields || {})
+    .map(([key, value]) => {
+      const cleanValue = fieldValueText(value);
+      return cleanValue ? `• <b>${escapeTelegramHtml(key)}:</b> ${escapeTelegramHtml(cleanValue)}` : '';
+    })
+    .filter(Boolean)
+    .join('\n');
+
+  const createdAt = new Intl.DateTimeFormat('ru-RU', {
+    dateStyle: 'short',
+    timeStyle: 'medium',
+    timeZone: 'Asia/Vladivostok'
+  }).format(new Date(inquiry.createdAt));
+
+  const lines = [
+    '<b>Новая заявка с сайта</b>',
+    '',
+    `<b>Страница:</b> ${escapeTelegramHtml(pageLabel(inquiry.page))}`,
+    `<b>Время:</b> ${escapeTelegramHtml(createdAt)}`,
+    inquiry.title ? `<b>Заголовок:</b> ${escapeTelegramHtml(inquiry.title)}` : '',
+    inquiry.formId ? `<b>Форма:</b> ${escapeTelegramHtml(inquiry.formId)}` : '',
+    '',
+    fields || 'Поля заявки не распознаны.'
+  ].filter(Boolean);
+
+  const message = lines.join('\n');
+  return message.length > 3900 ? `${message.slice(0, 3900)}\n...` : message;
+}
+
+async function notifyTelegram(inquiry) {
+  if (!telegramBotToken || !telegramChatId) return false;
+
+  const response = await fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: telegramChatId,
+      text: formatInquiryForTelegram(inquiry),
+      parse_mode: 'HTML',
+      disable_web_page_preview: true
+    })
+  });
+
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(payload.description || `Telegram API error ${response.status}`);
+  }
+
+  return true;
+}
+
 function parseMultipart(buffer, boundary) {
   const boundaryText = `--${boundary}`;
   const body = buffer.toString('binary');
@@ -466,6 +544,9 @@ async function handleApi(request, response, pathname) {
     const inquiries = await readInquiries();
     inquiries.push(inquiry);
     if (!await saveInquiryToDatabase(inquiry)) await saveInquiries(inquiries);
+    notifyTelegram(inquiry).catch((error) => {
+      console.error('Telegram notification failed:', error.message);
+    });
     return sendJson(response, 200, { ok: true, id: inquiry.id });
   }
 
