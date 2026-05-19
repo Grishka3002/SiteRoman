@@ -962,6 +962,59 @@
     window.setInterval(neutralizeLegacyVideoWidgets, 5000);
   }
 
+  const HUMAN_CHECK_TEXT_RE = /i(?:'|\u2019)?m not a robot|not a robot|check the box|let us know you(?:'|\u2019)?re human|you are human|captcha/i;
+
+  function removeNodeUnlessItOwnsFormFields(node) {
+    if (!node || node === document.body || node.tagName === 'FORM') return;
+    if (node.querySelector?.('input:not([type="checkbox"]):not([name*="captcha" i]):not([name*="recaptcha" i]), textarea, select, button[type="submit"]')) return;
+    node.remove();
+  }
+
+  function removeFormHumanChecks(root = document) {
+    const captchaSelector = [
+      '.t-captcha',
+      '.t-form__captcha',
+      '.t-form__captcha-wrapper',
+      '.js-form-captcha',
+      '.js-tilda-captcha',
+      '.smart-captcha',
+      '[data-captcha]',
+      '[data-smartcaptcha]',
+      'iframe[src*="captcha" i]',
+      'iframe[src*="recaptcha" i]',
+      'iframe[src*="smartcaptcha" i]',
+      'input[name*="captcha" i]',
+      'input[name*="recaptcha" i]',
+      'input[name*="smart-token" i]'
+    ].join(',');
+
+    root.querySelectorAll(captchaSelector).forEach((node) => {
+      const container = node.closest('.t-input-group, .t-form__captcha, .t-form__captcha-wrapper, .js-form-captcha, .smart-captcha, [data-captcha]') || node;
+      removeNodeUnlessItOwnsFormFields(container);
+    });
+
+    root.querySelectorAll('form *').forEach((node) => {
+      if (!HUMAN_CHECK_TEXT_RE.test(String(node.textContent || ''))) return;
+      const container = node.closest('.t-input-group, .t-form__captcha, .t-form__captcha-wrapper, .js-form-captcha, .smart-captcha, [data-captcha]') || node;
+      removeNodeUnlessItOwnsFormFields(container);
+    });
+
+    document.querySelectorAll('body *').forEach((node) => {
+      if (!HUMAN_CHECK_TEXT_RE.test(String(node.textContent || ''))) return;
+      if (!node.querySelector?.('input[type="checkbox"], iframe')) return;
+      const container = node.closest('[role="dialog"], .t-popup, .t-form__captcha, .t-form__captcha-wrapper, .js-form-captcha, .smart-captcha, [data-captcha]') || node;
+      removeNodeUnlessItOwnsFormFields(container);
+    });
+  }
+
+  function bindHumanCheckRemoval() {
+    removeFormHumanChecks();
+    if (!document.body || typeof MutationObserver !== 'function') return;
+    const observer = new MutationObserver(() => removeFormHumanChecks());
+    observer.observe(document.body, { childList: true, subtree: true });
+    window.setTimeout(() => observer.disconnect(), 10000);
+  }
+
   function collectFormFields(form) {
     const fields = {};
     const formData = new FormData(form);
@@ -1035,9 +1088,13 @@
     cleanForm.classList.remove('js-form-proccess');
     cleanForm.removeAttribute('data-formactiontype');
     cleanForm.removeAttribute('data-success-callback');
+    cleanForm.removeAttribute('data-captcha');
+    cleanForm.removeAttribute('data-recaptcha');
+    cleanForm.removeAttribute('data-smartcaptcha');
     cleanForm.setAttribute('action', '/api/inquiry');
     cleanForm.setAttribute('method', 'post');
     cleanForm.querySelectorAll('[name="formservices[]"], [name="formservices"]').forEach((node) => node.remove());
+    removeFormHumanChecks(cleanForm);
     cleanForm.querySelectorAll('.js-errorbox-all, .js-rule-error, .js-error-control-box').forEach((node) => {
       node.classList.remove('js-rule-error', 'js-error-control-box');
       if (node.classList.contains('js-errorbox-all')) node.style.display = 'none';
@@ -1090,9 +1147,16 @@
   bindLazyMediaObserver();
   bindLoadMoreHydration();
   preloadHeroImage();
+  bindHumanCheckRemoval();
   mountLocalForms();
-  window.setTimeout(mountLocalForms, 600);
-  window.setTimeout(mountLocalForms, 1800);
+  window.setTimeout(() => {
+    removeFormHumanChecks();
+    mountLocalForms();
+  }, 600);
+  window.setTimeout(() => {
+    removeFormHumanChecks();
+    mountLocalForms();
+  }, 1800);
   mountWeddingContacts();
   mountCorporateGuarantees();
   mountTariffReadMore();
