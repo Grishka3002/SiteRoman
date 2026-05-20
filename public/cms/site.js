@@ -1085,7 +1085,7 @@
     const button = submitButton || form.querySelector('[type="submit"]');
     const previousDisabled = button?.disabled;
     if (button) button.disabled = true;
-    showFormMessage(form, 'РћС‚РїСЂР°РІР»СЏРµРј Р·Р°СЏРІРєСѓ...');
+    showFormMessage(form, 'Отправляем заявку...');
 
     try {
       const response = await fetch('/api/inquiry', {
@@ -1099,7 +1099,7 @@
         })
       });
       const payload = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(payload.error || 'РќРµ СѓРґР°Р»РѕСЃСЊ РѕС‚РїСЂР°РІРёС‚СЊ Р·Р°СЏРІРєСѓ');
+      if (!response.ok) throw new Error(payload.error || 'Не удалось отправить заявку');
       if (!payload.telegramNotified) {
         console.warn('Telegram notification was not sent:', payload.telegramError || 'check server environment variables and logs');
       }
