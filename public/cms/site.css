@@ -37,6 +37,8 @@
   #rec1025539376 .tn-elem[data-elem-id="1701371942141"],
   #rec1025539376 .tn-elem[data-elem-id="1701371942144"] {
     z-index: 20 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1701371942141"],
