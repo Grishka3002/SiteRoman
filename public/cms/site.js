@@ -292,6 +292,86 @@
     });
   }
 
+  function sourceFromImageLayer(layer) {
+    const atom = layer?.querySelector('.tn-atom');
+    const img = layer?.querySelector('img');
+    const original = atom?.getAttribute('data-original') || img?.getAttribute('data-original') || img?.getAttribute('src');
+    if (original) return original;
+    const background = atom ? window.getComputedStyle(atom).backgroundImage : '';
+    const match = background.match(/url\(["']?([^"')]+)["']?\)/i);
+    return match?.[1] || '';
+  }
+
+  function mountNativeIntroCards() {
+    if (!window.matchMedia('(max-width: 479px)').matches) return;
+
+    ['rec2171225751', 'rec1025539376'].forEach((recordId) => {
+      const record = document.getElementById(recordId);
+      const artboard = record?.querySelector('.t396__artboard');
+      const oldCard = record?.querySelector('.tn-elem[data-elem-id="1701371942122"]');
+      const oldPhoto = record?.querySelector('.tn-elem[data-elem-id="1700335086807"]');
+      if (!record || !artboard || !oldCard || !oldPhoto) return;
+
+      let card = record.querySelector('.cms-native-intro-card');
+      if (!card) {
+        const photoUrl = sourceFromImageLayer(oldPhoto);
+        const signatureUrl = sourceFromImageLayer(record.querySelector('.tn-elem[data-elem-id="1701371942148"]'));
+        const icons = [
+          sourceFromImageLayer(record.querySelector('.tn-elem[data-elem-id="1701371942144"]')),
+          sourceFromImageLayer(record.querySelector('.tn-elem[data-elem-id="1701371942129"]')),
+          sourceFromImageLayer(record.querySelector('.tn-elem[data-elem-id="1701371942134"]')),
+          sourceFromImageLayer(record.querySelector('.tn-elem[data-elem-id="1701371942139"]'))
+        ].filter(Boolean);
+
+        if (!photoUrl || icons.length < 4) return;
+
+        card = document.createElement('div');
+        card.className = 'cms-native-intro-card';
+        card.innerHTML = `
+          <div class="cms-native-intro-card__photo"></div>
+          <div class="cms-native-intro-card__line"></div>
+          ${signatureUrl ? `<img class="cms-native-intro-card__signature" src="${escapeHtml(signatureUrl)}" alt="">` : ''}
+          <div class="cms-native-intro-card__icons">
+            ${icons.map((src) => `<img src="${escapeHtml(src)}" alt="">`).join('')}
+          </div>
+        `;
+        card.querySelector('.cms-native-intro-card__photo').style.backgroundImage = `url("${photoUrl}")`;
+        artboard.append(card);
+      }
+
+      let cardTop = Number.parseFloat(card.dataset.cmsNativeTop || '');
+      const artRect = artboard.getBoundingClientRect();
+      const text = record.querySelector('.tn-elem[data-elem-id="1700337416552"]');
+      const textBottom = text ? text.getBoundingClientRect().bottom - artRect.top + 16 : 0;
+      if (!Number.isFinite(cardTop)) {
+        if (window.getComputedStyle(oldCard).display === 'none') return;
+        const oldCardRect = oldCard.getBoundingClientRect();
+        cardTop = Math.round(Math.max(oldCardRect.top - artRect.top, textBottom));
+        card.dataset.cmsNativeTop = String(cardTop);
+      } else if (textBottom > cardTop + 1) {
+        cardTop = Math.round(textBottom);
+        card.dataset.cmsNativeTop = String(cardTop);
+      }
+
+      card.style.top = `${cardTop}px`;
+      record.classList.add('cms-native-intro-card-ready');
+
+      window.requestAnimationFrame(() => {
+        const nextHeight = Math.ceil(cardTop + card.offsetHeight + 34);
+        record.querySelectorAll('.t396__artboard, .t396__filter, .t396__carrier').forEach((node) => {
+          node.style.setProperty('height', `${nextHeight}px`, 'important');
+        });
+      });
+    });
+  }
+
+  function bindNativeIntroCards() {
+    mountNativeIntroCards();
+    window.setTimeout(mountNativeIntroCards, 400);
+    window.setTimeout(mountNativeIntroCards, 1200);
+    window.addEventListener('resize', mountNativeIntroCards);
+  }
+
   function mountBottomBlock(settings = {}) {
     const config = settings.bottomBlock || {};
     const text = String(config.text || '').trim();
@@ -1216,6 +1296,7 @@
   mountWeddingContacts();
   mountCorporateGuarantees();
   mountTariffReadMore();
+  bindNativeIntroCards();
   neutralizeLegacyVideoWidgets();
 
   fetch('/api/cms')
@@ -1226,6 +1307,7 @@
       const settings = cms.settings || {};
       applyCustomTextFontSizes();
       applyTypographySettings(settings);
+      mountNativeIntroCards();
       applyVideoPosters(settings);
       const mediaMounted = appendMediaToPortfolio(media);
       const reviewsMounted = renderReviewCarousel(reviews);
@@ -1240,6 +1322,7 @@
     .catch(() => {
       applyCustomTextFontSizes();
       applyTypographySettings();
+      mountNativeIntroCards();
       mountCornerVideo();
     });
 })();

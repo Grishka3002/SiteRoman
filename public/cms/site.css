@@ -6,6 +6,76 @@
 }
 
 @media (max-width: 479px) {
+  .cms-native-intro-card-ready .tn-elem[data-elem-id="1701371942122"],
+  .cms-native-intro-card-ready .tn-elem[data-elem-id="1700335086807"],
+  .cms-native-intro-card-ready .tn-elem[data-elem-id="1701371942146"],
+  .cms-native-intro-card-ready .tn-elem[data-elem-id="1701371942148"],
+  .cms-native-intro-card-ready .tn-elem[data-elem-id="1701371942126"],
+  .cms-native-intro-card-ready .tn-elem[data-elem-id="1701371942129"],
+  .cms-native-intro-card-ready .tn-elem[data-elem-id="1701371942132"],
+  .cms-native-intro-card-ready .tn-elem[data-elem-id="1701371942134"],
+  .cms-native-intro-card-ready .tn-elem[data-elem-id="1701371942137"],
+  .cms-native-intro-card-ready .tn-elem[data-elem-id="1701371942139"],
+  .cms-native-intro-card-ready .tn-elem[data-elem-id="1701371942141"],
+  .cms-native-intro-card-ready .tn-elem[data-elem-id="1701371942144"],
+  .cms-native-intro-card-ready .tn-elem[data-elem-id="1703661412047"] {
+    display: none !important;
+  }
+
+  .cms-native-intro-card {
+    position: absolute;
+    left: 50%;
+    z-index: 12;
+    width: calc(100vw - 10px);
+    max-width: 366px;
+    padding: 24px 24px 18px;
+    box-sizing: border-box;
+    border-radius: 20px;
+    background: #e3e3e3;
+    color: #000;
+    transform: translateX(-50%);
+  }
+
+  .cms-native-intro-card__photo {
+    width: 100%;
+    aspect-ratio: 284 / 369;
+    border-radius: 5px;
+    background-color: #000;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .cms-native-intro-card__line {
+    height: 1px;
+    margin: 16px 0 8px;
+    background: #b0b0b0;
+  }
+
+  .cms-native-intro-card__signature {
+    display: block;
+    width: 42px;
+    height: auto;
+    margin: 0 0 15px;
+  }
+
+  .cms-native-intro-card__icons {
+    display: flex;
+    align-items: center;
+    gap: 19px;
+  }
+
+  .cms-native-intro-card__icons img {
+    display: block;
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+  }
+
+  .cms-native-intro-card__icons img:last-child {
+    margin-left: auto;
+  }
+
   #rec2171225751 .tn-elem[data-elem-id="1701371942122"],
   #rec1025539376 .tn-elem[data-elem-id="1701371942122"] {
     z-index: 1 !important;
