@@ -345,7 +345,7 @@ function sanitizeInquiry(payload, request) {
     title: String(payload.title || ''),
     userAgent: request.headers['user-agent'] || '',
     fields: Object.fromEntries(Object.entries(fields)
-      .filter(([key]) => !key.startsWith('formservices') && key !== 'form-spec-comments')
+      .filter(([key]) => shouldKeepInquiryField(key))
       .map(([key, value]) => [
         String(key).slice(0, 120),
         Array.isArray(value)
@@ -353,6 +353,15 @@ function sanitizeInquiry(payload, request) {
           : String(value).slice(0, 4000)
       ]))
   };
+}
+
+function shouldKeepInquiryField(key) {
+  const cleanKey = String(key || '').trim();
+  if (!cleanKey) return false;
+  if (cleanKey.startsWith('formservices') || cleanKey.startsWith('tildaspec')) return false;
+  if (cleanKey === 'form-spec-comments' || cleanKey === 'Checkbox' || cleanKey === 'ВАЖНО') return false;
+  if (/^-+$/.test(cleanKey)) return false;
+  return true;
 }
 
 function escapeTelegramHtml(value) {
@@ -399,8 +408,6 @@ function formatInquiryForTelegram(inquiry) {
     '',
     `<b>Страница:</b> ${escapeTelegramHtml(pageLabel(inquiry.page))}`,
     `<b>Время:</b> ${escapeTelegramHtml(createdAt)}`,
-    inquiry.title ? `<b>Заголовок:</b> ${escapeTelegramHtml(inquiry.title)}` : '',
-    inquiry.formId ? `<b>Форма:</b> ${escapeTelegramHtml(inquiry.formId)}` : '',
     '',
     fields || 'Поля заявки не распознаны.'
   ].filter(Boolean);
@@ -548,20 +555,12 @@ async function handleApi(request, response, pathname) {
     const inquiries = await readInquiries();
     inquiries.push(inquiry);
     if (!await saveInquiryToDatabase(inquiry)) await saveInquiries(inquiries);
-    let telegramNotified = false;
-    let telegramError = '';
-    await notifyTelegram(inquiry).then((notified) => {
-      telegramNotified = Boolean(notified);
+    notifyTelegram(inquiry).then((notified) => {
+      if (!notified) console.warn('Telegram notification was not sent:', inquiry.id);
     }).catch((error) => {
-      telegramError = error.message;
       console.error('Telegram notification failed:', error.message);
     });
-    return sendJson(response, 200, {
-      ok: true,
-      id: inquiry.id,
-      telegramNotified,
-      telegramError: telegramNotified ? undefined : telegramError || 'Telegram notification was not sent'
-    });
+    return sendJson(response, 200, { ok: true, id: inquiry.id, telegramQueued: true });
   }
 
   if (request.method === 'POST' && pathname === '/api/login') {

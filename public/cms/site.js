@@ -1019,7 +1019,7 @@
     const fields = {};
     const formData = new FormData(form);
     formData.forEach((value, key) => {
-      if (!key || key.startsWith('formservices') || key === 'form-spec-comments') return;
+      if (!shouldKeepInquiryField(key)) return;
       if (value instanceof File) return;
       const cleanValue = String(value || '').trim();
       if (!cleanValue) return;
@@ -1027,6 +1027,15 @@
       else fields[key] = cleanValue;
     });
     return fields;
+  }
+
+  function shouldKeepInquiryField(key) {
+    const cleanKey = String(key || '').trim();
+    if (!cleanKey) return false;
+    if (cleanKey.startsWith('formservices') || cleanKey.startsWith('tildaspec')) return false;
+    if (cleanKey === 'form-spec-comments' || cleanKey === 'Checkbox' || cleanKey === 'ВАЖНО') return false;
+    if (/^-+$/.test(cleanKey)) return false;
+    return true;
   }
 
   function showFormMessage(form, message, isError) {
@@ -1100,7 +1109,7 @@
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(payload.error || 'Не удалось отправить заявку');
-      if (!payload.telegramNotified) {
+      if (payload.telegramNotified === false) {
         console.warn('Telegram notification was not sent:', payload.telegramError || 'check server environment variables and logs');
       }
       handleLocalFormSuccess(form);
@@ -1175,7 +1184,7 @@
           });
           const payload = await response.json().catch(() => ({}));
           if (!response.ok) throw new Error(payload.error || 'Не удалось отправить заявку');
-          if (!payload.telegramNotified) {
+          if (payload.telegramNotified === false) {
             console.warn('Telegram notification was not sent:', payload.telegramError || 'check server environment variables and logs');
           }
           handleLocalFormSuccess(form);
