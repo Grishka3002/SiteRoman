@@ -292,104 +292,6 @@
     });
   }
 
-  const introCardRecordIds = ['rec2171225751', 'rec1025539376'];
-  const INTRO_CARD_MOBILE_HEIGHT = 532;
-  const INTRO_CARD_THANKS_OFFSET = 36;
-  const introCardLayerIds = [
-    '1701371942122',
-    '1700335086807',
-    '1701371942146',
-    '1701371942148',
-    '1701371942126',
-    '1701371942129',
-    '1701371942132',
-    '1701371942134',
-    '1701371942137',
-    '1701371942139',
-    '1701371942141',
-    '1701371942144',
-    '1703661412047'
-  ];
-
-  function px(value) {
-    const parsed = Number.parseFloat(value || '');
-    return Number.isFinite(parsed) ? parsed : 0;
-  }
-
-  function resizeIntroCardArtboard(record, cardTop, cardHeight, zoom = 1) {
-    const nextHeight = Math.ceil((cardTop + cardHeight + 95) * zoom);
-    record.querySelectorAll('.t396__artboard, .t396__filter, .t396__carrier').forEach((node) => {
-      node.style.setProperty('height', `${nextHeight}px`, 'important');
-    });
-  }
-
-  function alignMobileIntroCards() {
-    if (!window.matchMedia('(max-width: 479px)').matches) return;
-
-    introCardRecordIds.forEach((recordId) => {
-      const record = document.getElementById(recordId);
-      const text = record?.querySelector('.tn-elem[data-elem-id="1700337416552"]');
-      const card = record?.querySelector('.tn-elem[data-elem-id="1701371942122"]');
-      if (!record || !text || !card) return;
-
-      if (!record.dataset.cmsIntroCardBaseReady) {
-        const cardRect = card.getBoundingClientRect();
-        introCardLayerIds.forEach((id) => {
-          const layer = record.querySelector(`.tn-elem[data-elem-id="${id}"]`);
-          if (layer) {
-            layer.dataset.cmsBaseTop = String(px(window.getComputedStyle(layer).top));
-            layer.dataset.cmsBaseScreenOffset = String(layer.getBoundingClientRect().top - cardRect.top);
-          }
-        });
-        record.dataset.cmsIntroCardBaseReady = 'true';
-      }
-
-      const textStyle = window.getComputedStyle(text);
-      const cardStyle = window.getComputedStyle(card);
-      const textTop = px(textStyle.top);
-      const textHeight = text.offsetHeight || text.querySelector('.tn-atom')?.scrollHeight || 0;
-      const baseCardTop = Number.parseFloat(card.dataset.cmsBaseTop || '') || px(cardStyle.top);
-      const cardZoom = Math.max(1, px(cardStyle.zoom) || 1);
-      const desiredCardTop = Math.ceil(textTop + textHeight + 16);
-      const delta = desiredCardTop - baseCardTop;
-      card.style.setProperty('height', `${INTRO_CARD_MOBILE_HEIGHT}px`, 'important');
-
-      introCardLayerIds.forEach((id) => {
-        const layer = record.querySelector(`.tn-elem[data-elem-id="${id}"]`);
-        if (!layer) return;
-        const baseTop = Number.parseFloat(layer.dataset.cmsBaseTop || '');
-        if (!Number.isFinite(baseTop)) return;
-        const baseScreenOffset = Number.parseFloat(layer.dataset.cmsBaseScreenOffset || '');
-        const layerZoom = Math.max(1, px(window.getComputedStyle(layer).zoom) || 1);
-        const nextTop = Number.isFinite(baseScreenOffset)
-          ? (desiredCardTop * cardZoom + baseScreenOffset) / layerZoom
-          : baseTop + delta * (cardZoom / layerZoom);
-        const footerOffset = id === '1703661412047' ? INTRO_CARD_THANKS_OFFSET * (cardZoom / layerZoom) : 0;
-        layer.style.setProperty('top', `${Math.round(nextTop + footerOffset)}px`, 'important');
-        layer.style.setProperty('opacity', '1', 'important');
-        layer.style.setProperty('visibility', 'visible', 'important');
-      });
-
-      resizeIntroCardArtboard(record, desiredCardTop, INTRO_CARD_MOBILE_HEIGHT, cardZoom);
-    });
-  }
-
-  function bindMobileIntroCardAlignment() {
-    alignMobileIntroCards();
-    window.setTimeout(alignMobileIntroCards, 250);
-    window.setTimeout(alignMobileIntroCards, 900);
-    window.setTimeout(alignMobileIntroCards, 1800);
-    window.setTimeout(alignMobileIntroCards, 3200);
-    const interval = window.setInterval(alignMobileIntroCards, 700);
-    window.setTimeout(() => window.clearInterval(interval), 6500);
-    window.addEventListener('resize', alignMobileIntroCards);
-    let scrollTimer = 0;
-    window.addEventListener('scroll', () => {
-      window.clearTimeout(scrollTimer);
-      scrollTimer = window.setTimeout(alignMobileIntroCards, 80);
-    }, { passive: true });
-  }
-
   function mountBottomBlock(settings = {}) {
     const config = settings.bottomBlock || {};
     const text = String(config.text || '').trim();
@@ -1314,7 +1216,6 @@
   mountWeddingContacts();
   mountCorporateGuarantees();
   mountTariffReadMore();
-  bindMobileIntroCardAlignment();
   neutralizeLegacyVideoWidgets();
 
   fetch('/api/cms')
@@ -1325,7 +1226,6 @@
       const settings = cms.settings || {};
       applyCustomTextFontSizes();
       applyTypographySettings(settings);
-      alignMobileIntroCards();
       applyVideoPosters(settings);
       const mediaMounted = appendMediaToPortfolio(media);
       const reviewsMounted = renderReviewCarousel(reviews);
@@ -1340,7 +1240,6 @@
     .catch(() => {
       applyCustomTextFontSizes();
       applyTypographySettings();
-      alignMobileIntroCards();
       mountCornerVideo();
     });
 })();
