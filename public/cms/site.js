@@ -343,14 +343,18 @@
       const artRect = artboard.getBoundingClientRect();
       const text = record.querySelector('.tn-elem[data-elem-id="1700337416552"]');
       const textBottom = text ? text.getBoundingClientRect().bottom - artRect.top + 16 : 0;
+      let oldCardTop = Number.parseFloat(card.dataset.cmsOldCardTop || '');
       if (!Number.isFinite(cardTop)) {
         if (window.getComputedStyle(oldCard).display === 'none') return;
         const oldCardRect = oldCard.getBoundingClientRect();
-        cardTop = Math.round(Math.max(oldCardRect.top - artRect.top, textBottom));
-        card.dataset.cmsNativeTop = String(cardTop);
-      } else if (textBottom > cardTop + 1) {
-        cardTop = Math.round(textBottom);
-        card.dataset.cmsNativeTop = String(cardTop);
+        oldCardTop = Math.round(oldCardRect.top - artRect.top);
+        card.dataset.cmsOldCardTop = String(oldCardTop);
+      }
+
+      const nextCardTop = Math.round(Math.max(Number.isFinite(oldCardTop) ? oldCardTop : 0, textBottom));
+      if (!Number.isFinite(cardTop) || Math.abs(nextCardTop - cardTop) > 1) {
+        cardTop = nextCardTop;
+        card.dataset.cmsNativeTop = String(nextCardTop);
       }
 
       card.style.top = `${cardTop}px`;
@@ -369,7 +373,18 @@
     mountNativeIntroCards();
     window.setTimeout(mountNativeIntroCards, 400);
     window.setTimeout(mountNativeIntroCards, 1200);
+    window.setTimeout(mountNativeIntroCards, 2500);
+    window.setTimeout(mountNativeIntroCards, 4500);
+    window.setTimeout(mountNativeIntroCards, 7000);
+    const interval = window.setInterval(mountNativeIntroCards, 800);
+    window.setTimeout(() => window.clearInterval(interval), 8500);
+    document.fonts?.ready?.then(mountNativeIntroCards).catch(() => {});
     window.addEventListener('resize', mountNativeIntroCards);
+    let scrollTimer = 0;
+    window.addEventListener('scroll', () => {
+      window.clearTimeout(scrollTimer);
+      scrollTimer = window.setTimeout(mountNativeIntroCards, 120);
+    }, { passive: true });
   }
 
   function mountBottomBlock(settings = {}) {
