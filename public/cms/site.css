@@ -6,6 +6,39 @@
 }
 
 @media (max-width: 479px) {
+  #rec2171225751 .tn-elem[data-elem-id="1701371942122"],
+  #rec1025539376 .tn-elem[data-elem-id="1701371942122"] {
+    z-index: 1 !important;
+  }
+
+  #rec2171225751 .tn-elem[data-elem-id="1700335086807"],
+  #rec1025539376 .tn-elem[data-elem-id="1700335086807"] {
+    z-index: 2 !important;
+  }
+
+  #rec2171225751 .tn-elem[data-elem-id="1701371942146"],
+  #rec2171225751 .tn-elem[data-elem-id="1701371942148"],
+  #rec2171225751 .tn-elem[data-elem-id="1701371942126"],
+  #rec2171225751 .tn-elem[data-elem-id="1701371942129"],
+  #rec2171225751 .tn-elem[data-elem-id="1701371942132"],
+  #rec2171225751 .tn-elem[data-elem-id="1701371942134"],
+  #rec2171225751 .tn-elem[data-elem-id="1701371942137"],
+  #rec2171225751 .tn-elem[data-elem-id="1701371942139"],
+  #rec2171225751 .tn-elem[data-elem-id="1701371942141"],
+  #rec2171225751 .tn-elem[data-elem-id="1701371942144"],
+  #rec1025539376 .tn-elem[data-elem-id="1701371942146"],
+  #rec1025539376 .tn-elem[data-elem-id="1701371942148"],
+  #rec1025539376 .tn-elem[data-elem-id="1701371942126"],
+  #rec1025539376 .tn-elem[data-elem-id="1701371942129"],
+  #rec1025539376 .tn-elem[data-elem-id="1701371942132"],
+  #rec1025539376 .tn-elem[data-elem-id="1701371942134"],
+  #rec1025539376 .tn-elem[data-elem-id="1701371942137"],
+  #rec1025539376 .tn-elem[data-elem-id="1701371942139"],
+  #rec1025539376 .tn-elem[data-elem-id="1701371942141"],
+  #rec1025539376 .tn-elem[data-elem-id="1701371942144"] {
+    z-index: 20 !important;
+  }
+
   #rec2171225751 .tn-elem[data-elem-id="1701371942141"],
   #rec2171225751 .tn-elem[data-elem-id="1701371942144"],
   #rec1025539376 .tn-elem[data-elem-id="1701371942141"],
