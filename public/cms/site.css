@@ -1220,12 +1220,12 @@ video {
   #rec2171225751 .t396__artboard,
   #rec2171225751 .t396__filter,
   #rec2171225751 .t396__carrier {
-    height: 2240px !important;
+    height: 2050px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1701371942122"] {
     top: 1450px !important;
-    height: 660px !important;
+    height: 488px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1700335086807"] {
@@ -1241,7 +1241,7 @@ video {
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1701371942146"] {
-    display: none !important;
+    display: table !important;
   }
 
   #rec1025539376 .tn-elem[data-elem-id="1700337775212"] {
@@ -1253,11 +1253,6 @@ video {
     font-size: 31px !important;
     line-height: 1.05 !important;
     white-space: nowrap !important;
-  }
-
-  #rec2171225751 .tn-elem[data-elem-id="1701371942146"] {
-    top: 1848px !important;
-    width: 284px !important;
   }
 
   #rec2171225751 .tn-elem[data-elem-id="1701371942148"] {
@@ -1283,6 +1278,16 @@ video {
 
   #rec2171225751 .tn-elem[data-elem-id="1703661412047"] {
     top: 1888px !important;
+  }
+
+  #rec1025539376 .t396__artboard,
+  #rec1025539376 .t396__filter,
+  #rec1025539376 .t396__carrier {
+    height: 1530px !important;
+  }
+
+  #rec1025539376 .tn-elem[data-elem-id="1701371942122"] {
+    height: 488px !important;
   }
 
   #rec2171225881 .t396__artboard,
