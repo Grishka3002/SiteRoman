@@ -2,7 +2,7 @@ import { createServer } from 'node:http';
 import { createReadStream, statSync } from 'node:fs';
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
-import { basename, extname, join, normalize } from 'node:path';
+import { basename, extname, isAbsolute, join, normalize } from 'node:path';
 import { tmpdir } from 'node:os';
 import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
@@ -14,10 +14,16 @@ const require = createRequire(import.meta.url);
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 
 const publicDir = join(process.cwd(), 'public');
-const dataDir = join(process.cwd(), 'data');
+const defaultDataDir = join(process.cwd(), 'data');
+const storageMode = String(process.env.STORAGE_MODE || '').trim().toLowerCase();
+const storageDirEnv = String(process.env.STORAGE_DIR || '').trim();
+const storageDir = storageDirEnv
+  ? normalize(isAbsolute(storageDirEnv) ? storageDirEnv : join(process.cwd(), storageDirEnv))
+  : '';
+const dataDir = storageDir ? join(storageDir, 'data') : defaultDataDir;
 const cmsPath = join(dataDir, 'cms.json');
 const inquiriesPath = join(dataDir, 'inquiries.json');
-const uploadsDir = join(publicDir, 'uploads');
+const uploadsDir = storageDir ? join(storageDir, 'uploads') : join(publicDir, 'uploads');
 const port = Number(process.env.PORT || 3000);
 const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
 const databaseUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL || '';
@@ -25,7 +31,8 @@ const telegramBotToken = String(process.env.TELEGRAM_BOT_TOKEN || '').trim();
 const telegramChatId = String(process.env.TELEGRAM_CHAT_ID || '').trim();
 const defaultCornerVideoUrl = '/assets/corner-video-roman.mp4';
 const legacyCornerVideoUrl = '/assets/360p.f5fe27dad4.mp4';
-const pool = databaseUrl
+const usePostgres = storageMode !== 'filesystem' && Boolean(databaseUrl);
+const pool = usePostgres
   ? new Pool({
     connectionString: databaseUrl,
     ssl: databaseUrl.includes('sslmode=require') ? { rejectUnauthorized: false } : undefined
@@ -110,6 +117,7 @@ async function initDatabase() {
 const databaseReady = initDatabase()
   .then((ready) => {
     if (ready) console.log('Postgres storage is enabled');
+    else if (storageMode === 'filesystem') console.log(`Filesystem storage is enabled at ${storageDir || process.cwd()}`);
     return ready;
   })
   .catch((error) => {
@@ -185,6 +193,31 @@ function sendBuffer(response, request, content, contentType, cacheControl) {
   response.end(content);
 }
 
+function sendFile(response, request, filePath, contentType, cacheControl) {
+  const stats = statSync(filePath);
+  const range = parseRange(request.headers.range, stats.size);
+
+  if (range) {
+    response.writeHead(206, {
+      'Content-Type': contentType,
+      'Content-Length': range.end - range.start + 1,
+      'Content-Range': `bytes ${range.start}-${range.end}/${stats.size}`,
+      'Accept-Ranges': 'bytes',
+      'Cache-Control': cacheControl
+    });
+    createReadStream(filePath, { start: range.start, end: range.end }).pipe(response);
+    return;
+  }
+
+  response.writeHead(200, {
+    'Content-Type': contentType,
+    'Content-Length': stats.size,
+    'Accept-Ranges': 'bytes',
+    'Cache-Control': cacheControl
+  });
+  createReadStream(filePath).pipe(response);
+}
+
 function runFfmpeg(args) {
   return new Promise((resolve, reject) => {
     const child = spawn(ffmpegPath, args, { windowsHide: true });
@@ -258,6 +291,15 @@ async function readCms() {
     await saveCmsToDatabase(cms);
     return cms;
   } catch {
+    if (cmsPath !== join(defaultDataDir, 'cms.json')) {
+      try {
+        const cms = normalizeCms(JSON.parse(await readFile(join(defaultDataDir, 'cms.json'), 'utf8')));
+        await saveCms(cms);
+        return cms;
+      } catch {
+        // Fall through to built-in defaults.
+      }
+    }
     return defaultCms;
   }
 }
@@ -647,7 +689,11 @@ async function handleUploadRequest(request, response, pathname) {
   const localPath = join(uploadsDir, name);
   try {
     const stats = statSync(localPath);
-    if (stats.isFile()) return false;
+    if (stats.isFile()) {
+      const contentType = mimeTypes[extname(localPath).toLowerCase()] || 'application/octet-stream';
+      sendFile(response, request, localPath, contentType, 'public, max-age=31536000, immutable');
+      return true;
+    }
   } catch {
     // Missing local files can still be restored from Postgres after a redeploy.
   }
@@ -683,27 +729,8 @@ createServer(async (request, response) => {
     filePath.includes(`${join('public', 'cms')}`);
 
   const stats = statSync(filePath);
-  const range = parseRange(request.headers.range, stats.size);
-  if (range) {
-    response.writeHead(206, {
-      'Content-Type': type,
-      'Content-Length': range.end - range.start + 1,
-      'Content-Range': `bytes ${range.start}-${range.end}/${stats.size}`,
-      'Accept-Ranges': 'bytes',
-      'Cache-Control': noCache ? 'no-store, max-age=0' : 'public, max-age=31536000, immutable'
-    });
-    createReadStream(filePath, { start: range.start, end: range.end }).pipe(response);
-    return;
-  }
-
-  response.writeHead(200, {
-    'Content-Type': type,
-    'Content-Length': stats.size,
-    'Accept-Ranges': 'bytes',
-    'Cache-Control': noCache ? 'no-store, max-age=0' : 'public, max-age=31536000, immutable'
-  });
-
-  createReadStream(filePath).pipe(response);
+  if (!stats.isFile()) return sendJson(response, 404, { error: 'Not found' });
+  sendFile(response, request, filePath, type, noCache ? 'no-store, max-age=0' : 'public, max-age=31536000, immutable');
 }).listen(port, '0.0.0.0', () => {
   console.log(`Site is running on http://localhost:${port}`);
 });
