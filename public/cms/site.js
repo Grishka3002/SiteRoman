@@ -302,6 +302,33 @@
     return match?.[1] || '';
   }
 
+  function realContentBottom(node, relativeTo) {
+    if (!node || !relativeTo) return 0;
+
+    const baseTop = relativeTo.getBoundingClientRect().top;
+    const nodeRect = node.getBoundingClientRect();
+    const atom = node.querySelector('.tn-atom') || node;
+    const atomRect = atom.getBoundingClientRect();
+    let bottom = Math.max(nodeRect.bottom - baseTop, atomRect.bottom - baseTop);
+
+    [node, atom].forEach((item) => {
+      const itemRect = item.getBoundingClientRect();
+      bottom = Math.max(bottom, itemRect.top - baseTop + item.scrollHeight);
+    });
+
+    const range = document.createRange();
+    try {
+      range.selectNodeContents(atom);
+      Array.from(range.getClientRects()).forEach((rect) => {
+        bottom = Math.max(bottom, rect.bottom - baseTop);
+      });
+    } finally {
+      range.detach?.();
+    }
+
+    return bottom;
+  }
+
   function mountNativeIntroCards() {
     if (!window.matchMedia('(max-width: 479px)').matches) return;
 
@@ -318,11 +345,11 @@
         const photoUrl = sourceFromImageLayer(oldPhoto);
         const signatureUrl = sourceFromImageLayer(record.querySelector('.tn-elem[data-elem-id="1701371942148"]'));
         const icons = [
-          sourceFromImageLayer(record.querySelector('.tn-elem[data-elem-id="1701371942144"]')),
-          sourceFromImageLayer(record.querySelector('.tn-elem[data-elem-id="1701371942129"]')),
-          sourceFromImageLayer(record.querySelector('.tn-elem[data-elem-id="1701371942134"]')),
-          sourceFromImageLayer(record.querySelector('.tn-elem[data-elem-id="1701371942139"]'))
-        ].filter(Boolean);
+          { action: 'like', src: sourceFromImageLayer(record.querySelector('.tn-elem[data-elem-id="1701371942144"]')), activeSrc: sourceFromImageLayer(record.querySelector('.tn-elem[data-elem-id="1701371942141"]')), targets: '1701371942144,1701371942141' },
+          { action: 'comment', src: sourceFromImageLayer(record.querySelector('.tn-elem[data-elem-id="1701371942129"]')), activeSrc: sourceFromImageLayer(record.querySelector('.tn-elem[data-elem-id="1701371942126"]')), targets: '1701371942129,1701371942126' },
+          { action: 'send', src: sourceFromImageLayer(record.querySelector('.tn-elem[data-elem-id="1701371942134"]')), activeSrc: sourceFromImageLayer(record.querySelector('.tn-elem[data-elem-id="1701371942132"]')), targets: '1701371942134,1701371942132' },
+          { action: 'save', src: sourceFromImageLayer(record.querySelector('.tn-elem[data-elem-id="1701371942139"]')), activeSrc: sourceFromImageLayer(record.querySelector('.tn-elem[data-elem-id="1701371942137"]')), targets: '1701371942139,1701371942137' }
+        ].filter((icon) => icon.src);
 
         if (!photoUrl || icons.length < 4) return;
 
@@ -333,7 +360,11 @@
           <div class="cms-native-intro-card__line"></div>
           ${signatureUrl ? `<img class="cms-native-intro-card__signature" src="${escapeHtml(signatureUrl)}" alt="">` : ''}
           <div class="cms-native-intro-card__icons">
-            ${icons.map((src) => `<img src="${escapeHtml(src)}" alt="">`).join('')}
+            ${icons.map((icon) => `
+              <button class="cms-native-intro-card__icon" type="button" data-action="${escapeHtml(icon.action)}" data-targets="${escapeHtml(icon.targets)}" data-src="${escapeHtml(icon.src)}" data-active-src="${escapeHtml(icon.activeSrc || icon.src)}">
+                <img src="${escapeHtml(icon.src)}" alt="">
+              </button>
+            `).join('')}
           </div>
         `;
         card.querySelector('.cms-native-intro-card__photo').style.backgroundImage = `url("${photoUrl}")`;
@@ -345,16 +376,36 @@
       card.style.removeProperty('top');
       record.classList.add('cms-native-intro-card-ready');
 
+      if (!card.dataset.cmsActionsReady) {
+        card.dataset.cmsActionsReady = 'true';
+        card.addEventListener('click', (event) => {
+          const button = event.target.closest('.cms-native-intro-card__icon');
+          if (!button) return;
+
+          const isActive = button.classList.toggle('is-active');
+          const image = button.querySelector('img');
+          const nextSrc = isActive ? button.dataset.activeSrc : button.dataset.src;
+          if (image && nextSrc) image.src = nextSrc;
+
+          (button.dataset.targets || '').split(',').forEach((id) => {
+            record.querySelector(`.tn-elem[data-elem-id="${id}"]`)?.dispatchEvent(new MouseEvent('click', {
+              bubbles: true,
+              cancelable: true,
+              view: window
+            }));
+          });
+        });
+      }
+
       window.requestAnimationFrame(() => {
-        const artRect = artboard.getBoundingClientRect();
         const textBlocks = [
           record.querySelector('.tn-elem[data-elem-id="1700337775212"]'),
           record.querySelector('.tn-elem[data-elem-id="1700337416552"]')
         ].filter((node) => node && window.getComputedStyle(node).display !== 'none');
         const textBottom = textBlocks.reduce((bottom, node) => {
-          return Math.max(bottom, node.getBoundingClientRect().bottom - artRect.top);
+          return Math.max(bottom, realContentBottom(node, artboard));
         }, 0);
-        const nextHeight = Math.ceil(Math.max(textBottom + 18, 0));
+        const nextHeight = Math.ceil(Math.max(textBottom + 48, 0));
         record.querySelectorAll('.t396__artboard, .t396__filter, .t396__carrier').forEach((node) => {
           node.style.setProperty('height', `${nextHeight}px`, 'important');
         });
