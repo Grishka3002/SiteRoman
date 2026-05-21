@@ -302,40 +302,8 @@
     return match?.[1] || '';
   }
 
-  function realContentBottom(node, relativeTo) {
-    if (!node || !relativeTo) return 0;
-
-    const baseTop = relativeTo.getBoundingClientRect().top;
-    const nodeRect = node.getBoundingClientRect();
-    const atom = node.querySelector('.tn-atom') || node;
-    const atomRect = atom.getBoundingClientRect();
-    let bottom = Math.max(nodeRect.bottom - baseTop, atomRect.bottom - baseTop);
-
-    [node, atom].forEach((item) => {
-      const itemRect = item.getBoundingClientRect();
-      bottom = Math.max(bottom, itemRect.top - baseTop + item.scrollHeight);
-    });
-
-    const range = document.createRange();
-    try {
-      range.selectNodeContents(atom);
-      Array.from(range.getClientRects()).forEach((rect) => {
-        bottom = Math.max(bottom, rect.bottom - baseTop);
-      });
-    } finally {
-      range.detach?.();
-    }
-
-    return bottom;
-  }
-
   function mountNativeIntroCards() {
     if (!window.matchMedia('(max-width: 479px)').matches) return;
-
-    const mobileIntroMinimumHeights = {
-      rec2171225751: 2380,
-      rec1025539376: 1530
-    };
 
     ['rec2171225751', 'rec1025539376'].forEach((recordId) => {
       const record = document.getElementById(recordId);
@@ -343,7 +311,27 @@
       const artboard = record?.querySelector('.t396__artboard');
       const oldCard = record?.querySelector('.tn-elem[data-elem-id="1701371942122"]');
       const oldPhoto = record?.querySelector('.tn-elem[data-elem-id="1700335086807"]');
+      const titleAtom = record?.querySelector('.tn-elem[data-elem-id="1700337775212"] .tn-atom');
+      const textAtom = record?.querySelector('.tn-elem[data-elem-id="1700337416552"] .tn-atom');
       if (!record || !t396 || !artboard || !oldCard || !oldPhoto) return;
+
+      let flow = record.querySelector('.cms-native-intro-flow');
+      if (!flow) {
+        flow = document.createElement('div');
+        flow.className = 'cms-native-intro-flow';
+        flow.innerHTML = `
+          <div class="cms-native-intro-flow__title"></div>
+          <div class="cms-native-intro-flow__text"></div>
+        `;
+        t396.after(flow);
+      } else if (flow.previousElementSibling !== t396) {
+        t396.after(flow);
+      }
+
+      const nativeTitle = flow.querySelector('.cms-native-intro-flow__title');
+      const nativeText = flow.querySelector('.cms-native-intro-flow__text');
+      if (nativeTitle && titleAtom) nativeTitle.innerHTML = titleAtom.innerHTML;
+      if (nativeText && textAtom) nativeText.innerHTML = textAtom.innerHTML;
 
       let card = record.querySelector('.cms-native-intro-card');
       if (!card) {
@@ -375,8 +363,8 @@
         card.querySelector('.cms-native-intro-card__photo').style.backgroundImage = `url("${photoUrl}")`;
       }
 
-      if (card.previousElementSibling !== t396) {
-        t396.after(card);
+      if (card.parentElement !== flow) {
+        flow.append(card);
       }
       card.style.removeProperty('top');
       record.classList.add('cms-native-intro-card-ready');
@@ -403,17 +391,8 @@
       }
 
       window.requestAnimationFrame(() => {
-        const textBlocks = [
-          record.querySelector('.tn-elem[data-elem-id="1700337775212"]'),
-          record.querySelector('.tn-elem[data-elem-id="1700337416552"]')
-        ].filter((node) => node && window.getComputedStyle(node).display !== 'none');
-        const textBottom = textBlocks.reduce((bottom, node) => {
-          return Math.max(bottom, realContentBottom(node, artboard));
-        }, 0);
-        const minHeight = mobileIntroMinimumHeights[recordId] || 0;
-        const nextHeight = Math.ceil(Math.max(textBottom + 48, minHeight));
         record.querySelectorAll('.t396__artboard, .t396__filter, .t396__carrier').forEach((node) => {
-          node.style.setProperty('height', `${nextHeight}px`, 'important');
+          node.style.setProperty('height', '0px', 'important');
         });
       });
     });
