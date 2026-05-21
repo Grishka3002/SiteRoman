@@ -307,10 +307,11 @@
 
     ['rec2171225751', 'rec1025539376'].forEach((recordId) => {
       const record = document.getElementById(recordId);
+      const t396 = record?.querySelector('.t396');
       const artboard = record?.querySelector('.t396__artboard');
       const oldCard = record?.querySelector('.tn-elem[data-elem-id="1701371942122"]');
       const oldPhoto = record?.querySelector('.tn-elem[data-elem-id="1700335086807"]');
-      if (!record || !artboard || !oldCard || !oldPhoto) return;
+      if (!record || !t396 || !artboard || !oldCard || !oldPhoto) return;
 
       let card = record.querySelector('.cms-native-intro-card');
       if (!card) {
@@ -336,32 +337,24 @@
           </div>
         `;
         card.querySelector('.cms-native-intro-card__photo').style.backgroundImage = `url("${photoUrl}")`;
-        artboard.append(card);
       }
 
-      let cardTop = Number.parseFloat(card.dataset.cmsNativeTop || '');
-      const artRect = artboard.getBoundingClientRect();
-      const text = record.querySelector('.tn-elem[data-elem-id="1700337416552"]');
-      const textBottom = text ? text.getBoundingClientRect().bottom - artRect.top + 16 : 0;
-      let oldCardTop = Number.parseFloat(card.dataset.cmsOldCardTop || '');
-      if (!Number.isFinite(cardTop)) {
-        if (window.getComputedStyle(oldCard).display === 'none') return;
-        const oldCardRect = oldCard.getBoundingClientRect();
-        oldCardTop = Math.round(oldCardRect.top - artRect.top);
-        card.dataset.cmsOldCardTop = String(oldCardTop);
+      if (card.previousElementSibling !== t396) {
+        t396.after(card);
       }
-
-      const nextCardTop = Math.round(Math.max(Number.isFinite(oldCardTop) ? oldCardTop : 0, textBottom));
-      if (!Number.isFinite(cardTop) || Math.abs(nextCardTop - cardTop) > 1) {
-        cardTop = nextCardTop;
-        card.dataset.cmsNativeTop = String(nextCardTop);
-      }
-
-      card.style.top = `${cardTop}px`;
+      card.style.removeProperty('top');
       record.classList.add('cms-native-intro-card-ready');
 
       window.requestAnimationFrame(() => {
-        const nextHeight = Math.ceil(cardTop + card.offsetHeight + 34);
+        const artRect = artboard.getBoundingClientRect();
+        const textBlocks = [
+          record.querySelector('.tn-elem[data-elem-id="1700337775212"]'),
+          record.querySelector('.tn-elem[data-elem-id="1700337416552"]')
+        ].filter((node) => node && window.getComputedStyle(node).display !== 'none');
+        const textBottom = textBlocks.reduce((bottom, node) => {
+          return Math.max(bottom, node.getBoundingClientRect().bottom - artRect.top);
+        }, 0);
+        const nextHeight = Math.ceil(Math.max(textBottom + 18, 0));
         record.querySelectorAll('.t396__artboard, .t396__filter, .t396__carrier').forEach((node) => {
           node.style.setProperty('height', `${nextHeight}px`, 'important');
         });

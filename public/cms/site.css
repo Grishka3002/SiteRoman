@@ -23,17 +23,16 @@
   }
 
   .cms-native-intro-card {
-    position: absolute;
-    left: 50%;
+    position: relative;
     z-index: 12;
     width: calc(100vw - 10px);
     max-width: 366px;
+    margin: 16px auto 0;
     padding: 24px 24px 18px;
     box-sizing: border-box;
     border-radius: 20px;
     background: #e3e3e3;
     color: #000;
-    transform: translateX(-50%);
   }
 
   .cms-native-intro-card__photo {
