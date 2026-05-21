@@ -332,6 +332,11 @@
   function mountNativeIntroCards() {
     if (!window.matchMedia('(max-width: 479px)').matches) return;
 
+    const mobileIntroMinimumHeights = {
+      rec2171225751: 2380,
+      rec1025539376: 1530
+    };
+
     ['rec2171225751', 'rec1025539376'].forEach((recordId) => {
       const record = document.getElementById(recordId);
       const t396 = record?.querySelector('.t396');
@@ -405,7 +410,8 @@
         const textBottom = textBlocks.reduce((bottom, node) => {
           return Math.max(bottom, realContentBottom(node, artboard));
         }, 0);
-        const nextHeight = Math.ceil(Math.max(textBottom + 48, 0));
+        const minHeight = mobileIntroMinimumHeights[recordId] || 0;
+        const nextHeight = Math.ceil(Math.max(textBottom + 48, minHeight));
         record.querySelectorAll('.t396__artboard, .t396__filter, .t396__carrier').forEach((node) => {
           node.style.setProperty('height', `${nextHeight}px`, 'important');
         });
