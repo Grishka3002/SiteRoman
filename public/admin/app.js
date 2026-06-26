@@ -754,6 +754,31 @@ function ensureCmsSettings() {
     : { text: '', fontSize: 16 };
 }
 
+function ensureHeadNode(tagName, selector, attributes = {}) {
+  if (!contentDoc?.head) return null;
+  let node = contentDoc.head.querySelector(selector);
+  if (!node) {
+    node = contentDoc.createElement(tagName);
+    Object.entries(attributes).forEach(([name, value]) => node.setAttribute(name, value));
+    contentDoc.head.append(node);
+  }
+  return node;
+}
+
+function pageTitleValue() {
+  if (!contentDoc) return '';
+  return contentDoc.querySelector('title')?.textContent || contentDoc.title || '';
+}
+
+function setPageTitleValue(value) {
+  if (!contentDoc) return;
+  const title = String(value || '').trim();
+  const titleNode = ensureHeadNode('title', 'title');
+  if (titleNode) titleNode.textContent = title;
+  const ogTitle = ensureHeadNode('meta', 'meta[property="og:title"]', { property: 'og:title' });
+  if (ogTitle) ogTitle.setAttribute('content', title);
+}
+
 function collectPageVideos() {
   if (!contentDoc) return [];
   return uniqueNodes($$('video', contentDoc)).map((video, index) => ({
@@ -768,13 +793,21 @@ function renderCmsSettings(panel) {
   const corner = cmsData.settings.cornerVideo;
   const typography = cmsData.settings.typography;
   const bottomBlock = cmsData.settings.bottomBlock;
+  const pageTitle = pageTitleValue();
   panel.innerHTML = `
     <div class="block-panel__head">
       <div>
         <h2>Настройки сайта</h2>
-        <p class="muted">Общие настройки, которые работают на всех страницах. Превью обычных видео теперь находятся во вкладке «Видео».</p>
+        <p class="muted">Настройки текущей страницы и общие параметры сайта. Превью обычных видео теперь находятся во вкладке «Видео».</p>
       </div>
     </div>
+    <section class="settings-card">
+      <h3>Заголовок вкладки и поисковика</h3>
+      <label>Текст
+        <textarea data-page-title rows="3" placeholder="Например: Роман Шумилов. Ведущий. Владивосток">${escapeHtml(pageTitle)}</textarea>
+      </label>
+      <p class="muted">Это та строка, которая отображается в названии вкладки браузера и передается в превью ссылки.</p>
+    </section>
     <div class="settings-grid">
       <section class="settings-card">
         <h3>Видео в углу сайта</h3>
@@ -834,6 +867,10 @@ function renderCmsSettings(panel) {
     onUpload: (url) => { corner.poster = url; }
   });
 
+  $('[data-page-title]', panel).addEventListener('input', (event) => {
+    setPageTitleValue(event.target.value);
+    status('Заголовок изменен. Нажмите «Сохранить страницу».');
+  });
   $('[data-setting-font-min]', panel).addEventListener('input', (event) => {
     typography.minMobileFontSize = Number(event.target.value || 17);
   });
@@ -854,7 +891,7 @@ function renderCmsSettings(panel) {
   });
   $('[data-save-settings]', panel).addEventListener('click', async () => {
     try {
-      await saveCmsData();
+      await saveContentPage();
       status('Настройки сохранены.');
     } catch (error) {
       status(error.message, true);
