@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Benzin';src:url('assets/fonts/Benzin-Regular.woff') format('woff');font-weight:400;font-display:swap}
+@font-face{font-family:'InterL';src:url('assets/fonts/Inter-Medium.woff') format('woff');font-weight:500;font-display:swap}
+@font-face{font-family:'InterL';src:url('assets/fonts/Inter-SemiBold.woff') format('woff');font-weight:600;font-display:swap}
+body{margin:0;background:#f0eee9;font-family:system-ui,sans-serif}
+.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 8px}
+.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}
+.dv-tname{font:600 13px/1.2 system-ui,sans-serif;color:#1a1a1a}
+.dv-note{margin:0 0 20px;font:12px/1.5 system-ui,sans-serif;color:rgba(0,0,0,.55);max-width:860px}
+.dv-opts{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}
+.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11px/1.3 system-ui,sans-serif;color:rgba(0,0,0,.55)}
+.dv-card{max-width:100%;background:#131315;border:1px solid rgba(0,0,0,.08);border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}
+.dv-opt:target .dv-oid{background:#2a78d6;color:#fff}
+.dv-next{margin:22px 0 0;font:12px/1.5 system-ui,sans-serif;color:rgba(0,0,0,.5)}
+@keyframes rshRise{from{opacity:0;transform:translateY(46px)}to{opacity:1;transform:translateY(0)}}
+@keyframes rshCurtainL{from{opacity:0;transform:translateX(-7%)}to{opacity:1;transform:translateX(0)}}
+@keyframes rshCurtainR{from{opacity:0;transform:translateX(7%)}to{opacity:1;transform:translateX(0)}}
+@keyframes rshMarq{to{transform:translateX(-50%)}}
+@keyframes rshMarqUp{to{transform:translateY(-50%)}}
+@keyframes rshMarqDown{from{transform:translateY(-50%)}to{transform:translateY(0)}}
+@keyframes rshKen{0%{transform:scale(1)}50%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes rshShine{to{background-position:-250% 0}}
+@keyframes rshDrift{0%{transform:translate(-12%,-6%)}50%{transform:translate(14%,10%)}100%{transform:translate(-12%,-6%)}}
+@keyframes rshPulse{0%{box-shadow:0 0 0 0 rgba(255,228,15,.55)}70%{box-shadow:0 0 0 14px rgba(255,228,15,0)}100%{box-shadow:0 0 0 0 rgba(255,228,15,0)}}
+@keyframes rshCaret{0%,45%{border-color:#FFE40F}50%,100%{border-color:transparent}}
+@keyframes rshFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes rshSpin{to{transform:rotate(360deg)}}
+</style>
+</helmet>
+
+<section class="dv-turn" id="t2">
+  <div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">Три анимированных варианта главной. Структура прежняя — 3 страницы: главная-развилка → «Свадьбы» и «Корпоративы».</span></div>
+  <p class="dv-note">Анимации живые: бегущие строки, Ken Burns на фото, блик по имени, прожектор, печатающийся заголовок. Наведите курсор на половины в <a class="dv-oid" href="#2a">2a</a> и кнопки в <a class="dv-oid" href="#2c">2c</a>.</p>
+  <div class="dv-opts">
+
+    <!-- ═══════════════ 2a: ШТОРЫ ═══════════════ -->
+    <div class="dv-opt" id="2a">
+      <div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>«Шторы» — экран поделён надвое, половины оживают на hover; внизу бегущая строка</div>
+      <div class="dv-card" style="width:1200px">
+        <div data-screen-label="2a Главная — шторы" style="background:#131315;color:#EDEAE3;font-family:'InterL',Inter,system-ui,sans-serif;position:relative;overflow:hidden">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:22px 44px;position:relative;z-index:5">
+            <div style="display:flex;align-items:center;gap:9px">
+              <span style="font-family:'Benzin';font-size:14px;letter-spacing:.06em">РШ</span>
+              <span style="width:6px;height:6px;border-radius:50%;background:#FFE40F;display:inline-block;animation:rshPulse 2.6s ease-out infinite"></span>
+            </div>
+            <span style="font-size:11px;letter-spacing:.3em;color:rgba(237,234,227,.55)">ВЕДУЩИЙ МЕРОПРИЯТИЙ</span>
+            <a href="#2a" style="color:#C6A15B;font-size:11.5px;letter-spacing:.12em;text-decoration:none;border:1px solid rgba(198,161,91,.5);padding:9px 16px;border-radius:2px">РАССЧИТАТЬ СТОИМОСТЬ</a>
+          </div>
+          <!-- split -->
+          <div style="display:flex;height:600px;gap:2px;padding:0 2px">
+            <div style="flex:1;position:relative;overflow:hidden;transition:flex .55s cubic-bezier(.22,.8,.24,1);animation:rshCurtainL .9s cubic-bezier(.22,.8,.24,1) both" style-hover="flex:1.45">
+              <img src="assets/gal-2.webp" alt="Свадьбы" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%;filter:grayscale(.4) contrast(1.05) brightness(.62);animation:rshKen 16s ease-in-out infinite">
+              <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(19,19,21,.3) 30%,rgba(19,19,21,.94) 100%)"></div>
+              <div style="position:absolute;left:40px;bottom:110px;right:40px">
+                <div style="font-size:11px;letter-spacing:.32em;color:#C6A15B;margin-bottom:12px">01 — /WEDDING</div>
+                <div style="font-family:'Benzin';font-size:34px;line-height:1.15">СВАДЬБЫ</div>
+                <div style="margin-top:12px;font-size:13.5px;line-height:1.6;color:rgba(237,234,227,.7);max-width:340px">Дипломированный свадебный церемониймейстер</div>
+                <div style="margin-top:18px;width:52px;height:52px;border:1px solid rgba(198,161,91,.6);border-radius:50%;display:grid;place-items:center;color:#C6A15B;font-size:18px;animation:rshFloat 3s ease-in-out infinite">→</div>
+              </div>
+            </div>
+            <div style="flex:1;position:relative;overflow:hidden;transition:flex .55s cubic-bezier(.22,.8,.24,1);animation:rshCurtainR .9s cubic-bezier(.22,.8,.24,1) both" style-hover="flex:1.45">
+              <img src="assets/vef.jpg" alt="Корпоративные события" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 18%;filter:grayscale(.4) contrast(1.05) brightness(.62);animation:rshKen 16s ease-in-out infinite 1.2s">
+              <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(19,19,21,.3) 30%,rgba(19,19,21,.94) 100%)"></div>
+              <div style="position:absolute;left:40px;bottom:110px;right:40px">
+                <div style="font-size:11px;letter-spacing:.32em;color:#C6A15B;margin-bottom:12px">02 — /CORPORATE</div>
+                <div style="font-family:'Benzin';font-size:34px;line-height:1.15">КОРПОРАТИВЫ</div>
+                <div style="margin-top:12px;font-size:13.5px;line-height:1.6;color:rgba(237,234,227,.7);max-width:340px">ВЭФ · Wildberries · Газпромбанк · МАЕР</div>
+                <div style="margin-top:18px;width:52px;height:52px;border:1px solid rgba(198,161,91,.6);border-radius:50%;display:grid;place-items:center;color:#C6A15B;font-size:18px;animation:rshFloat 3s ease-in-out infinite .4s">→</div>
+              </div>
+            </div>
+          </div>
+          <!-- name across -->
+          <div style="position:absolute;left:0;right:0;top:200px;text-align:center;pointer-events:none;z-index:4">
+            <div style="font-family:'Benzin';font-size:84px;line-height:1;letter-spacing:.01em;text-shadow:0 6px 40px rgba(0,0,0,.55);animation:rshRise 1s .25s cubic-bezier(.22,.8,.24,1) both">РОМАН</div>
+            <div style="font-family:'Benzin';font-size:84px;line-height:1.05;color:#C6A15B;text-shadow:0 6px 40px rgba(0,0,0,.55);animation:rshRise 1s .45s cubic-bezier(.22,.8,.24,1) both">ШУМИЛОВ</div>
+            <div style="margin-top:16px;font-size:13px;letter-spacing:.28em;color:rgba(237,234,227,.75);animation:rshRise 1s .65s cubic-bezier(.22,.8,.24,1) both">ВЫБЕРИТЕ РАЗДЕЛ</div>
+          </div>
+          <!-- marquee -->
+          <div style="position:relative;border-top:1px solid rgba(198,161,91,.25);overflow:hidden;padding:16px 0;background:#131315">
+            <div style="display:flex;width:max-content;animation:rshMarq 28s linear infinite">
+              <div style="display:flex;gap:34px;padding-right:34px;font-size:12px;letter-spacing:.22em;color:rgba(237,234,227,.55);white-space:nowrap">
+                <span>ОПЫТ С 2004 ГОДА</span><span style="color:#C6A15B">◆</span><span>ПРЕМЬЕР-ЛИГА КВН</span><span style="color:#C6A15B">◆</span><span>РАДИО И ТВ</span><span style="color:#C6A15B">◆</span><span>БАТЛ ВЕДУЩИХ, МОСКВА</span><span style="color:#C6A15B">◆</span><span>«АРТИСТ ЭСТРАДЫ»</span><span style="color:#C6A15B">◆</span><span>МЕРОПРИЯТИЯ НА АНГЛИЙСКОМ</span><span style="color:#C6A15B">◆</span><span>ВЛАДИВОСТОК · ХАБАРОВСК · ЮЖНО-САХАЛИНСК</span><span style="color:#C6A15B">◆</span>
+              </div>
+              <div style="display:flex;gap:34px;padding-right:34px;font-size:12px;letter-spacing:.22em;color:rgba(237,234,227,.55);white-space:nowrap">
+                <span>ОПЫТ С 2004 ГОДА</span><span style="color:#C6A15B">◆</span><span>ПРЕМЬЕР-ЛИГА КВН</span><span style="color:#C6A15B">◆</span><span>РАДИО И ТВ</span><span style="color:#C6A15B">◆</span><span>БАТЛ ВЕДУЩИХ, МОСКВА</span><span style="color:#C6A15B">◆</span><span>«АРТИСТ ЭСТРАДЫ»</span><span style="color:#C6A15B">◆</span><span>МЕРОПРИЯТИЯ НА АНГЛИЙСКОМ</span><span style="color:#C6A15B">◆</span><span>ВЛАДИВОСТОК · ХАБАРОВСК · ЮЖНО-САХАЛИНСК</span><span style="color:#C6A15B">◆</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ 2b: ПРОЖЕКТОР ═══════════════ -->
+    <div class="dv-opt" id="2b">
+      <div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a>«Прожектор» — дрейфующий свет, блик по имени, арки-порталы с Ken Burns</div>
+      <div class="dv-card" style="width:1200px">
+        <div data-screen-label="2b Главная — прожектор" style="background:#121214;color:#EFEBE2;font-family:'InterL',Inter,system-ui,sans-serif;position:relative;overflow:hidden">
+          <div style="position:absolute;top:-180px;left:30%;width:640px;height:640px;border-radius:50%;background:radial-gradient(circle,rgba(198,161,91,.22),transparent 65%);filter:blur(70px);animation:rshDrift 11s ease-in-out infinite;pointer-events:none"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:24px 48px;position:relative">
+            <span style="font-family:'Benzin';font-size:13px">РОМАН ШУМИЛОВ<span style="color:#FFE40F">.</span></span>
+            <div style="display:flex;gap:26px;font-size:12px;letter-spacing:.16em;color:rgba(239,235,226,.6)">
+              <span>СВАДЬБЫ</span><span>КОРПОРАТИВЫ</span><span>КОНТАКТЫ</span>
+            </div>
+            <a href="#2b" style="background:#C6A15B;color:#121214;font-size:12px;font-weight:600;text-decoration:none;padding:11px 18px;border-radius:2px">Рассчитать стоимость</a>
+          </div>
+          <div style="text-align:center;padding:58px 40px 8px;position:relative">
+            <div style="font-size:11px;letter-spacing:.4em;color:#C6A15B;margin-bottom:20px;animation:rshRise .9s .1s both">ВЕДУЩИЙ МЕРОПРИЯТИЙ</div>
+            <div style="font-family:'Benzin';font-size:78px;line-height:1.06;color:transparent;background-image:linear-gradient(110deg,#EFEBE2 38%,#C6A15B 47%,#FFE40F 50%,#C6A15B 53%,#EFEBE2 62%);background-size:250% 100%;background-position:250% 0;-webkit-background-clip:text;background-clip:text;animation:rshShine 5.5s linear infinite;">РОМАН ШУМИЛОВ</div>
+            <div style="margin:24px auto 0;max-width:520px;font-size:15px;line-height:1.65;color:rgba(239,235,226,.72);animation:rshRise .9s .3s both">Люди мне доверяют и, как результат, заказывают у&nbsp;меня главные события в&nbsp;своей жизни.</div>
+          </div>
+          <div style="display:flex;justify-content:center;gap:56px;padding:46px 40px 10px;position:relative">
+            <div style="text-align:center;animation:rshRise 1s .45s both">
+              <div style="width:330px;height:400px;border-radius:165px 165px 0 0;overflow:hidden;border:1px solid rgba(198,161,91,.5);position:relative">
+                <img src="assets/gal-3.webp" alt="Свадьбы" style="width:100%;height:100%;object-fit:cover;object-position:50% 20%;filter:grayscale(.35) brightness(.78);animation:rshKen 14s ease-in-out infinite">
+                <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(18,18,20,.75))"></div>
+                <div style="position:absolute;bottom:22px;left:0;right:0;font-family:'Benzin';font-size:19px;color:#EFEBE2">СВАДЬБЫ</div>
+              </div>
+              <div style="margin-top:16px;font-size:11.5px;letter-spacing:.26em;color:#C6A15B">ПЕРЕЙТИ → /WEDDING</div>
+            </div>
+            <div style="align-self:center;position:relative;width:96px;height:96px;flex:none">
+              <div style="position:absolute;inset:0;border:1px dashed rgba(198,161,91,.55);border-radius:50%;animation:rshSpin 14s linear infinite"></div>
+              <div style="position:absolute;inset:0;display:grid;place-items:center;font-size:10px;letter-spacing:.3em;color:rgba(239,235,226,.6);text-align:center;line-height:1.8">ВЫБОР<br>РАЗДЕЛА</div>
+            </div>
+            <div style="text-align:center;animation:rshRise 1s .6s both">
+              <div style="width:330px;height:400px;border-radius:165px 165px 0 0;overflow:hidden;border:1px solid rgba(198,161,91,.5);position:relative">
+                <img src="assets/gal-6.webp" alt="Корпоративы" style="width:100%;height:100%;object-fit:cover;object-position:50% 12%;filter:grayscale(.35) brightness(.78);animation:rshKen 14s ease-in-out infinite 1.4s">
+                <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(18,18,20,.75))"></div>
+                <div style="position:absolute;bottom:22px;left:0;right:0;font-family:'Benzin';font-size:19px;color:#EFEBE2">КОРПОРАТИВЫ</div>
+              </div>
+              <div style="margin-top:16px;font-size:11.5px;letter-spacing:.26em;color:#C6A15B">ПЕРЕЙТИ → /CORPORATE</div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:26px 48px;margin-top:30px;border-top:1px solid rgba(255,255,255,.07);font-size:11px;letter-spacing:.2em;color:rgba(239,235,226,.45)">
+            <span>С 2004 ГОДА</span><span>КВН · РАДИО · ТВ</span><span style="color:rgba(198,161,91,.85)">ВЭФ · WILDBERRIES · ГАЗПРОМБАНК · МАЕР</span><span>EN — ДА</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ 2c: КИНОЛЕНТА ═══════════════ -->
+    <div class="dv-opt" id="2c">
+      <div class="dv-olabel"><a class="dv-oid" href="#2c">2c</a>«Кинолента» — печатающийся подзаголовок, встречные фото-ленты, кнопки-разделы</div>
+      <div class="dv-card" style="width:1200px">
+        <div data-screen-label="2c Главная — кинолента" style="background:#141416;color:#EDEAE3;font-family:'InterL',Inter,system-ui,sans-serif;position:relative;overflow:hidden">
+          <div style="display:grid;grid-template-columns:1.05fr .95fr;min-height:700px">
+            <!-- left -->
+            <div style="padding:40px 20px 44px 52px;display:flex;flex-direction:column">
+              <div style="display:flex;align-items:center;gap:9px">
+                <span style="font-family:'Benzin';font-size:14px">РШ</span>
+                <span style="width:6px;height:6px;border-radius:50%;background:#FFE40F;display:inline-block;animation:rshPulse 2.6s ease-out infinite"></span>
+              </div>
+              <div style="margin-top:86px">
+                <div style="display:inline-block;overflow:hidden;white-space:nowrap;border-right:2px solid #FFE40F;padding-right:6px;font-size:12px;letter-spacing:.34em;color:#C6A15B;max-width:100%;animation:rshCaret 1.1s step-end infinite">ВЕДУЩИЙ МЕРОПРИЯТИЙ — С 2004 ГОДА</div>
+                <div style="font-family:'Benzin';font-size:66px;line-height:1.08;margin-top:18px;animation:rshRise .9s .15s both">РОМАН<br>ШУМИЛОВ</div>
+                <div style="margin-top:22px;font-size:15px;line-height:1.7;color:rgba(237,234,227,.72);max-width:420px;animation:rshRise .9s .35s both">Люди мне доверяют и, как результат, заказывают у&nbsp;меня главные события в&nbsp;своей жизни.</div>
+              </div>
+              <div style="margin-top:44px;display:flex;flex-direction:column;gap:12px;max-width:440px">
+                <a href="#2c" style="display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(198,161,91,.5);color:#EDEAE3;text-decoration:none;padding:20px 24px;border-radius:2px;transition:background .35s,color .35s;animation:rshRise .9s .5s both" style-hover="background:#C6A15B;color:#141416">
+                  <span style="font-family:'Benzin';font-size:15px">СВАДЬБЫ</span>
+                  <span style="font-size:17px;animation:rshFloat 2.8s ease-in-out infinite">→</span>
+                </a>
+                <a href="#2c" style="display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(198,161,91,.5);color:#EDEAE3;text-decoration:none;padding:20px 24px;border-radius:2px;transition:background .35s,color .35s;animation:rshRise .9s .62s both" style-hover="background:#C6A15B;color:#141416">
+                  <span style="font-family:'Benzin';font-size:15px">КОРПОРАТИВНЫЕ СОБЫТИЯ</span>
+                  <span style="font-size:17px;animation:rshFloat 2.8s ease-in-out infinite .4s">→</span>
+                </a>
+                <a href="#2c" style="display:flex;justify-content:center;align-items:center;gap:10px;background:#FFE40F;color:#141416;text-decoration:none;padding:16px 24px;border-radius:2px;font-size:13px;font-weight:600;animation:rshRise .9s .74s both">Рассчитать стоимость</a>
+              </div>
+              <div style="margin-top:auto;padding-top:36px;font-size:11px;letter-spacing:.22em;color:rgba(237,234,227,.45)">ВЛАДИВОСТОК · ХАБАРОВСК · ЮЖНО-САХАЛИНСК</div>
+            </div>
+            <!-- right: film strips -->
+            <div style="display:flex;gap:14px;padding:0 40px 0 10px;height:700px;overflow:hidden;position:relative">
+              <div style="position:absolute;inset:0;background:linear-gradient(180deg,#141416 0%,transparent 12%,transparent 88%,#141416 100%);z-index:3;pointer-events:none"></div>
+              <div style="flex:1;overflow:hidden">
+                <div style="display:flex;flex-direction:column;gap:14px;animation:rshMarqUp 34s linear infinite">
+                  <img src="assets/photo-1.webp" alt="" style="width:100%;height:300px;object-fit:cover;object-position:50% 15%;border-radius:2px;filter:grayscale(.3)">
+                  <img src="assets/gal-2.webp" alt="" style="width:100%;height:300px;object-fit:cover;border-radius:2px;filter:grayscale(.3)">
+                  <img src="assets/gal-3.webp" alt="" style="width:100%;height:300px;object-fit:cover;object-position:50% 20%;border-radius:2px;filter:grayscale(.3)">
+                  <img src="assets/photo-1.webp" alt="" style="width:100%;height:300px;object-fit:cover;object-position:50% 15%;border-radius:2px;filter:grayscale(.3)">
+                  <img src="assets/gal-2.webp" alt="" style="width:100%;height:300px;object-fit:cover;border-radius:2px;filter:grayscale(.3)">
+                  <img src="assets/gal-3.webp" alt="" style="width:100%;height:300px;object-fit:cover;object-position:50% 20%;border-radius:2px;filter:grayscale(.3)">
+                </div>
+              </div>
+              <div style="flex:1;overflow:hidden">
+                <div style="display:flex;flex-direction:column;gap:14px;animation:rshMarqDown 34s linear infinite">
+                  <img src="assets/vef.jpg" alt="" style="width:100%;height:300px;object-fit:cover;object-position:50% 15%;border-radius:2px;filter:grayscale(.3)">
+                  <img src="assets/show.jpg" alt="" style="width:100%;height:300px;object-fit:cover;object-position:50% 25%;border-radius:2px;filter:grayscale(.3)">
+                  <img src="assets/gal-6.webp" alt="" style="width:100%;height:300px;object-fit:cover;object-position:50% 12%;border-radius:2px;filter:grayscale(.3)">
+                  <img src="assets/vef.jpg" alt="" style="width:100%;height:300px;object-fit:cover;object-position:50% 15%;border-radius:2px;filter:grayscale(.3)">
+                  <img src="assets/show.jpg" alt="" style="width:100%;height:300px;object-fit:cover;object-position:50% 25%;border-radius:2px;filter:grayscale(.3)">
+                  <img src="assets/gal-6.webp" alt="" style="width:100%;height:300px;object-fit:cover;object-position:50% 12%;border-radius:2px;filter:grayscale(.3)">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <p class="dv-next">Попробуйте: «собери все 3 страницы в стиле <a class="dv-oid" href="#2a">2a</a>» · «имя с бликом из <a class="dv-oid" href="#2b">2b</a> внутрь <a class="dv-oid" href="#2a">2a</a>» · «ленты из <a class="dv-oid" href="#2c">2c</a> медленнее и цветные»</p>
+</section>
+
+<section class="dv-turn" id="t1">
+  <div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Новое направление: графит + бронза/золото, жёлтый — только искра. Тексты прежние. Две структуры + один визуальный рифф.</span></div>
+  <p class="dv-note"><a class="dv-oid" href="#1a">1a</a> — структура как сейчас: главная-«развилка», ведущая на /wedding и /corporate. <a class="dv-oid" href="#1b">1b</a> — главная как полноценный лендинг (факты, направления, квиз), свадьбы/корпоративы остаются подстраницами. <a class="dv-oid" href="#1c">1c</a> — тот же лендинг, но в редакционной серифной подаче.</p>
+  <div class="dv-opts">
+
+    <!-- ═══════════════ 1a: РАЗВИЛКА ═══════════════ -->
+    <div class="dv-opt" id="1a">
+      <div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Структура А — главная-«развилка», графит + бронза</div>
+      <div class="dv-card" style="width:1200px">
+        <div data-screen-label="1a Главная-развилка" style="background:#131315;color:#EDEAE3;font-family:'InterL',Inter,system-ui,sans-serif;position:relative">
+          <!-- top bar -->
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:26px 48px;border-bottom:1px solid rgba(198,161,91,.18)">
+            <div style="display:flex;align-items:baseline;gap:10px">
+              <span style="font-family:'Benzin';font-size:15px;letter-spacing:.08em">РШ</span>
+              <span style="width:5px;height:5px;border-radius:50%;background:#FFE40F;display:inline-block"></span>
+            </div>
+            <div style="display:flex;gap:28px;font-size:12px;letter-spacing:.14em;color:rgba(237,234,227,.65)">
+              <span>ВЛАДИВОСТОК</span><span>ХАБАРОВСК</span><span>ЮЖНО-САХАЛИНСК</span>
+            </div>
+            <a href="#1a" style="color:#C6A15B;font-size:12px;letter-spacing:.12em;text-decoration:none;border:1px solid rgba(198,161,91,.5);padding:10px 18px;border-radius:2px">РАССЧИТАТЬ СТОИМОСТЬ</a>
+          </div>
+          <!-- name -->
+          <div style="text-align:center;padding:64px 40px 46px">
+            <div style="font-size:11px;letter-spacing:.42em;color:#C6A15B;margin-bottom:22px">ВЕДУЩИЙ МЕРОПРИЯТИЙ</div>
+            <div style="font-family:'Benzin';font-size:76px;line-height:1.04;letter-spacing:.01em">РОМАН<span style="color:#C6A15B"> ШУМИЛОВ</span></div>
+            <div style="margin:26px auto 0;max-width:560px;font-size:15px;line-height:1.65;color:rgba(237,234,227,.72)">Люди мне доверяют и, как результат, заказывают у&nbsp;меня главные события в&nbsp;своей жизни.</div>
+          </div>
+          <!-- fork -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;padding:0 2px">
+            <div style="position:relative;height:430px;overflow:hidden">
+              <img src="assets/gal-2.webp" alt="Свадьбы" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%;filter:grayscale(.35) contrast(1.05) brightness(.75)">
+              <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(19,19,21,.15) 40%,rgba(19,19,21,.92) 100%)"></div>
+              <div style="position:absolute;left:44px;right:44px;bottom:38px;display:flex;justify-content:space-between;align-items:flex-end">
+                <div>
+                  <div style="font-size:11px;letter-spacing:.3em;color:#C6A15B;margin-bottom:10px">РАЗДЕЛ 01</div>
+                  <div style="font-family:'Benzin';font-size:30px">СВАДЬБЫ</div>
+                </div>
+                <div style="width:52px;height:52px;border:1px solid rgba(198,161,91,.6);border-radius:50%;display:grid;place-items:center;color:#C6A15B;font-size:18px">→</div>
+              </div>
+            </div>
+            <div style="position:relative;height:430px;overflow:hidden">
+              <img src="assets/vef.jpg" alt="Корпоративные события" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 22%;filter:grayscale(.35) contrast(1.05) brightness(.75)">
+              <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(19,19,21,.15) 40%,rgba(19,19,21,.92) 100%)"></div>
+              <div style="position:absolute;left:44px;right:44px;bottom:38px;display:flex;justify-content:space-between;align-items:flex-end">
+                <div>
+                  <div style="font-size:11px;letter-spacing:.3em;color:#C6A15B;margin-bottom:10px">РАЗДЕЛ 02</div>
+                  <div style="font-family:'Benzin';font-size:30px">КОРПОРАТИВНЫЕ СОБЫТИЯ</div>
+                </div>
+                <div style="width:52px;height:52px;border:1px solid rgba(198,161,91,.6);border-radius:50%;display:grid;place-items:center;color:#C6A15B;font-size:18px">→</div>
+              </div>
+            </div>
+          </div>
+          <!-- bottom strip -->
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:24px 48px;font-size:12px;letter-spacing:.1em;color:rgba(237,234,227,.5)">
+            <span>ОПЫТ РАБОТЫ ВЕДУЩИМ С 2004 ГОДА</span>
+            <span style="color:rgba(198,161,91,.8)">ВЭФ · WILDBERRIES · ГАЗПРОМБАНК · МАЕР</span>
+            <span>ВЕДУ МЕРОПРИЯТИЯ НА АНГЛИЙСКОМ ЯЗЫКЕ</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ 1b: ЛЕНДИНГ ═══════════════ -->
+    <div class="dv-opt" id="1b">
+      <div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Структура Б — главная-лендинг: герой → факты → направления → квиз</div>
+      <div class="dv-card" style="width:1200px">
+        <div data-screen-label="1b Главная-лендинг" style="background:#17181B;color:#EDEAE3;font-family:'InterL',Inter,system-ui,sans-serif">
+          <!-- nav -->
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:22px 48px;border-bottom:1px solid rgba(255,255,255,.07)">
+            <div style="display:flex;align-items:baseline;gap:8px">
+              <span style="font-family:'Benzin';font-size:14px">РОМАН ШУМИЛОВ</span>
+              <span style="width:5px;height:5px;border-radius:50%;background:#FFE40F;display:inline-block"></span>
+            </div>
+            <div style="display:flex;gap:26px;font-size:13px;color:rgba(237,234,227,.7)">
+              <span>Свадьбы</span><span>Корпоративы</span><span>Обо мне</span><span>Отзывы</span><span>Контакты</span>
+            </div>
+            <a href="#1b" style="background:#C6A15B;color:#17181B;font-size:12px;font-weight:600;letter-spacing:.06em;text-decoration:none;padding:11px 20px;border-radius:2px">Рассчитать стоимость</a>
+          </div>
+          <!-- hero -->
+          <div style="display:grid;grid-template-columns:1.1fr .9fr;gap:56px;padding:64px 48px 58px;align-items:center">
+            <div>
+              <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px">
+                <span style="width:34px;height:1px;background:#C6A15B;display:inline-block"></span>
+                <span style="font-size:11px;letter-spacing:.34em;color:#C6A15B">ВЕДУЩИЙ МЕРОПРИЯТИЙ</span>
+              </div>
+              <div style="font-family:'Benzin';font-size:56px;line-height:1.08">РОМАН ШУМИЛОВ</div>
+              <div style="margin-top:24px;font-size:16px;line-height:1.7;color:rgba(237,234,227,.75);max-width:480px">Люди мне доверяют и, как результат, заказывают у&nbsp;меня главные события в&nbsp;своей жизни. Мне достаточно опыта, чтобы понять, что вы хотите и&nbsp;как это воплотить.</div>
+              <div style="display:flex;gap:14px;margin-top:34px">
+                <a href="#1b" style="background:#C6A15B;color:#17181B;font-size:13px;font-weight:600;text-decoration:none;padding:16px 26px;border-radius:2px">Рассчитать стоимость</a>
+                <a href="#1b" style="border:1px solid rgba(237,234,227,.25);color:#EDEAE3;font-size:13px;text-decoration:none;padding:16px 26px;border-radius:2px">Смотреть видео</a>
+              </div>
+              <div style="margin-top:38px;font-size:12px;letter-spacing:.16em;color:rgba(237,234,227,.45)">ВЛАДИВОСТОК · ХАБАРОВСК · ЮЖНО-САХАЛИНСК</div>
+            </div>
+            <div style="position:relative;height:520px">
+              <div style="position:absolute;inset:22px -22px -22px 22px;border:1px solid rgba(198,161,91,.4);border-radius:2px"></div>
+              <img src="assets/photo-1.webp" alt="Роман Шумилов на мероприятии" style="position:relative;width:100%;height:100%;object-fit:cover;object-position:50% 18%;border-radius:2px;filter:saturate(.8) contrast(1.04)">
+              <div style="position:absolute;left:-18px;bottom:34px;background:#131315;border:1px solid rgba(198,161,91,.4);padding:14px 20px;display:flex;align-items:center;gap:12px">
+                <span style="font-family:'Benzin';font-size:22px;color:#C6A15B">20+</span>
+                <span style="font-size:12px;line-height:1.4;color:rgba(237,234,227,.7)">лет на сцене —<br>с 2004 года</span>
+              </div>
+            </div>
+          </div>
+          <!-- facts -->
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(255,255,255,.07);border-bottom:1px solid rgba(255,255,255,.07)">
+            <div style="padding:30px 32px;border-right:1px solid rgba(255,255,255,.07)">
+              <div style="font-family:'Benzin';font-size:15px;color:#C6A15B;margin-bottom:8px">КВН</div>
+              <div style="font-size:13px;line-height:1.55;color:rgba(237,234,227,.7)">Участник премьер-лиги КВН, работал на&nbsp;радио и&nbsp;ТВ</div>
+            </div>
+            <div style="padding:30px 32px;border-right:1px solid rgba(255,255,255,.07)">
+              <div style="font-family:'Benzin';font-size:15px;color:#C6A15B;margin-bottom:8px">ВЭФ</div>
+              <div style="font-size:13px;line-height:1.55;color:rgba(237,234,227,.7)">Официальный голос бизнес-церемоний: Wildberries, Газпромбанк, МАЕР</div>
+            </div>
+            <div style="padding:30px 32px;border-right:1px solid rgba(255,255,255,.07)">
+              <div style="font-family:'Benzin';font-size:15px;color:#C6A15B;margin-bottom:8px">ДИПЛОМ</div>
+              <div style="font-size:13px;line-height:1.55;color:rgba(237,234,227,.7)">«Артист эстрады», дипломированный свадебный церемониймейстер</div>
+            </div>
+            <div style="padding:30px 32px">
+              <div style="font-family:'Benzin';font-size:15px;color:#C6A15B;margin-bottom:8px">EN</div>
+              <div style="font-size:13px;line-height:1.55;color:rgba(237,234,227,.7)">Веду мероприятия на&nbsp;английском языке</div>
+            </div>
+          </div>
+          <!-- directions -->
+          <div style="padding:58px 48px">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:30px">
+              <div style="font-family:'Benzin';font-size:26px">НАПРАВЛЕНИЯ</div>
+              <div style="font-size:12px;letter-spacing:.2em;color:#C6A15B">ВЫБЕРИТЕ РАЗДЕЛ</div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+              <div style="position:relative;height:340px;overflow:hidden;border-radius:2px">
+                <img src="assets/gal-3.webp" alt="Свадьбы" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 25%;filter:grayscale(.3) brightness(.72)">
+                <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(19,19,21,.9))"></div>
+                <div style="position:absolute;left:32px;bottom:28px;right:32px">
+                  <div style="font-family:'Benzin';font-size:22px;margin-bottom:8px">СВАДЬБЫ</div>
+                  <div style="font-size:13px;color:rgba(237,234,227,.75);margin-bottom:16px">Организуем с моей командой мероприятие под ключ</div>
+                  <span style="font-size:12px;letter-spacing:.18em;color:#C6A15B">ПОДРОБНЕЕ →</span>
+                </div>
+              </div>
+              <div style="position:relative;height:340px;overflow:hidden;border-radius:2px">
+                <img src="assets/gal-6.webp" alt="Корпоративные события" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 20%;filter:grayscale(.3) brightness(.72)">
+                <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(19,19,21,.9))"></div>
+                <div style="position:absolute;left:32px;bottom:28px;right:32px">
+                  <div style="font-family:'Benzin';font-size:22px;margin-bottom:8px">КОРПОРАТИВНЫЕ СОБЫТИЯ</div>
+                  <div style="font-size:13px;color:rgba(237,234,227,.75);margin-bottom:16px">Первые лица, международные делегации, деловой этикет</div>
+                  <span style="font-size:12px;letter-spacing:.18em;color:#C6A15B">ПОДРОБНЕЕ →</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- quiz CTA -->
+          <div style="margin:0 48px 58px;border:1px solid rgba(198,161,91,.35);border-radius:2px;padding:44px 48px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;background:linear-gradient(120deg,rgba(198,161,91,.07),transparent 60%)">
+            <div>
+              <div style="font-family:'Benzin';font-size:24px;line-height:1.3;margin-bottom:14px">РАССЧИТАТЬ СТОИМОСТЬ</div>
+              <div style="font-size:14px;line-height:1.65;color:rgba(237,234,227,.7)">Ответьте на несколько вопросов — пришлю расчёт и&nbsp;проверю, свободна ли ваша дата.</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div style="border:1px solid rgba(237,234,227,.2);padding:14px 16px;font-size:13px;color:rgba(237,234,227,.45);border-radius:2px">Дата события</div>
+                <div style="border:1px solid rgba(237,234,227,.2);padding:14px 16px;font-size:13px;color:rgba(237,234,227,.45);border-radius:2px">Город</div>
+              </div>
+              <div style="border:1px solid rgba(237,234,227,.2);padding:14px 16px;font-size:13px;color:rgba(237,234,227,.45);border-radius:2px">Телефон</div>
+              <a href="#1b" style="background:#C6A15B;color:#17181B;font-size:13px;font-weight:600;text-decoration:none;padding:16px;border-radius:2px;text-align:center">Получить расчёт</a>
+            </div>
+          </div>
+          <!-- footer -->
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:22px 48px;border-top:1px solid rgba(255,255,255,.07);font-size:12px;color:rgba(237,234,227,.45)">
+            <span style="font-family:'Benzin';font-size:12px;color:rgba(237,234,227,.8)">РШ<span style="color:#FFE40F">.</span></span>
+            <span>WhatsApp · Telegram · Instagram</span>
+            <span>Политика конфиденциальности</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ 1c: РЕДАКЦИОННЫЙ РИФФ ═══════════════ -->
+    <div class="dv-opt" id="1c">
+      <div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Визуальный рифф — та же структура Б, редакционная серифная подача (герой)</div>
+      <div class="dv-card" style="width:1200px">
+        <div data-screen-label="1c Редакционный герой" style="background:#141416;color:#EFEBE2;font-family:'Cormorant Garamond',Georgia,serif;position:relative;overflow:hidden">
+          <!-- nav -->
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:26px 56px;font-family:'InterL',Inter,system-ui,sans-serif">
+            <span style="font-size:12px;letter-spacing:.28em;color:rgba(239,235,226,.75)">ВЛАДИВОСТОК — 2026</span>
+            <div style="display:flex;gap:30px;font-size:12px;letter-spacing:.14em;color:rgba(239,235,226,.6)">
+              <span>СВАДЬБЫ</span><span>КОРПОРАТИВЫ</span><span>КОНТАКТЫ</span>
+            </div>
+            <span style="font-size:12px;letter-spacing:.14em;color:#C6A15B;border-bottom:1px solid rgba(198,161,91,.5);padding-bottom:3px">РАССЧИТАТЬ СТОИМОСТЬ</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 460px 1fr;align-items:end;padding:30px 56px 0;min-height:640px">
+            <div style="padding-bottom:70px">
+              <div style="font-size:15px;letter-spacing:.05em;font-style:italic;color:#C6A15B;margin-bottom:16px">ведущий мероприятий</div>
+              <div style="font-size:74px;line-height:.95;font-weight:500">Роман</div>
+              <div style="margin-top:34px;max-width:300px;font-size:17px;line-height:1.55;color:rgba(239,235,226,.75)">Люди мне доверяют и, как результат, заказывают у&nbsp;меня главные события в&nbsp;своей жизни.</div>
+            </div>
+            <div style="position:relative;justify-self:center">
+              <div style="width:420px;height:560px;border-radius:210px 210px 0 0;overflow:hidden;border:1px solid rgba(198,161,91,.55);position:relative">
+                <img src="assets/hero-wedding.webp" alt="Роман Шумилов" style="width:100%;height:100%;object-fit:cover;object-position:50% 0%;filter:grayscale(1) contrast(1.08) brightness(.92)">
+                <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(20,20,22,.55))"></div>
+              </div>
+              <div style="position:absolute;top:24px;right:-10px;width:9px;height:9px;border-radius:50%;background:#FFE40F"></div>
+            </div>
+            <div style="padding-bottom:70px;justify-self:end;text-align:right">
+              <div style="font-size:74px;line-height:.95;font-weight:500;font-style:italic;color:#C6A15B">Шумилов</div>
+              <div style="margin-top:34px;font-family:'InterL',Inter,system-ui,sans-serif;font-size:11px;letter-spacing:.22em;line-height:2.2;color:rgba(239,235,226,.55)">ОПЫТ — С 2004 ГОДА<br>ПРЕМЬЕР-ЛИГА КВН · РАДИО · ТВ<br>ВЭФ · WILDBERRIES · ГАЗПРОМБАНК<br>МЕРОПРИЯТИЯ НА АНГЛИЙСКОМ</div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 56px;border-top:1px solid rgba(198,161,91,.25);font-family:'InterL',Inter,system-ui,sans-serif;font-size:11px;letter-spacing:.2em;color:rgba(239,235,226,.5)">
+            <span>ВЛАДИВОСТОК</span><span>ХАБАРОВСК</span><span style="color:#C6A15B">ВЫБЕРИТЕ РАЗДЕЛ: СВАДЬБЫ / КОРПОРАТИВЫ</span><span>ЮЖНО-САХАЛИНСК</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <p class="dv-next">Попробуйте: «развить <a class="dv-oid" href="#1b">1b</a> в полный сайт из 3 страниц» · «герой из <a class="dv-oid" href="#1c">1c</a> + структура <a class="dv-oid" href="#1b">1b</a>» · «покажите вариант светлее»</p>
+</section>
+
+</x-dc>
+</body>
+</html>
