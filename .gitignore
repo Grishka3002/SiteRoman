@@ -1,3 +1,4 @@
 .thumbnail
 .claude/
 node_modules/
+data/inquiries.json

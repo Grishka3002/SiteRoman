@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Админ-панель — Роман Шумилов</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<!-- логин -->
+<div id="login" class="login hidden">
+  <form id="login-form" class="login-box">
+    <div class="login-title">РШ<span class="dot">.</span> АДМИН-ПАНЕЛЬ</div>
+    <input id="login-password" type="password" placeholder="Пароль" autocomplete="current-password">
+    <button type="submit">Войти</button>
+    <div id="login-error" class="login-error"></div>
+  </form>
+</div>
+
+<!-- панель -->
+<div id="panel" class="hidden">
+  <header class="topbar">
+    <div class="brand">РШ<span class="dot">.</span> <span class="brand-sub">управление сайтом</span></div>
+    <nav id="tabs" class="tabs"></nav>
+    <div class="topbar-right">
+      <a href="/" target="_blank" class="view-site">Открыть сайт ↗</a>
+      <button id="logout" class="logout">Выйти</button>
+    </div>
+  </header>
+
+  <main id="content" class="content"></main>
+
+  <div id="savebar" class="savebar hidden">
+    <span id="save-status"></span>
+    <button id="reset-page" class="btn-secondary">Сбросить страницу к исходной</button>
+    <button id="save" class="btn-primary">Сохранить изменения</button>
+  </div>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>

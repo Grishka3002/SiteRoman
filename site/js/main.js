@@ -33,7 +33,10 @@ document.addEventListener('DOMContentLoaded', function () {
       data[input.name] = input.value.trim();
     });
     var gift = document.querySelector('.gifts input:checked');
-    if (gift) data.gift = gift.value;
+    if (gift) {
+      var giftLabel = gift.closest('label');
+      data.gift = giftLabel ? giftLabel.textContent.trim() : gift.value;
+    }
     return data;
   }
 
@@ -55,9 +58,14 @@ document.addEventListener('DOMContentLoaded', function () {
     phoneInput.classList.remove('invalid');
 
     var data = collectData();
-    /* TODO production: отправка заявки на бэкенд (data/inquiries.json)
-       или в Telegram-бот. Пока заявка фиксируется в консоли. */
-    console.log('Заявка:', data);
+    data.page = document.title;
+    fetch('/api/inquiry', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).catch(function () {
+      console.warn('Заявка не дошла до сервера:', data);
+    });
 
     form.classList.add('sent');
   });

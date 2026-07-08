@@ -12,16 +12,16 @@
 <!-- навбар -->
 <nav class="nav">
   <a href="index.html" class="logo">
-    <span class="logo-text">РШ</span>
+    <span class="logo-text" data-edit="logo.text">РШ</span>
     <span class="logo-dot"></span>
   </a>
   <div class="nav-links">
-    <a href="index.html">ГЛАВНАЯ</a>
-    <a href="svadby.html">СВАДЬБЫ</a>
-    <span class="active">КОРПОРАТИВЫ</span>
+    <a href="index.html" data-edit="nav.link1">ГЛАВНАЯ</a>
+    <a href="svadby.html" data-edit="nav.link2">СВАДЬБЫ</a>
+    <span class="active" data-edit="nav.link3">КОРПОРАТИВЫ</span>
   </div>
   <div class="nav-right">
-    <a href="#quiz" class="nav-cta">Рассчитать стоимость</a>
+    <a href="#quiz" class="nav-cta" data-edit="nav.cta">Рассчитать стоимость</a>
     <button class="burger" aria-label="Меню"><span></span><span></span><span></span></button>
   </div>
 </nav>
@@ -29,18 +29,18 @@
 <!-- герой -->
 <div class="hero hero--sub">
   <div class="hero-text">
-    <div class="typewriter">РАЗДЕЛ 02 — РЕЖИССЁР СОБЫТИЙ</div>
-    <h1 class="h1-long">КОРПОРАТИВНЫЕ<br>СОБЫТИЯ</h1>
-    <div class="hero-lead" style="max-width:440px">Сценарий строится под&nbsp;цели компании и&nbsp;характер гостей. Без стандартных конкурсов: только уместные интерактивы, которые поддерживают смысл события.</div>
+    <div class="typewriter" data-edit="hero.type">РАЗДЕЛ 02 — РЕЖИССЁР СОБЫТИЙ</div>
+    <h1 class="h1-long" data-edit="hero.title">КОРПОРАТИВНЫЕ<br>СОБЫТИЯ</h1>
+    <div class="hero-lead" style="max-width:440px" data-edit="hero.lead">Сценарий строится под&nbsp;цели компании и&nbsp;характер гостей. Без стандартных конкурсов: только уместные интерактивы, которые поддерживают смысл события.</div>
     <div class="hero-btns">
-      <a href="#quiz" class="btn-yellow">Рассчитать стоимость</a>
-      <a href="#levels" class="btn-ghost">Уровни реализации <span>→</span></a>
+      <a href="#quiz" class="btn-yellow" data-edit="hero.btnQuiz">Рассчитать стоимость</a>
+      <a href="#levels" class="btn-ghost"><span data-edit="hero.btnLevels">Уровни реализации</span> <span>→</span></a>
     </div>
-    <div class="hero-cities">ПЕРВЫЕ ЛИЦА · МЕЖДУНАРОДНЫЕ ДЕЛЕГАЦИИ · ДЕЛОВОЙ ЭТИКЕТ · EN</div>
+    <div class="hero-cities" data-edit="hero.cities">ПЕРВЫЕ ЛИЦА · МЕЖДУНАРОДНЫЕ ДЕЛЕГАЦИИ · ДЕЛОВОЙ ЭТИКЕТ · EN</div>
   </div>
   <div class="strips">
     <div class="strip-col">
-      <div class="strip-track">
+      <div class="strip-track" data-photos="stripLeft">
         <img src="assets/vef.jpg" alt="ВЭФ" style="object-position:50% 15%">
         <img src="assets/corp-1.webp" alt="Церемония Газпромбанка" style="object-position:50% 40%">
         <img src="assets/corp-4.webp" alt="Церемония с Александром Тихоновым" style="object-position:50% 25%">
@@ -50,7 +50,7 @@
       </div>
     </div>
     <div class="strip-col">
-      <div class="strip-track strip-track--down">
+      <div class="strip-track strip-track--down" data-photos="stripRight">
         <img src="assets/corp-3.webp" alt="Корпоратив Pegas Touristik" style="object-position:50% 30%">
         <img src="assets/show.jpg" alt="Шоу на сцене" style="object-position:50% 25%">
         <img src="assets/corp-2.webp" alt="Гала-вечер" style="object-position:50% 20%">
@@ -64,7 +64,7 @@
 
 <!-- бегущая строка клиентов -->
 <div class="marquee marquee--fast">
-  <div class="marquee-track">
+  <div class="marquee-track" data-marquee="marquee" data-marquee-hl>
     <div class="marquee-group">
       <span class="hl">МНЕ ДОВЕРЯЮТ</span><span class="d">◆</span><span>ВЭФ</span><span class="d">◆</span><span>WILDBERRIES</span><span class="d">◆</span><span>ГАЗПРОМБАНК</span><span class="d">◆</span><span>МАЕР</span><span class="d">◆</span><span>PEGAS TOURISTIK</span><span class="d">◆</span><span>ОФИЦИАЛЬНЫЕ ДЕЛОВЫЕ ЦЕРЕМОНИИ</span><span class="d">◆</span>
     </div>
@@ -77,94 +77,94 @@
 <!-- гарантии -->
 <div class="section">
   <div class="section-head">
-    <h2>Я ВАМ ГАРАНТИРУЮ</h2>
-    <span class="kicker">01 — 05</span>
+    <h2 data-edit="guar.title">Я ВАМ ГАРАНТИРУЮ</h2>
+    <span class="kicker" data-edit="guar.kicker">01 — 05</span>
   </div>
   <div class="guarantees guarantees--5">
     <div class="guarantee">
       <div class="num">01</div>
-      <h3>ФИКСИРОВАННАЯ СМЕТА И&nbsp;СРОКИ</h3>
-      <p>Никаких доплат после подписания договора. Соблюдение дедлайнов и&nbsp;ответственность за&nbsp;результат.</p>
+      <h3 data-edit="guar.h1">ФИКСИРОВАННАЯ СМЕТА И&nbsp;СРОКИ</h3>
+      <p data-edit="guar.t1">Никаких доплат после подписания договора. Соблюдение дедлайнов и&nbsp;ответственность за&nbsp;результат.</p>
     </div>
     <div class="guarantee">
       <div class="num">02</div>
-      <h3>СИСТЕМНЫЙ ПОДХОД</h3>
-      <p>На вашем проекте работают только аккредитованные специалисты агентства.</p>
+      <h3 data-edit="guar.h2">СИСТЕМНЫЙ ПОДХОД</h3>
+      <p data-edit="guar.t2">На вашем проекте работают только аккредитованные специалисты агентства.</p>
     </div>
     <div class="guarantee">
       <div class="num">03</div>
-      <h3>БЕЗОПАСНОСТЬ И&nbsp;ЭТИКА</h3>
-      <p>Сохранение конфиденциальности и&nbsp;соблюдение регламентов компании.</p>
+      <h3 data-edit="guar.h3">БЕЗОПАСНОСТЬ И&nbsp;ЭТИКА</h3>
+      <p data-edit="guar.t3">Сохранение конфиденциальности и&nbsp;соблюдение регламентов компании.</p>
     </div>
     <div class="guarantee">
       <div class="num">04</div>
-      <h3>УПРАВЛЯЕМАЯ АТМОСФЕРА</h3>
-      <p>Каждый гость будет чувствовать себя уместно. Это не&nbsp;просто «ведение», это модерация эмоций в&nbsp;зале.</p>
+      <h3 data-edit="guar.h4">УПРАВЛЯЕМАЯ АТМОСФЕРА</h3>
+      <p data-edit="guar.t4">Каждый гость будет чувствовать себя уместно. Это не&nbsp;просто «ведение», это модерация эмоций в&nbsp;зале.</p>
     </div>
     <div class="guarantee">
       <div class="num">05</div>
-      <h3>СЦЕНАРИЙ БЕЗ&nbsp;КЛИШЕ</h3>
-      <p>Сценарий строится под&nbsp;цели компании и&nbsp;характер гостей. Только уместные интерактивы, которые поддерживают смысл события.</p>
+      <h3 data-edit="guar.h5">СЦЕНАРИЙ БЕЗ&nbsp;КЛИШЕ</h3>
+      <p data-edit="guar.t5">Сценарий строится под&nbsp;цели компании и&nbsp;характер гостей. Только уместные интерактивы, которые поддерживают смысл события.</p>
     </div>
   </div>
-  <div class="guarantees-note"><span class="d">◆</span>Я работаю с профессиональным диджеем и современным оборудованием</div>
+  <div class="guarantees-note"><span class="d">◆</span><span data-edit="guar.note">Я работаю с профессиональным диджеем и современным оборудованием</span></div>
 </div>
 
 <!-- уровни реализации -->
 <div id="levels" class="section">
   <div class="section-head">
-    <h2>УРОВНИ РЕАЛИЗАЦИИ СОБЫТИЙ</h2>
-    <span class="kicker">ВЫБЕРИТЕ ФОРМАТ</span>
+    <h2 data-edit="lv.title">УРОВНИ РЕАЛИЗАЦИИ СОБЫТИЙ</h2>
+    <span class="kicker" data-edit="lv.kicker">ВЫБЕРИТЕ ФОРМАТ</span>
   </div>
   <div class="packages">
     <!-- EXECUTIVE -->
     <div class="package package--featured">
-      <h3>EXECUTIVE</h3>
-      <div class="package-desc">Для тех, кто ценит масштаб и&nbsp;полную автономию исполнителя. Минимум согласований — безупречный финал.</div>
+      <h3 data-edit="lv.p1.name">EXECUTIVE</h3>
+      <div class="package-desc" data-edit="lv.p1.desc">Для тех, кто ценит масштаб и&nbsp;полную автономию исполнителя. Минимум согласований — безупречный финал.</div>
       <div class="package-list package-list--labels">
-        <div><span class="package-label">Автономное продюсирование:</span> полное ведение проекта (до&nbsp;6&nbsp;часов) с&nbsp;минимальным вовлечением заказчика. Мы&nbsp;экономим ваше время, беря на&nbsp;себя все этапы подготовки.</div>
-        <div><span class="package-label">Технический Full-Service:</span> звуковой, световой и&nbsp;мультимедийный комплекс «под&nbsp;ключ».</div>
-        <div><span class="package-label">Сценарная инженерия:</span> разработка сценария, который работает на&nbsp;бизнес-задачи.</div>
-        <div><span class="package-label">Режиссура смыслов:</span> проработка смысловых блоков и&nbsp;выступлений топов. Мы&nbsp;сами готовим ваших сотрудников к&nbsp;выходу на&nbsp;сцену.</div>
-        <div><span class="package-label">Direct Communication:</span> я&nbsp;на&nbsp;связи для оперативных решений. Никаких пустых ВКС — только конкретика по&nbsp;запросу.</div>
-        <div><span class="package-label">Expert Network:</span> реализация спец. условий от&nbsp;топ-подрядчиков без вашего участия в&nbsp;переговорах.</div>
+        <div><span class="package-label" data-edit="lv.p1.i1l">Автономное продюсирование:</span> <span data-edit="lv.p1.i1t">полное ведение проекта (до&nbsp;6&nbsp;часов) с&nbsp;минимальным вовлечением заказчика. Мы&nbsp;экономим ваше время, беря на&nbsp;себя все этапы подготовки.</span></div>
+        <div><span class="package-label" data-edit="lv.p1.i2l">Технический Full-Service:</span> <span data-edit="lv.p1.i2t">звуковой, световой и&nbsp;мультимедийный комплекс «под&nbsp;ключ».</span></div>
+        <div><span class="package-label" data-edit="lv.p1.i3l">Сценарная инженерия:</span> <span data-edit="lv.p1.i3t">разработка сценария, который работает на&nbsp;бизнес-задачи.</span></div>
+        <div><span class="package-label" data-edit="lv.p1.i4l">Режиссура смыслов:</span> <span data-edit="lv.p1.i4t">проработка смысловых блоков и&nbsp;выступлений топов. Мы&nbsp;сами готовим ваших сотрудников к&nbsp;выходу на&nbsp;сцену.</span></div>
+        <div><span class="package-label" data-edit="lv.p1.i5l">Direct Communication:</span> <span data-edit="lv.p1.i5t">я&nbsp;на&nbsp;связи для оперативных решений. Никаких пустых ВКС — только конкретика по&nbsp;запросу.</span></div>
+        <div><span class="package-label" data-edit="lv.p1.i6l">Expert Network:</span> <span data-edit="lv.p1.i6t">реализация спец. условий от&nbsp;топ-подрядчиков без вашего участия в&nbsp;переговорах.</span></div>
       </div>
-      <a href="#quiz" class="package-cta package-cta--yellow">Рассчитать стоимость</a>
-      <div class="package-gift">и получить подарок</div>
+      <a href="#quiz" class="package-cta package-cta--yellow" data-edit="lv.p1.cta">Рассчитать стоимость</a>
+      <div class="package-gift" data-edit="lv.p1.gift">и получить подарок</div>
     </div>
     <!-- OPTIMUM -->
     <div class="package">
-      <h3>OPTIMUM</h3>
-      <div class="package-desc">Эффективное решение для тех, кто хочет держать руку на&nbsp;пульсе, не&nbsp;тратя на&nbsp;это рабочие часы.</div>
+      <h3 data-edit="lv.p2.name">OPTIMUM</h3>
+      <div class="package-desc" data-edit="lv.p2.desc">Эффективное решение для тех, кто хочет держать руку на&nbsp;пульсе, не&nbsp;тратя на&nbsp;это рабочие часы.</div>
       <div class="package-list package-list--labels">
-        <div><span class="package-label">Тайминг:</span> 4&nbsp;часа активного ведения + 5&nbsp;часов музыкального сопровождения.</div>
-        <div><span class="package-label">Техническая база:</span> оптимальный комплект оборудования для качественного звука и&nbsp;картинки.</div>
-        <div><span class="package-label">Сценарная чёткость:</span> авторская программа с&nbsp;чётким таймингом, исключающим заминки.</div>
-        <div><span class="package-label">Team Focus:</span> постановка ключевых моментов программы с&nbsp;участием сотрудников (кратко, чётко, результативно).</div>
-        <div><span class="package-label">Time Management:</span> максимально сжатый цикл согласований. Одна вводная встреча + финальный чек-ап.</div>
-        <div><span class="package-label">Mobile Connection:</span> оперативная связь в&nbsp;режиме реального времени. Мы&nbsp;бережём ваше время для вашей работы.</div>
-        <div><span class="package-label">Professional Network:</span> доступ к&nbsp;базе проверенных специалистов для усиления события.</div>
-        <div><span class="package-label">Legal:</span> работа по&nbsp;договору с&nbsp;полным пакетом закрывающих документов.</div>
+        <div><span class="package-label" data-edit="lv.p2.i1l">Тайминг:</span> <span data-edit="lv.p2.i1t">4&nbsp;часа активного ведения + 5&nbsp;часов музыкального сопровождения.</span></div>
+        <div><span class="package-label" data-edit="lv.p2.i2l">Техническая база:</span> <span data-edit="lv.p2.i2t">оптимальный комплект оборудования для качественного звука и&nbsp;картинки.</span></div>
+        <div><span class="package-label" data-edit="lv.p2.i3l">Сценарная чёткость:</span> <span data-edit="lv.p2.i3t">авторская программа с&nbsp;чётким таймингом, исключающим заминки.</span></div>
+        <div><span class="package-label" data-edit="lv.p2.i4l">Team Focus:</span> <span data-edit="lv.p2.i4t">постановка ключевых моментов программы с&nbsp;участием сотрудников (кратко, чётко, результативно).</span></div>
+        <div><span class="package-label" data-edit="lv.p2.i5l">Time Management:</span> <span data-edit="lv.p2.i5t">максимально сжатый цикл согласований. Одна вводная встреча + финальный чек-ап.</span></div>
+        <div><span class="package-label" data-edit="lv.p2.i6l">Mobile Connection:</span> <span data-edit="lv.p2.i6t">оперативная связь в&nbsp;режиме реального времени. Мы&nbsp;бережём ваше время для вашей работы.</span></div>
+        <div><span class="package-label" data-edit="lv.p2.i7l">Professional Network:</span> <span data-edit="lv.p2.i7t">доступ к&nbsp;базе проверенных специалистов для усиления события.</span></div>
+        <div><span class="package-label" data-edit="lv.p2.i8l">Legal:</span> <span data-edit="lv.p2.i8t">работа по&nbsp;договору с&nbsp;полным пакетом закрывающих документов.</span></div>
       </div>
-      <a href="#quiz" class="package-cta package-cta--outline">Рассчитать стоимость</a>
-      <div class="package-gift">и получить подарок</div>
+      <a href="#quiz" class="package-cta package-cta--outline" data-edit="lv.p2.cta">Рассчитать стоимость</a>
+      <div class="package-gift" data-edit="lv.p2.gift">и получить подарок</div>
     </div>
     <!-- FLASH -->
     <div class="package">
-      <h3>FLASH</h3>
-      <div class="package-desc">Короткий, мощный формат. Идеально для официальных открытий, презентаций и&nbsp;быстрых клиентских встреч.</div>
+      <h3 data-edit="lv.p3.name">FLASH</h3>
+      <div class="package-desc" data-edit="lv.p3.desc">Короткий, мощный формат. Идеально для официальных открытий, презентаций и&nbsp;быстрых клиентских встреч.</div>
       <div class="package-list package-list--labels">
-        <div><span class="package-label">Budget &amp; Time Control:</span> глубокая оптимизация ресурсов. Максимум результата при минимальных затратах времени и&nbsp;бюджета.</div>
-        <div><span class="package-label">Тайминг:</span> 3&nbsp;часа динамичного ведения + 4&nbsp;часа работы&nbsp;DJ.</div>
-        <div><span class="package-label">Техника:</span> базовое оснащение под&nbsp;задачи площадки.</div>
-        <div><span class="package-label">Сценарий-алгоритм:</span> лаконичный сценарный план с&nbsp;акцентом на&nbsp;факты и&nbsp;ключевые сообщения бренда.</div>
-        <div><span class="package-label">Expert Guidance:</span> одна консультация по&nbsp;наполнению программы — и&nbsp;мы&nbsp;уходим в&nbsp;реализацию.</div>
-        <div><span class="package-label">Always Connected:</span> постоянная доступность в&nbsp;мессенджерах.</div>
-        <div><span class="package-label">Image:</span> статусный внешний вид, соответствующий уровню гостей.</div>
-        <div><span class="package-label">Contract:</span> официальное оформление и&nbsp;гарантии.</div>
+        <div><span class="package-label" data-edit="lv.p3.i1l">Budget &amp; Time Control:</span> <span data-edit="lv.p3.i1t">глубокая оптимизация ресурсов. Максимум результата при минимальных затратах времени и&nbsp;бюджета.</span></div>
+        <div><span class="package-label" data-edit="lv.p3.i2l">Тайминг:</span> <span data-edit="lv.p3.i2t">3&nbsp;часа динамичного ведения + 4&nbsp;часа работы&nbsp;DJ.</span></div>
+        <div><span class="package-label" data-edit="lv.p3.i3l">Техника:</span> <span data-edit="lv.p3.i3t">базовое оснащение под&nbsp;задачи площадки.</span></div>
+        <div><span class="package-label" data-edit="lv.p3.i4l">Сценарий-алгоритм:</span> <span data-edit="lv.p3.i4t">лаконичный сценарный план с&nbsp;акцентом на&nbsp;факты и&nbsp;ключевые сообщения бренда.</span></div>
+        <div><span class="package-label" data-edit="lv.p3.i5l">Expert Guidance:</span> <span data-edit="lv.p3.i5t">одна консультация по&nbsp;наполнению программы — и&nbsp;мы&nbsp;уходим в&nbsp;реализацию.</span></div>
+        <div><span class="package-label" data-edit="lv.p3.i6l">Always Connected:</span> <span data-edit="lv.p3.i6t">постоянная доступность в&nbsp;мессенджерах.</span></div>
+        <div><span class="package-label" data-edit="lv.p3.i7l">Image:</span> <span data-edit="lv.p3.i7t">статусный внешний вид, соответствующий уровню гостей.</span></div>
+        <div><span class="package-label" data-edit="lv.p3.i8l">Contract:</span> <span data-edit="lv.p3.i8t">официальное оформление и&nbsp;гарантии.</span></div>
       </div>
-      <a href="#quiz" class="package-cta package-cta--outline">Рассчитать стоимость</a>
-      <div class="package-gift">и получить подарок</div>
+      <a href="#quiz" class="package-cta package-cta--outline" data-edit="lv.p3.cta">Рассчитать стоимость</a>
+      <div class="package-gift" data-edit="lv.p3.gift">и получить подарок</div>
     </div>
   </div>
 </div>
@@ -172,10 +172,10 @@
 <!-- видео -->
 <div class="section">
   <div class="section-head">
-    <h2>ВИДЕО С МЕРОПРИЯТИЙ</h2>
-    <span class="kicker">СМОТРИТЕ СО ЗВУКОМ</span>
+    <h2 data-edit="videos.title">ВИДЕО С МЕРОПРИЯТИЙ</h2>
+    <span class="kicker" data-edit="videos.kicker">СМОТРИТЕ СО ЗВУКОМ</span>
   </div>
-  <div class="videos">
+  <div class="videos" data-videos="videos">
     <video src="assets/video-6.mp4" controls playsinline preload="metadata"></video>
     <video src="assets/video-7.mp4" controls playsinline preload="metadata"></video>
     <video src="assets/video-8.mp4" controls playsinline preload="metadata"></video>
@@ -187,21 +187,21 @@
 <!-- отзывы -->
 <div class="section">
   <div class="section-head">
-    <h2>СЛОВА СЧАСТЛИВЫХ ЛЮДЕЙ</h2>
-    <span class="kicker">ОТЗЫВЫ</span>
+    <h2 data-edit="rev.title">СЛОВА СЧАСТЛИВЫХ ЛЮДЕЙ</h2>
+    <span class="kicker" data-edit="rev.kicker">ОТЗЫВЫ</span>
   </div>
   <div class="reviews reviews--3">
     <div class="review review--tint">
       <div class="quote-mark">“</div>
-      <p>Впервые за&nbsp;долгое время на&nbsp;нашем корпоративе HR-отдел просто отдыхал, а&nbsp;не&nbsp;бегал в&nbsp;истерике, пытаясь угодить коллективу. Роман действительно чувствует аудиторию, моментально переключает внимание и&nbsp;держит зал в&nbsp;тонусе. Сценарий был написан именно под&nbsp;нашу специфику, без шаблонов из&nbsp;интернета. Очень профессионально, чётко и&nbsp;с&nbsp;большим уважением к&nbsp;гостям. Обязательно вернёмся снова.</p>
+      <p data-edit="rev.t1">Впервые за&nbsp;долгое время на&nbsp;нашем корпоративе HR-отдел просто отдыхал, а&nbsp;не&nbsp;бегал в&nbsp;истерике, пытаясь угодить коллективу. Роман действительно чувствует аудиторию, моментально переключает внимание и&nbsp;держит зал в&nbsp;тонусе. Сценарий был написан именно под&nbsp;нашу специфику, без шаблонов из&nbsp;интернета. Очень профессионально, чётко и&nbsp;с&nbsp;большим уважением к&nbsp;гостям. Обязательно вернёмся снова.</p>
     </div>
     <div class="review">
       <div class="quote-mark">“</div>
-      <p>Заказывали у&nbsp;Романа организацию презентации нового бренда. Понравилось, что это не&nbsp;просто ведущий, а&nbsp;полноценное агентство: дизайнер проработал визуал, маркетологи помогли с&nbsp;правильными акцентами в&nbsp;сценарии. Всё было упаковано стильно, современно и&nbsp;без нафталиновых приёмов. Нам было важно выдержать уровень, и&nbsp;Роман с&nbsp;командой это сделали. Рекомендую.</p>
+      <p data-edit="rev.t2">Заказывали у&nbsp;Романа организацию презентации нового бренда. Понравилось, что это не&nbsp;просто ведущий, а&nbsp;полноценное агентство: дизайнер проработал визуал, маркетологи помогли с&nbsp;правильными акцентами в&nbsp;сценарии. Всё было упаковано стильно, современно и&nbsp;без нафталиновых приёмов. Нам было важно выдержать уровень, и&nbsp;Роман с&nbsp;командой это сделали. Рекомендую.</p>
     </div>
     <div class="review review--tint">
       <div class="quote-mark">“</div>
-      <p>Нам нужен был ведущий и&nbsp;организатор, который сможет на&nbsp;равных общаться с&nbsp;топ-менеджментом. Роман Шумилов — это про статус, уверенность и&nbsp;интеллект. Никаких глупых шуток или неуместного пафоса. Всё очень интеллигентно, но&nbsp;при этом энергично. Весь вечер не&nbsp;покидало ощущение, что мероприятием управляет опытный капитан. Высший пилотаж.</p>
+      <p data-edit="rev.t3">Нам нужен был ведущий и&nbsp;организатор, который сможет на&nbsp;равных общаться с&nbsp;топ-менеджментом. Роман Шумилов — это про статус, уверенность и&nbsp;интеллект. Никаких глупых шуток или неуместного пафоса. Всё очень интеллигентно, но&nbsp;при этом энергично. Весь вечер не&nbsp;покидало ощущение, что мероприятием управляет опытный капитан. Высший пилотаж.</p>
     </div>
   </div>
 </div>
@@ -209,45 +209,45 @@
 <!-- FAQ -->
 <div class="section section--narrow">
   <div class="section-head">
-    <h2>ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ</h2>
-    <span class="kicker">FAQ</span>
+    <h2 data-edit="faq.title">ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ</h2>
+    <span class="kicker" data-edit="faq.kicker">FAQ</span>
   </div>
   <div class="faq">
     <details>
-      <summary>Почему я должен нанять агентство, а не просто ведущего с диджеем?<span class="arrow">→</span></summary>
-      <div class="answer">Ведущий отвечает только за&nbsp;микрофон. Агентство отвечает за&nbsp;экосистему: от&nbsp;логистики артистов до&nbsp;контроля тайминга кухни. Мы&nbsp;исключаем ситуацию, когда «один не&nbsp;успел, а&nbsp;второй не&nbsp;знал». Вы&nbsp;покупаете не&nbsp;слова в&nbsp;микрофон, а&nbsp;архитектуру события, где каждый винтик работает на&nbsp;вашу задачу.</div>
+      <summary><span data-edit="faq.q1">Почему я должен нанять агентство, а не просто ведущего с диджеем?</span><span class="arrow">→</span></summary>
+      <div class="answer" data-edit="faq.a1">Ведущий отвечает только за&nbsp;микрофон. Агентство отвечает за&nbsp;экосистему: от&nbsp;логистики артистов до&nbsp;контроля тайминга кухни. Мы&nbsp;исключаем ситуацию, когда «один не&nbsp;успел, а&nbsp;второй не&nbsp;знал». Вы&nbsp;покупаете не&nbsp;слова в&nbsp;микрофон, а&nbsp;архитектуру события, где каждый винтик работает на&nbsp;вашу задачу.</div>
     </details>
     <details>
-      <summary>Кто будет заниматься моим проектом?<span class="arrow">→</span></summary>
-      <div class="answer">За каждым проектом закреплена команда: продюсер, отвечающий за&nbsp;бюджет и&nbsp;сроки; сценарист, создающий смыслы; и&nbsp;технический отдел. Я, как глава агентства, осуществляю финальный аудит концепции. Мы&nbsp;работаем как единый механизм, а&nbsp;не&nbsp;как группа фрилансеров. Это наша профильная деятельность.</div>
+      <summary><span data-edit="faq.q2">Кто будет заниматься моим проектом?</span><span class="arrow">→</span></summary>
+      <div class="answer" data-edit="faq.a2">За каждым проектом закреплена команда: продюсер, отвечающий за&nbsp;бюджет и&nbsp;сроки; сценарист, создающий смыслы; и&nbsp;технический отдел. Я, как глава агентства, осуществляю финальный аудит концепции. Мы&nbsp;работаем как единый механизм, а&nbsp;не&nbsp;как группа фрилансеров. Это наша профильная деятельность.</div>
     </details>
     <details>
-      <summary>Как вы гарантируете, что мероприятие не сорвётся по «техническим причинам»?<span class="arrow">→</span></summary>
-      <div class="answer">В нашей работе нет места «авось». У&nbsp;нас всегда есть план&nbsp;«Б»: резервное звуковое оборудование, дублирующие каналы связи и&nbsp;проверенный пул подрядчиков. Дисциплина и&nbsp;жёсткий контроль чек-листов на&nbsp;каждом этапе — это наш стандарт, заимствованный из&nbsp;систем управления сложными объектами.</div>
+      <summary><span data-edit="faq.q3">Как вы гарантируете, что мероприятие не сорвётся по «техническим причинам»?</span><span class="arrow">→</span></summary>
+      <div class="answer" data-edit="faq.a3">В нашей работе нет места «авось». У&nbsp;нас всегда есть план&nbsp;«Б»: резервное звуковое оборудование, дублирующие каналы связи и&nbsp;проверенный пул подрядчиков. Дисциплина и&nbsp;жёсткий контроль чек-листов на&nbsp;каждом этапе — это наш стандарт, заимствованный из&nbsp;систем управления сложными объектами.</div>
     </details>
     <details>
-      <summary>Мы боимся стандартных конкурсов и клише. Что предложите вы?<span class="arrow">→</span></summary>
-      <div class="answer">Мы не&nbsp;занимаемся «развлечением ради развлечения». Основа нашего продукта — драматургия и&nbsp;сценарный план, написанный под&nbsp;ваши задачи. Мы&nbsp;интегрируем ценности компании или личные истории героев в&nbsp;формат события так, чтобы это вызывало реальные эмоции, гордость и&nbsp;радость, а&nbsp;не&nbsp;неловкость.</div>
+      <summary><span data-edit="faq.q4">Мы боимся стандартных конкурсов и клише. Что предложите вы?</span><span class="arrow">→</span></summary>
+      <div class="answer" data-edit="faq.a4">Мы не&nbsp;занимаемся «развлечением ради развлечения». Основа нашего продукта — драматургия и&nbsp;сценарный план, написанный под&nbsp;ваши задачи. Мы&nbsp;интегрируем ценности компании или личные истории героев в&nbsp;формат события так, чтобы это вызывало реальные эмоции, гордость и&nbsp;радость, а&nbsp;не&nbsp;неловкость.</div>
     </details>
     <details>
-      <summary>Сколько времени занимает подготовка «под ключ»?<span class="arrow">→</span></summary>
-      <div class="answer">Качественный продукт требует времени. Оптимальный срок для сложного корпоративного или частного события — от&nbsp;2&nbsp;до&nbsp;4&nbsp;месяцев. Если нужно «вчера» — мы&nbsp;можем это сделать за&nbsp;счёт мобилизации всех ресурсов, но&nbsp;это потребует максимально быстрого принятия решений с&nbsp;вашей стороны.</div>
+      <summary><span data-edit="faq.q5">Сколько времени занимает подготовка «под ключ»?</span><span class="arrow">→</span></summary>
+      <div class="answer" data-edit="faq.a5">Качественный продукт требует времени. Оптимальный срок для сложного корпоративного или частного события — от&nbsp;2&nbsp;до&nbsp;4&nbsp;месяцев. Если нужно «вчера» — мы&nbsp;можем это сделать за&nbsp;счёт мобилизации всех ресурсов, но&nbsp;это потребует максимально быстрого принятия решений с&nbsp;вашей стороны.</div>
     </details>
     <details>
-      <summary>Работаете ли вы в других городах или только в своём регионе?<span class="arrow">→</span></summary>
-      <div class="answer">География не&nbsp;является ограничением. Мы&nbsp;имеем опыт выездных проектов и&nbsp;чётко отлаженные логистические схемы. Команда выезжает в&nbsp;любую точку, где требуется наш уровень экспертизы. Действующие загранпаспорта на&nbsp;руках.</div>
+      <summary><span data-edit="faq.q6">Работаете ли вы в других городах или только в своём регионе?</span><span class="arrow">→</span></summary>
+      <div class="answer" data-edit="faq.a6">География не&nbsp;является ограничением. Мы&nbsp;имеем опыт выездных проектов и&nbsp;чётко отлаженные логистические схемы. Команда выезжает в&nbsp;любую точку, где требуется наш уровень экспертизы. Действующие загранпаспорта на&nbsp;руках.</div>
     </details>
     <details>
-      <summary>Из чего складывается стоимость ваших услуг?<span class="arrow">→</span></summary>
-      <div class="answer">Стоимость — это отражение квалификации команды, объёма управленческой работы и&nbsp;гарантий безопасности. Вы&nbsp;платите за&nbsp;то, что в&nbsp;день мероприятия вы&nbsp;будете гостем, а&nbsp;не&nbsp;кризис-менеджером, бегающим между официантами и&nbsp;техниками.</div>
+      <summary><span data-edit="faq.q7">Из чего складывается стоимость ваших услуг?</span><span class="arrow">→</span></summary>
+      <div class="answer" data-edit="faq.a7">Стоимость — это отражение квалификации команды, объёма управленческой работы и&nbsp;гарантий безопасности. Вы&nbsp;платите за&nbsp;то, что в&nbsp;день мероприятия вы&nbsp;будете гостем, а&nbsp;не&nbsp;кризис-менеджером, бегающим между официантами и&nbsp;техниками.</div>
     </details>
     <details>
-      <summary>Будете ли вы лично присутствовать на моём мероприятии?<span class="arrow">→</span></summary>
-      <div class="answer">Моё участие обсуждается на&nbsp;этапе заключения договора. В&nbsp;зависимости от&nbsp;масштаба и&nbsp;задач, я&nbsp;могу выступать как ведущий, как главный продюсер на&nbsp;площадке или как куратор проекта. В&nbsp;любом случае, стандарты работы агентства остаются неизменно высокими.</div>
+      <summary><span data-edit="faq.q8">Будете ли вы лично присутствовать на моём мероприятии?</span><span class="arrow">→</span></summary>
+      <div class="answer" data-edit="faq.a8">Моё участие обсуждается на&nbsp;этапе заключения договора. В&nbsp;зависимости от&nbsp;масштаба и&nbsp;задач, я&nbsp;могу выступать как ведущий, как главный продюсер на&nbsp;площадке или как куратор проекта. В&nbsp;любом случае, стандарты работы агентства остаются неизменно высокими.</div>
     </details>
     <details>
-      <summary>Что требуется от меня как от заказчика?<span class="arrow">→</span></summary>
-      <div class="answer">Доверие и&nbsp;чёткое понимание конечной цели. На&nbsp;этапе брифинга нам нужно максимум информации, из&nbsp;которой мы&nbsp;сможем творить. После утверждения концепции вы&nbsp;делегируете нам реализацию. Ваша главная задача в&nbsp;день события — получать удовольствие от&nbsp;результата.</div>
+      <summary><span data-edit="faq.q9">Что требуется от меня как от заказчика?</span><span class="arrow">→</span></summary>
+      <div class="answer" data-edit="faq.a9">Доверие и&nbsp;чёткое понимание конечной цели. На&nbsp;этапе брифинга нам нужно максимум информации, из&nbsp;которой мы&nbsp;сможем творить. После утверждения концепции вы&nbsp;делегируете нам реализацию. Ваша главная задача в&nbsp;день события — получать удовольствие от&nbsp;результата.</div>
     </details>
   </div>
 </div>
@@ -256,35 +256,35 @@
 <div id="quiz" class="quiz">
   <div class="quiz-grid">
     <div>
-      <h2>РАССЧИТАЙТЕ СТОИМОСТЬ, ОТВЕТИВ НА&nbsp;ВОПРОСЫ, — И&nbsp;ПОЛУЧИТЕ ПОДАРОК</h2>
-      <div class="quiz-lead">Выберите подарок — остальное мы&nbsp;возьмём на&nbsp;себя. Ответ в&nbsp;самые короткие сроки.</div>
+      <h2 data-edit="quiz.title">РАССЧИТАЙТЕ СТОИМОСТЬ, ОТВЕТИВ НА&nbsp;ВОПРОСЫ, — И&nbsp;ПОЛУЧИТЕ ПОДАРОК</h2>
+      <div class="quiz-lead" data-edit="quiz.lead">Выберите подарок — остальное мы&nbsp;возьмём на&nbsp;себя. Ответ в&nbsp;самые короткие сроки.</div>
       <div class="gifts">
-        <label class="gift"><input type="radio" name="gift" value="Видеоролик с мероприятия" checked><span class="radio"></span>Видеоролик с мероприятия</label>
-        <label class="gift"><input type="radio" name="gift" value="+1 час работы диджея на дискотеке"><span class="radio"></span>+1 час работы диджея на дискотеке</label>
-        <label class="gift"><input type="radio" name="gift" value="1 час работы ведущего на сборе гостей"><span class="radio"></span>1 час работы ведущего на сборе гостей</label>
-        <label class="gift"><input type="radio" name="gift" value="Подарок не нужен"><span class="radio"></span>Подарок не нужен</label>
+        <label class="gift"><input type="radio" name="gift" value="Видеоролик с мероприятия" checked><span class="radio"></span><span data-edit="quiz.gift1">Видеоролик с мероприятия</span></label>
+        <label class="gift"><input type="radio" name="gift" value="+1 час работы диджея на дискотеке"><span class="radio"></span><span data-edit="quiz.gift2">+1 час работы диджея на дискотеке</span></label>
+        <label class="gift"><input type="radio" name="gift" value="1 час работы ведущего на сборе гостей"><span class="radio"></span><span data-edit="quiz.gift3">1 час работы ведущего на сборе гостей</span></label>
+        <label class="gift"><input type="radio" name="gift" value="Подарок не нужен"><span class="radio"></span><span data-edit="quiz.gift4">Подарок не нужен</span></label>
       </div>
     </div>
     <form class="quiz-form" novalidate>
       <div class="quiz-fields">
         <div class="quiz-row">
-          <input name="date" placeholder="Дата события" autocomplete="off">
-          <input name="city" placeholder="Город" autocomplete="address-level2">
+          <input name="date" placeholder="Дата события" data-edit-ph="quiz.phDate" autocomplete="off">
+          <input name="city" placeholder="Город" data-edit-ph="quiz.phCity" autocomplete="address-level2">
         </div>
-        <input name="company" placeholder="Компания" autocomplete="organization">
-        <input name="phone" type="tel" placeholder="Телефон" autocomplete="tel">
-        <button type="submit" class="quiz-submit">Получить расчёт и подарок</button>
+        <input name="company" placeholder="Компания" data-edit-ph="quiz.phCompany" autocomplete="organization">
+        <input name="phone" type="tel" placeholder="Телефон" data-edit-ph="quiz.phPhone" autocomplete="tel">
+        <button type="submit" class="quiz-submit" data-edit="quiz.btn">Получить расчёт и подарок</button>
         <div class="quiz-messengers">
-          <a href="#quiz" data-messenger="telegram">Отправить в Telegram</a>
-          <a href="#quiz" data-messenger="whatsapp">Отправить в WhatsApp</a>
-          <a href="#quiz" data-messenger="vk">Отправить во ВКонтакте</a>
-          <a href="#quiz" data-messenger="phone">Позвонить лично</a>
+          <a href="#quiz" data-messenger="telegram" data-edit="quiz.msg1">Отправить в Telegram</a>
+          <a href="#quiz" data-messenger="whatsapp" data-edit="quiz.msg2">Отправить в WhatsApp</a>
+          <a href="#quiz" data-messenger="vk" data-edit="quiz.msg3">Отправить во ВКонтакте</a>
+          <a href="#quiz" data-messenger="phone" data-edit="quiz.msg4">Позвонить лично</a>
         </div>
-        <div class="quiz-consent">Я даю Согласие на обработку персональных данных в соответствии с Политикой конфиденциальности.</div>
+        <div class="quiz-consent" data-edit="quiz.consent">Я даю Согласие на обработку персональных данных в соответствии с Политикой конфиденциальности.</div>
       </div>
       <div class="quiz-success">
-        <h3>СПАСИБО ЗА ВАШ ИНТЕРЕС!</h3>
-        <p>Вы получите ответ в&nbsp;самые короткие сроки. Мы&nbsp;проверим, свободна&nbsp;ли ваша дата, и&nbsp;пришлём расчёт.</p>
+        <h3 data-edit="quiz.successTitle">СПАСИБО ЗА ВАШ ИНТЕРЕС!</h3>
+        <p data-edit="quiz.successText">Вы получите ответ в&nbsp;самые короткие сроки. Мы&nbsp;проверим, свободна&nbsp;ли ваша дата, и&nbsp;пришлём расчёт.</p>
       </div>
     </form>
   </div>
@@ -292,12 +292,12 @@
 
 <!-- футер -->
 <div class="footer">
-  <a href="index.html" class="footer-logo">РШ<span class="dot">.</span></a>
-  <span class="footer-links"><a href="index.html">Главная</a><a href="svadby.html">Свадьбы</a></span>
-  <span>WhatsApp · Telegram · Instagram*</span>
-  <span>Политика конфиденциальности</span>
+  <a href="index.html" class="footer-logo" data-edit="footer.logo">РШ<span class="dot">.</span></a>
+  <span class="footer-links"><a href="index.html" data-edit="footer.link1">Главная</a><a href="svadby.html" data-edit="footer.link2">Свадьбы</a></span>
+  <span data-edit="footer.social">WhatsApp · Telegram · Instagram*</span>
+  <span data-edit="footer.policy">Политика конфиденциальности</span>
 </div>
-<div class="fine">ИП Прядко Роман Алексеевич · ИНН 253812210156 · ОГРНИП 324253600073857 · *Instagram принадлежит компании Meta, деятельность которой признана экстремистской и запрещена на территории РФ</div>
+<div class="fine" data-edit="fine.text">ИП Прядко Роман Алексеевич · ИНН 253812210156 · ОГРНИП 324253600073857 · *Instagram принадлежит компании Meta, деятельность которой признана экстремистской и запрещена на территории РФ</div>
 
 <script src="js/main.js"></script>
 </body>
