@@ -16,10 +16,10 @@
     stripLeft: 'ФОТО-ЛЕНТА — ЛЕВАЯ КОЛОНКА', stripRight: 'ФОТО-ЛЕНТА — ПРАВАЯ КОЛОНКА',
     marquee: 'БЕГУЩАЯ СТРОКА', guar: 'ГАРАНТИИ', pkg: 'ПАКЕТЫ УСЛУГ', lv: 'УРОВНИ РЕАЛИЗАЦИИ',
     videos: 'ВИДЕО', rev: 'ОТЗЫВЫ', faq: 'ВОПРОСЫ И ОТВЕТЫ (FAQ)', quiz: 'КВИЗ — РАСЧЁТ СТОИМОСТИ',
-    footer: 'ФУТЕР', fine: 'МЕЛКИЙ ТЕКСТ В ПОДВАЛЕ'
+    footer: 'ФУТЕР', fine: 'МЕЛКИЙ ТЕКСТ В ПОДВАЛЕ', preloader: 'ЭКРАН ЗАГРУЗКИ'
   };
   var FIELD_LABELS = {
-    text: 'Текст', type: 'Тайпрайтер-строка', title: 'Заголовок', lead: 'Подзаголовок / текст',
+    text: 'Текст', label: 'Надпись', type: 'Тайпрайтер-строка', title: 'Заголовок', lead: 'Подзаголовок / текст',
     cities: 'Строка внизу героя', kicker: 'Надпись справа от заголовка', note: 'Строка под карточками',
     btn: 'Кнопка', btnQuiz: 'Жёлтая кнопка', btnWeddings: 'Кнопка «Свадьбы»',
     btnCorporate: 'Кнопка «Корпоративы»', btnPackages: 'Кнопка «Пакеты услуг»',
@@ -332,46 +332,70 @@
     return wrap;
   }
 
-  /* список видео */
+  /* список видео (элемент: {src, poster}) */
   function videosEl(v) {
+    /* обратная совместимость со старым форматом (строка-src) */
+    v.value = v.value.map(function (x) {
+      return typeof x === 'string' ? { src: x, poster: '' } : x;
+    });
     var wrap = el('div', 'media-list');
     function render() {
       wrap.innerHTML = '';
-      v.value.forEach(function (src, idx) {
+      v.value.forEach(function (item, idx) {
         var row = el('div', 'media-item');
-        var vid = el('video');
-        vid.src = '/' + src;
-        vid.preload = 'metadata';
-        vid.muted = true;
-        row.appendChild(vid);
-        row.appendChild(el('div', 'media-name', src.split('/').pop()));
+        if (item.poster) {
+          var img = el('img');
+          img.src = '/' + item.poster;
+          img.title = 'Превью видео';
+          row.appendChild(img);
+        } else {
+          var vid = el('video');
+          vid.src = '/' + item.src;
+          vid.preload = 'metadata';
+          vid.muted = true;
+          row.appendChild(vid);
+        }
+        var name = el('div', 'media-name', item.src.split('/').pop() +
+          (item.poster ? '<br><span style="color:#8fce8f">превью: ' + item.poster.split('/').pop() + '</span>' : ''));
+        name.style.flex = '1';
+        row.appendChild(name);
         var actions = el('div', 'media-actions');
-        var up = el('button', '', '↑');
+        var up = el('button', '', '↑'); up.title = 'Выше';
         up.addEventListener('click', function () {
           if (idx === 0) return;
           v.value.splice(idx - 1, 0, v.value.splice(idx, 1)[0]);
           markDirty(); render();
         });
-        var down = el('button', '', '↓');
+        var down = el('button', '', '↓'); down.title = 'Ниже';
         down.addEventListener('click', function () {
           if (idx === v.value.length - 1) return;
           v.value.splice(idx + 1, 0, v.value.splice(idx, 1)[0]);
           markDirty(); render();
         });
-        var del = el('button', 'del', '✕');
+        var poster = el('button', '', '🖼'); poster.title = 'Загрузить фото-превью';
+        poster.addEventListener('click', function () {
+          uploadFile('image/*', function (path) { item.poster = path; markDirty(); render(); });
+        });
+        actions.appendChild(up); actions.appendChild(down); actions.appendChild(poster);
+        if (item.poster) {
+          var noPoster = el('button', '', '⊘'); noPoster.title = 'Убрать превью';
+          noPoster.addEventListener('click', function () { item.poster = ''; markDirty(); render(); });
+          actions.appendChild(noPoster);
+        }
+        var del = el('button', 'del', '✕'); del.title = 'Удалить видео';
         del.addEventListener('click', function () {
           if (v.value.length <= 1) { alert('Должно остаться хотя бы одно видео'); return; }
           v.value.splice(idx, 1);
           markDirty(); render();
         });
-        actions.appendChild(up); actions.appendChild(down); actions.appendChild(del);
+        actions.appendChild(del);
         row.appendChild(actions);
         wrap.appendChild(row);
       });
       var add = el('button', 'add-media', '+ Добавить видео');
       add.addEventListener('click', function () {
         uploadFile('video/*', function (path) {
-          v.value.push(path);
+          v.value.push({ src: path, poster: '' });
           markDirty(); render();
         });
       });

@@ -86,24 +86,24 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 .typewriter{
   display:inline-block;overflow:hidden;white-space:nowrap;
   border-right:2px solid var(--yellow);padding-right:6px;
-  font-size:12px;letter-spacing:.34em;color:var(--bronze);max-width:100%;
+  font-size:clamp(12px,.8vw,15px);letter-spacing:.34em;color:var(--bronze);max-width:100%;
   animation:rshCaret 1.1s step-end infinite;align-self:flex-start;
 }
-.hero h1{font-size:66px;line-height:1.08;margin:18px 0 0;animation:rshRise .9s .15s both}
-.hero--sub h1{font-size:64px}
-.hero h1.h1-long{font-size:52px;line-height:1.12}
-.hero-lead{margin-top:22px;font-size:15px;line-height:1.7;color:var(--text-72);max-width:420px;animation:rshRise .9s .35s both}
-.hero--sub .hero-lead{max-width:430px}
+.hero h1{font-size:clamp(56px,5.5vw,96px);line-height:1.08;margin:18px 0 0;animation:rshRise .9s .15s both}
+.hero--sub h1{font-size:clamp(52px,5.2vw,90px)}
+.hero h1.h1-long{font-size:clamp(40px,4vw,72px);line-height:1.12}
+.hero-lead{margin-top:24px;font-size:clamp(15px,1.1vw,19px);line-height:1.7;color:var(--text-72);max-width:560px;animation:rshRise .9s .35s both}
+.hero--sub .hero-lead{max-width:560px}
 
 /* кнопки героя главной (столбцом) */
-.hero-nav-buttons{margin-top:44px;display:flex;flex-direction:column;gap:12px;max-width:440px}
+.hero-nav-buttons{margin-top:44px;display:flex;flex-direction:column;gap:12px;max-width:500px}
 .btn-section{
   display:flex;justify-content:space-between;align-items:center;
   border:1px solid var(--bronze-50);color:var(--text);text-decoration:none;
-  padding:20px 24px;border-radius:2px;transition:background .35s,color .35s;
+  padding:22px 26px;border-radius:2px;transition:background .35s,color .35s;
 }
 .btn-section:hover{background:var(--bronze);color:var(--bg)}
-.btn-section .label{font-family:var(--benzin);font-size:15px}
+.btn-section .label{font-family:var(--benzin);font-size:16px}
 .btn-section .arrow{font-size:17px;animation:rshFloat 2.8s ease-in-out infinite}
 .btn-section .arrow--delay{animation-delay:.4s}
 
@@ -112,19 +112,19 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 .btn-yellow{
   display:flex;justify-content:center;align-items:center;gap:10px;
   background:var(--yellow);color:var(--bg);text-decoration:none;
-  padding:16px 26px;border-radius:2px;font-size:13px;font-weight:600;
+  padding:18px 30px;border-radius:2px;font-size:14px;font-weight:600;
 }
 .btn-yellow:hover{color:var(--bg)}
 .btn-ghost{
-  border:1px solid var(--bronze-50);color:var(--text);font-size:13px;text-decoration:none;
-  padding:16px 26px;border-radius:2px;display:flex;align-items:center;gap:10px;
+  border:1px solid var(--bronze-50);color:var(--text);font-size:14px;text-decoration:none;
+  padding:18px 30px;border-radius:2px;display:flex;align-items:center;gap:10px;
   transition:background .35s,color .35s;
 }
 .btn-ghost span{color:var(--bronze)}
 .btn-ghost:hover{background:var(--bronze);color:var(--bg)}
 .btn-ghost:hover span{color:var(--bg)}
 
-.hero-cities{margin-top:auto;padding-top:36px;font-size:11px;letter-spacing:.22em;color:var(--text-45)}
+.hero-cities{margin-top:auto;padding-top:36px;font-size:clamp(11px,.75vw,13px);letter-spacing:.22em;color:var(--text-45)}
 .hero--sub .hero-cities{margin-top:44px;padding-top:0}
 
 /* каскад появления */
@@ -134,15 +134,17 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 .rise-4{animation:rshRise .9s .62s both}
 .rise-5{animation:rshRise .9s .74s both}
 
-/* ---------- фото-ленты ---------- */
-.strips{display:flex;gap:14px;padding:0 40px 0 10px;height:min(92vh,760px);overflow:hidden;position:relative}
-.hero--sub .strips{height:min(78vh,700px)}
+/* ---------- фото-ленты ----------
+   Высота не фиксирована: грид растягивает ленты на всю высоту героя,
+   так что они доходят до бегущей строки. */
+.strips{display:flex;gap:14px;padding:0 40px 0 10px;overflow:hidden;position:relative;min-height:480px}
 .strips::before{
   content:'';position:absolute;inset:0;z-index:3;pointer-events:none;
   background:linear-gradient(180deg,var(--bg) 0%,transparent 12%,transparent 88%,var(--bg) 100%);
 }
-.strip-col{flex:1;overflow:hidden}
-.strip-track{display:flex;flex-direction:column;gap:14px;animation:rshMarqUp 34s linear infinite}
+.strip-col{flex:1;overflow:hidden;position:relative}
+/* трек абсолютный: не задаёт высоту герою, а заполняет выделенную */
+.strip-track{position:absolute;left:0;right:0;top:0;display:flex;flex-direction:column;gap:14px;animation:rshMarqUp 34s linear infinite}
 .strip-track--down{animation-direction:reverse}
 .hero--sub .strip-track{animation-duration:36s}
 .strip-track img{width:100%;height:300px;object-fit:cover;border-radius:2px;filter:grayscale(.3)}
@@ -180,15 +182,15 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 .guarantees-note .d{color:var(--bronze)}
 
 /* ---------- пакеты / уровни ---------- */
-.packages{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:start}
-.package{border:1px solid var(--line-14);border-radius:2px;padding:34px 30px;position:relative}
+.packages{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.package{border:1px solid var(--line-14);border-radius:2px;padding:34px 30px;position:relative;display:flex;flex-direction:column}
 .package--featured{border-color:var(--bronze);background:linear-gradient(160deg,rgba(198,161,91,.08),transparent 55%)}
 .package-badge{position:absolute;top:-13px;right:22px;background:var(--yellow);color:var(--bg);font-size:11px;font-weight:600;letter-spacing:.14em;padding:6px 12px;border-radius:2px}
 .package h3{font-family:var(--benzin);font-size:22px;font-weight:400;margin:0}
 .package--featured h3{color:var(--bronze)}
 .package-sub{margin-top:6px;font-size:12px;letter-spacing:.18em;color:var(--text-50)}
 .package-desc{margin-top:12px;font-size:13px;line-height:1.6;color:var(--text-70)}
-.package-list{margin-top:22px;display:flex;flex-direction:column;gap:11px;font-size:13px;line-height:1.55;color:var(--text-75)}
+.package-list{margin-top:22px;display:flex;flex-direction:column;gap:11px;font-size:13px;line-height:1.55;color:var(--text-75);flex:1}
 .package-list--labels{gap:13px}
 .package-item{display:flex;gap:10px}
 .package-item .d{color:var(--bronze);flex:none}
@@ -202,6 +204,10 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 
 /* ---------- видео ---------- */
 .videos{display:flex;gap:14px;overflow-x:auto;padding-bottom:14px}
+/* центрирование, когда ролики помещаются; при переполнении margin:auto = 0
+   и остаётся обычная прокрутка слева направо */
+.videos>:first-child{margin-left:auto}
+.videos>:last-child{margin-right:auto}
 .videos video{
   flex:none;width:250px;aspect-ratio:25/48;object-fit:cover;border-radius:2px;
   background:var(--video-bg);border:1px solid var(--line-10);
@@ -289,6 +295,27 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 .quiz-form.sent .quiz-fields{display:none}
 .quiz-form.sent .quiz-success{display:block}
 
+/* ---------- свечение под курсором ---------- */
+.cursor-glow{
+  position:fixed;left:0;top:0;width:640px;height:640px;border-radius:50%;
+  pointer-events:none;z-index:1;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(198,161,91,.13) 0%,rgba(198,161,91,.05) 35%,transparent 65%);
+  mix-blend-mode:screen;
+}
+
+/* ---------- экран загрузки ---------- */
+#preloader{
+  position:fixed;inset:0;z-index:9999;background:var(--bg);
+  display:flex;flex-direction:column;justify-content:center;align-items:center;gap:20px;
+  transition:opacity .5s ease,visibility .5s;
+}
+#preloader .preloader-label{font-size:11px;letter-spacing:.34em;color:var(--bronze)}
+#preloader .preloader-num{font-family:var(--benzin);font-size:clamp(56px,8vw,110px);line-height:1;color:var(--text)}
+#preloader .preloader-line{width:min(320px,60vw);height:1px;background:var(--line-10);overflow:hidden}
+#preloader .preloader-line span{display:block;height:100%;width:0;background:var(--bronze)}
+#preloader.done{opacity:0;visibility:hidden;pointer-events:none}
+.no-preloader #preloader{display:none}
+
 /* ---------- футер ---------- */
 .footer{
   display:flex;justify-content:space-between;align-items:center;
@@ -327,8 +354,7 @@ h1,h2{font-family:var(--benzin);font-weight:400}
   .hero-btns{flex-direction:column;align-items:stretch}
   .hero-btns a{justify-content:center;text-align:center}
 
-  .strips{height:340px;padding:0 20px;margin-top:6px}
-  .hero--sub .strips{height:340px}
+  .strips{height:340px;min-height:0;padding:0 20px;margin-top:6px}
   .strip-track img{height:200px}
 
   .section{padding:52px 20px 0}

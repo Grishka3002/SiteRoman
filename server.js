@@ -79,7 +79,12 @@ function renderPage(pageId) {
   $('[data-videos]').each((i, el) => {
     const list = videos[$(el).attr('data-videos')];
     if (!Array.isArray(list)) return;
-    $(el).html(list.map(v => `<video src="${escAttr(v)}" controls playsinline preload="metadata"></video>`).join(''));
+    $(el).html(list.map(raw => {
+      // обратная совместимость: раньше элемент был строкой-src
+      const v = typeof raw === 'string' ? { src: raw } : raw;
+      const poster = v.poster ? ` poster="${escAttr(v.poster)}"` : '';
+      return `<video src="${escAttr(v.src)}"${poster} controls playsinline preload="metadata"></video>`;
+    }).join(''));
   });
   $('[data-marquee]').each((i, el) => {
     const list = marquees[$(el).attr('data-marquee')];
@@ -119,7 +124,10 @@ function extractPage(pageId) {
   });
   const videos = {};
   $('[data-videos]').each((i, el) => {
-    videos[$(el).attr('data-videos')] = $(el).find('video').toArray().map(v => $(v).attr('src') || '');
+    videos[$(el).attr('data-videos')] = $(el).find('video').toArray().map(v => ({
+      src: $(v).attr('src') || '',
+      poster: $(v).attr('poster') || ''
+    }));
   });
   const marquees = {};
   $('[data-marquee]').each((i, el) => {

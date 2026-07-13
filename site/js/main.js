@@ -11,6 +11,61 @@ var CONTACTS = {
 
 document.addEventListener('DOMContentLoaded', function () {
 
+  /* ---------- экран загрузки (0→100%) ----------
+     Полная анимация — один раз за сессию (флаг в sessionStorage,
+     проверяется инлайн-скриптом в <head>, который ставит .no-preloader). */
+  var preloader = document.getElementById('preloader');
+  if (preloader) {
+    if (document.documentElement.classList.contains('no-preloader')) {
+      preloader.remove();
+    } else {
+      var num = preloader.querySelector('.preloader-num');
+      var bar = preloader.querySelector('.preloader-line span');
+      var t0 = null, DURATION = 1400, finished = false;
+      var finish = function () {
+        if (finished) return;
+        finished = true;
+        if (num) num.textContent = '100%';
+        if (bar) bar.style.width = '100%';
+        preloader.classList.add('done');
+        try { sessionStorage.setItem('rsh-loaded', '1'); } catch (err) {}
+        setTimeout(function () { preloader.remove(); }, 600);
+      };
+      var tick = function (ts) {
+        if (finished) return;
+        if (t0 === null) t0 = ts;
+        var p = Math.min(1, (ts - t0) / DURATION);
+        var e = 1 - Math.pow(1 - p, 3); /* ease-out */
+        if (num) num.textContent = Math.round(e * 100) + '%';
+        if (bar) bar.style.width = (e * 100) + '%';
+        if (p < 1) requestAnimationFrame(tick);
+        else finish();
+      };
+      requestAnimationFrame(tick);
+      /* страховка: rAF стоит в фоновой вкладке — не держать оверлей вечно */
+      setTimeout(finish, DURATION + 800);
+    }
+  }
+
+  /* ---------- свечение под курсором ---------- */
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    var glow = document.createElement('div');
+    glow.className = 'cursor-glow';
+    document.body.appendChild(glow);
+    var gx = window.innerWidth / 2, gy = window.innerHeight / 2;
+    var tx = gx, ty = gy;
+    document.addEventListener('mousemove', function (e) {
+      tx = e.clientX; ty = e.clientY;
+    });
+    (function follow() {
+      gx += (tx - gx) * 0.12;
+      gy += (ty - gy) * 0.12;
+      glow.style.left = gx + 'px';
+      glow.style.top = gy + 'px';
+      requestAnimationFrame(follow);
+    })();
+  }
+
   /* ---------- бургер-меню ---------- */
   var burger = document.querySelector('.burger');
   var navLinks = document.querySelector('.nav-links');
