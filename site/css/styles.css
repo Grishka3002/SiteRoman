@@ -33,6 +33,8 @@
   --line-10:rgba(255,255,255,.1);
   --line-14:rgba(255,255,255,.14);
   --benzin:'Benzin',sans-serif;
+  /* градиент главных CTA: фирменный жёлтый → золото → мягкий фиолет */
+  --grad-cta:linear-gradient(115deg,#FFE40F 0%,#F6CE4F 38%,#E4B77E 62%,#C79EF2 88%,#9D74F5 100%);
 }
 
 *{box-sizing:border-box}
@@ -294,6 +296,30 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 .quiz-success p{font-size:13.5px;line-height:1.65;color:var(--text-70);margin:0}
 .quiz-form.sent .quiz-fields{display:none}
 .quiz-form.sent .quiz-success{display:block}
+
+/* ---------- градиент жёлтых CTA ---------- */
+.nav-cta,.btn-yellow,.quiz-submit,.package-cta--yellow{
+  background-color:var(--yellow); /* fallback */
+  background-image:var(--grad-cta);
+  background-size:170% 100%;
+  background-position:0% 50%;
+  transition:background-position .5s ease;
+}
+.nav-cta:hover,.btn-yellow:hover,.quiz-submit:hover,.package-cta--yellow:hover{
+  background-position:100% 50%;
+}
+/* бронзовая кнопка квиза на главной: hover — тот же градиент */
+.quiz-submit--bronze{
+  background-color:var(--bronze);
+  background-image:none;
+  transition:background .3s;
+}
+.quiz-submit--bronze:hover{
+  background-color:var(--yellow);
+  background-image:var(--grad-cta);
+  background-size:170% 100%;
+  background-position:0% 50%;
+}
 
 /* ---------- свечение под курсором ---------- */
 .cursor-glow{
