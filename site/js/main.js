@@ -66,6 +66,46 @@ document.addEventListener('DOMContentLoaded', function () {
     })();
   }
 
+  /* ---------- видео-визитка: плавающая кнопка + панель ---------- */
+  var vizFab = document.getElementById('vizitka-fab');
+  var vizPanel = document.getElementById('vizitka-panel');
+  if (vizFab && vizPanel) {
+    var panelVideo = function () { return vizPanel.querySelector('video'); };
+    var openViz = function () {
+      vizPanel.classList.add('open');
+      vizFab.classList.add('hidden');
+      var v = panelVideo();
+      if (v) {
+        v.muted = false;
+        var p = v.play();
+        if (p) p.catch(function () {}); /* если автозапуск запрещён — останется постер с Play */
+      }
+    };
+    var closeViz = function () {
+      vizPanel.classList.remove('open');
+      vizFab.classList.remove('hidden');
+      var v = panelVideo();
+      if (v) v.pause();
+    };
+    vizFab.querySelector('.vizitka-fab-btn').addEventListener('click', openViz);
+    vizPanel.querySelector('.vizitka-close').addEventListener('click', closeViz);
+    vizPanel.addEventListener('click', function (e) {
+      if (e.target.closest('.vizitka-panel-cta')) closeViz(); /* по CTA закрываем и скроллим к квизу */
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeViz();
+    });
+    /* живое превью в кружке при наведении (десктоп) */
+    var fabVideo = vizFab.querySelector('video');
+    if (fabVideo && window.matchMedia('(hover: hover)').matches) {
+      vizFab.addEventListener('mouseenter', function () {
+        var p = fabVideo.play();
+        if (p) p.catch(function () {});
+      });
+      vizFab.addEventListener('mouseleave', function () { fabVideo.pause(); });
+    }
+  }
+
   /* ---------- бургер-меню ---------- */
   var burger = document.querySelector('.burger');
   var navLinks = document.querySelector('.nav-links');

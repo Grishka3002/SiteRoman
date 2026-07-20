@@ -79,24 +79,6 @@
   </div>
 </div>
 
-<!-- видео-визитка -->
-<div class="section">
-  <div class="vizitka">
-    <div class="vizitka-video" data-videos="vizitka">
-      <video src="assets/vizitka.mp4" poster="assets/vizitka-poster.jpg" controls playsinline preload="metadata"></video>
-    </div>
-    <div class="vizitka-text">
-      <div class="kicker" data-edit="vizitka.kicker">ВИДЕО-ВИЗИТКА</div>
-      <h2 data-edit="vizitka.title">ДАВАЙТЕ ЗНАКОМИТЬСЯ</h2>
-      <div class="vizitka-lead" data-edit="vizitka.lead">Полминуты — и&nbsp;вы поймёте, подходим&nbsp;ли мы друг другу. Пара слов о&nbsp;том, как я&nbsp;работаю и&nbsp;почему мне доверяют главные события. Включите звук.</div>
-      <div class="vizitka-btns">
-        <a href="#quiz" class="btn-yellow" data-edit="vizitka.btnQuiz">Рассчитать стоимость</a>
-        <a href="#videos" class="btn-ghost"><span data-edit="vizitka.btnVideos">Видео с мероприятий</span> <span>→</span></a>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- видео -->
 <div id="videos" class="section">
   <div class="section-head">
@@ -142,6 +124,25 @@
   <span class="footer-links"><a href="svadby.html" data-edit="footer.link1">Свадьбы</a><a href="korporativy.html" data-edit="footer.link2">Корпоративы</a></span>
   <span data-edit="footer.social">WhatsApp · Telegram · Instagram</span>
   <span data-edit="footer.policy">Политика конфиденциальности</span>
+</div>
+
+<!-- видео-визитка: плавающая кнопка + раскрывающаяся панель -->
+<div class="vizitka-fab" id="vizitka-fab">
+  <span class="vizitka-fab-label" data-edit="vizitka.label">ВИДЕО-ВИЗИТКА</span>
+  <button class="vizitka-fab-btn" type="button" aria-label="Открыть видео-визитку">
+    <video src="assets/vizitka.mp4" poster="assets/vizitka-poster.jpg" muted loop playsinline preload="none"></video>
+    <span class="vizitka-fab-play">▶</span>
+  </button>
+</div>
+<div class="vizitka-panel" id="vizitka-panel" role="dialog" aria-label="Видео-визитка">
+  <div class="vizitka-panel-head">
+    <span data-edit="vizitka.title">ДАВАЙТЕ ЗНАКОМИТЬСЯ</span>
+    <button class="vizitka-close" type="button" aria-label="Закрыть">✕</button>
+  </div>
+  <div class="vizitka-panel-video" data-videos="vizitka">
+    <video src="assets/vizitka.mp4" poster="assets/vizitka-poster.jpg" controls playsinline preload="metadata"></video>
+  </div>
+  <a href="#quiz" class="btn-yellow vizitka-panel-cta" data-edit="vizitka.btnQuiz">Рассчитать стоимость</a>
 </div>
 
 <script src="js/main.js"></script>
