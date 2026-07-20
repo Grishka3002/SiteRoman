@@ -204,6 +204,22 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 .package-cta--outline:hover{background:var(--bronze);color:var(--bg)}
 .package-gift{margin-top:10px;text-align:center;font-size:11.5px;letter-spacing:.08em;color:var(--text-50)}
 
+/* ---------- видео-визитка ---------- */
+.vizitka{
+  display:grid;grid-template-columns:minmax(0,400px) 1fr;gap:56px;align-items:center;
+  border:1px solid var(--bronze-35);border-radius:2px;padding:44px 48px;
+  background:linear-gradient(120deg,rgba(198,161,91,.07),transparent 60%);
+}
+.vizitka-video{display:flex;justify-content:center}
+.vizitka-video video{
+  width:100%;max-width:340px;aspect-ratio:9/16;object-fit:cover;border-radius:2px;
+  background:var(--video-bg);border:1px solid var(--bronze-35);
+}
+.vizitka-text .kicker{display:block;margin-bottom:16px}
+.vizitka-text h2{font-size:clamp(24px,2.2vw,34px);margin:0 0 18px}
+.vizitka-lead{font-size:clamp(14px,1.05vw,17px);line-height:1.7;color:var(--text-72);max-width:520px}
+.vizitka-btns{display:flex;gap:14px;margin-top:30px}
+
 /* ---------- видео ---------- */
 .videos{display:flex;gap:14px;overflow-x:auto;padding-bottom:14px}
 /* центрирование, когда ролики помещаются; при переполнении margin:auto = 0
@@ -385,6 +401,10 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 
   .section{padding:52px 20px 0}
   .section+.section{padding-top:52px}
+  .vizitka{grid-template-columns:1fr;gap:32px;padding:28px 20px}
+  .vizitka-video video{max-width:280px}
+  .vizitka-btns{flex-direction:column;align-items:stretch}
+  .vizitka-btns a{justify-content:center;text-align:center}
   .guarantees,.guarantees--5,.packages,.reviews,.reviews--3,.quiz-grid{grid-template-columns:1fr}
   .quiz{margin:52px 20px 44px;padding:28px 20px}
   .quiz--home{margin:52px 20px}
