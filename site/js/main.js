@@ -95,15 +95,6 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') closeViz();
     });
-    /* живое превью в кружке при наведении (десктоп) */
-    var fabVideo = vizFab.querySelector('video');
-    if (fabVideo && window.matchMedia('(hover: hover)').matches) {
-      vizFab.addEventListener('mouseenter', function () {
-        var p = fabVideo.play();
-        if (p) p.catch(function () {});
-      });
-      vizFab.addEventListener('mouseleave', function () { fabVideo.pause(); });
-    }
   }
 
   /* ---------- бургер-меню ---------- */

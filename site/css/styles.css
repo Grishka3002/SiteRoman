@@ -206,32 +206,26 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 
 /* ---------- видео-визитка: плавающая кнопка + панель ---------- */
 .vizitka-fab{
-  position:fixed;right:26px;bottom:26px;z-index:60;
-  display:flex;align-items:center;gap:12px;
+  position:fixed;right:22px;bottom:22px;z-index:900;
   transition:opacity .3s,transform .3s;
 }
 .vizitka-fab.hidden{opacity:0;pointer-events:none;transform:translateY(12px)}
-.vizitka-fab-label{
-  font-size:10px;letter-spacing:.22em;color:var(--text-60);
-  background:rgba(23,24,27,.92);border:1px solid var(--hairline);
-  padding:9px 13px;border-radius:2px;white-space:nowrap;
-}
 .vizitka-fab-btn{
-  width:74px;height:74px;border-radius:50%;padding:0;cursor:pointer;
+  width:54px;height:54px;border-radius:50%;padding:0;cursor:pointer;
   border:2px solid var(--bronze);overflow:hidden;position:relative;
   background:var(--video-bg);animation:rshPulse 2.6s ease-out infinite;
-  transition:transform .3s;
+  transition:transform .3s;display:block;
 }
-.vizitka-fab-btn:hover{transform:scale(1.06)}
-.vizitka-fab-btn video{width:100%;height:100%;object-fit:cover;display:block}
+.vizitka-fab-btn:hover{transform:scale(1.1)}
+.vizitka-fab-btn img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
 .vizitka-fab-play{
   position:absolute;inset:0;display:grid;place-items:center;
-  font-size:16px;color:var(--yellow);text-shadow:0 0 12px rgba(0,0,0,.8);
-  background:rgba(13,13,15,.18);pointer-events:none;
+  font-size:13px;color:var(--yellow);text-shadow:0 0 10px rgba(0,0,0,.85);
+  background:rgba(13,13,15,.22);pointer-events:none;border-radius:50%;
 }
 .vizitka-panel{
-  position:fixed;right:26px;bottom:26px;z-index:70;
-  width:min(320px,calc(100vw - 32px));
+  position:fixed;right:22px;bottom:22px;z-index:910;
+  width:min(300px,calc(100vw - 32px));
   background:var(--panel);border:1px solid var(--bronze-35);border-radius:2px;
   box-shadow:0 24px 60px rgba(0,0,0,.55);
   opacity:0;transform:translateY(18px) scale(.96);transform-origin:bottom right;
@@ -445,8 +439,7 @@ h1,h2{font-family:var(--benzin);font-weight:400}
   .quiz-grid{gap:28px}
   .footer{flex-direction:column;align-items:flex-start;gap:10px;padding:20px}
   .fine{padding:0 20px 20px}
-  .vizitka-fab{right:14px;bottom:14px;gap:10px}
-  .vizitka-fab-btn{width:62px;height:62px}
-  .vizitka-fab-label{font-size:9px;padding:7px 10px}
-  .vizitka-panel{right:12px;bottom:12px;width:min(300px,calc(100vw - 24px))}
+  .vizitka-fab{right:14px;bottom:14px}
+  .vizitka-fab-btn{width:48px;height:48px}
+  .vizitka-panel{right:12px;bottom:12px;width:min(290px,calc(100vw - 24px))}
 }

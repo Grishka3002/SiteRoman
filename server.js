@@ -96,6 +96,21 @@ function renderPage(pageId) {
     $(el).html(group(false) + group(true));
   });
 
+  /* кэш-бастинг: ?v=<mtime> у локальных css/js, чтобы браузеры
+     не держали старые стили после деплоя */
+  const ver = rel => {
+    try { return Math.floor(fs.statSync(path.join(SITE, rel)).mtimeMs).toString(36); }
+    catch (e) { return '1'; }
+  };
+  $('link[rel="stylesheet"][href]').each((i, el) => {
+    const href = $(el).attr('href');
+    if (href && !href.includes('//') && !href.includes('?')) $(el).attr('href', href + '?v=' + ver(href));
+  });
+  $('script[src]').each((i, el) => {
+    const src = $(el).attr('src');
+    if (src && !src.includes('//') && !src.includes('?')) $(el).attr('src', src + '?v=' + ver(src));
+  });
+
   const out = $.html();
   pageCache[pageId] = out;
   return out;
@@ -141,10 +156,12 @@ function extractPage(pageId) {
 const app = express();
 app.use(express.json({ limit: '5mb' }));
 
-/* страницы */
-app.get(['/', '/index.html'], (req, res) => res.type('html').send(renderPage('home')));
-app.get('/svadby.html', (req, res) => res.type('html').send(renderPage('svadby')));
-app.get('/korporativy.html', (req, res) => res.type('html').send(renderPage('korporativy')));
+/* страницы (no-cache: браузер всегда перепроверяет HTML) */
+const sendPage = pageId => (req, res) =>
+  res.set('Cache-Control', 'no-cache').type('html').send(renderPage(pageId));
+app.get(['/', '/index.html'], sendPage('home'));
+app.get('/svadby.html', sendPage('svadby'));
+app.get('/korporativy.html', sendPage('korporativy'));
 
 /* заявка с квиза (публичное API) */
 app.post('/api/inquiry', (req, res) => {
