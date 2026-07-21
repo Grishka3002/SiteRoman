@@ -109,6 +109,50 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  /* ---------- карусель отзывов (скролл + автопрокрутка раз в 5 с) ---------- */
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('.reviews').forEach(function (track) {
+    var cards = track.children;
+    if (cards.length < 2) return;
+    var idx = 0, paused = false, timer = null, resumeTO = null, scrollTO = null;
+
+    function goTo(i) {
+      idx = (i + cards.length) % cards.length;
+      track.scrollTo({ left: cards[idx].offsetLeft, behavior: 'smooth' });
+    }
+    function start() {
+      if (reduceMotion || timer) return;
+      timer = setInterval(function () { if (!paused) goTo(idx + 1); }, 5000);
+    }
+
+    /* пауза при наведении (десктоп) */
+    track.addEventListener('mouseenter', function () { paused = true; });
+    track.addEventListener('mouseleave', function () { paused = false; });
+    /* пауза при касании (моб.), возобновление через 6 с бездействия */
+    track.addEventListener('touchstart', function () {
+      paused = true;
+      clearTimeout(resumeTO);
+    }, { passive: true });
+    track.addEventListener('touchend', function () {
+      clearTimeout(resumeTO);
+      resumeTO = setTimeout(function () { paused = false; }, 6000);
+    }, { passive: true });
+    /* синхронизировать индекс после ручной прокрутки */
+    track.addEventListener('scroll', function () {
+      clearTimeout(scrollTO);
+      scrollTO = setTimeout(function () {
+        var nearest = 0, min = Infinity;
+        for (var j = 0; j < cards.length; j++) {
+          var d = Math.abs(cards[j].offsetLeft - track.scrollLeft);
+          if (d < min) { min = d; nearest = j; }
+        }
+        idx = nearest;
+      }, 120);
+    }, { passive: true });
+
+    start();
+  });
+
   /* ---------- квиз ---------- */
   var form = document.querySelector('.quiz-form');
   if (!form) return;

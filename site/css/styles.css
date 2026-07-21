@@ -260,9 +260,19 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 }
 
 /* ---------- отзывы ---------- */
-.reviews{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-.reviews--3{grid-template-columns:repeat(3,1fr)}
-.review{border:1px solid var(--line-10);border-radius:2px;padding:30px 32px}
+.reviews{
+  position:relative;display:flex;gap:24px;overflow-x:auto;
+  scroll-snap-type:x mandatory;scroll-behavior:smooth;
+  padding-bottom:18px;-webkit-overflow-scrolling:touch;
+}
+.reviews::-webkit-scrollbar{height:4px}
+.reviews::-webkit-scrollbar-thumb{background:var(--line-14);border-radius:2px}
+.reviews::-webkit-scrollbar-track{background:transparent}
+.review{
+  flex:0 0 min(440px,82vw);scroll-snap-align:start;
+  border:1px solid var(--line-10);border-radius:2px;padding:30px 32px;
+  display:flex;flex-direction:column;
+}
 .review--tint{background:linear-gradient(160deg,rgba(198,161,91,.05),transparent 50%)}
 .review .quote-mark{font-family:var(--benzin);font-size:20px;color:var(--bronze);line-height:1}
 .review-person{display:flex;align-items:center;gap:12px;margin-bottom:4px}
@@ -436,7 +446,7 @@ h1,h2{font-family:var(--benzin);font-weight:400}
   .vizitka-video video{max-width:280px}
   .vizitka-btns{flex-direction:column;align-items:stretch}
   .vizitka-btns a{justify-content:center;text-align:center}
-  .guarantees,.guarantees--5,.packages,.reviews,.reviews--3,.quiz-grid{grid-template-columns:1fr}
+  .guarantees,.guarantees--5,.packages,.quiz-grid{grid-template-columns:1fr}
   .quiz{margin:52px 20px 44px;padding:28px 20px}
   .quiz--home{margin:52px 20px}
   .quiz-grid{gap:28px}
