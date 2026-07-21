@@ -28,6 +28,13 @@ const PAGES = {
 };
 const PAGE_TITLES = { home: 'Главная', svadby: 'Свадьбы', korporativy: 'Корпоративы' };
 
+/* числовые настройки страниц, редактируемые в админке */
+const SETTINGS_DEFS = {
+  home: [
+    { key: 'fabSize', label: 'Размер кнопки видео-визитки (px)', section: 'vizitka', def: 84, min: 48, max: 160 }
+  ]
+};
+
 /* ---------- утилиты ---------- */
 function readJson(file, fallback) {
   try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) { return fallback; }
@@ -95,6 +102,18 @@ function renderPage(pageId) {
       '</div>';
     $(el).html(group(false) + group(true));
   });
+
+  /* настройки: размер кнопки видео-визитки */
+  if (pageId === 'home') {
+    const raw = parseInt((content.settings || {}).fabSize, 10);
+    const size = Math.min(160, Math.max(48, raw || 84));
+    const mob = Math.max(44, Math.round(size * 0.8));
+    $('head').append(
+      `<style>.vizitka-fab-btn{width:${size}px;height:${size}px}` +
+      `.vizitka-fab-play{font-size:${Math.round(size * 0.22)}px}` +
+      `@media (max-width:820px){.vizitka-fab-btn{width:${mob}px;height:${mob}px}}</style>`
+    );
+  }
 
   /* кэш-бастинг: ?v=<mtime> у локальных css/js, чтобы браузеры
      не держали старые стили после деплоя */
@@ -215,6 +234,10 @@ app.get('/api/admin/data', requireAdmin, (req, res) => {
       marquees: Object.keys(def.marquees).map(key => ({
         key,
         value: over.marquees && over.marquees[key] ? over.marquees[key] : def.marquees[key]
+      })),
+      settings: (SETTINGS_DEFS[pageId] || []).map(s => ({
+        ...s,
+        value: over.settings && over.settings[s.key] != null ? over.settings[s.key] : s.def
       }))
     };
   }
@@ -222,14 +245,15 @@ app.get('/api/admin/data', requireAdmin, (req, res) => {
 });
 
 app.post('/api/admin/save', requireAdmin, (req, res) => {
-  const { page, texts, photos, videos, marquees } = req.body || {};
+  const { page, texts, photos, videos, marquees, settings } = req.body || {};
   if (!PAGES[page]) return res.status(400).json({ error: 'Неизвестная страница' });
   const content = readJson(CONTENT_FILE, {});
   content[page] = {
     texts: texts || {},
     photos: photos || {},
     videos: videos || {},
-    marquees: marquees || {}
+    marquees: marquees || {},
+    settings: settings || {}
   };
   writeJson(CONTENT_FILE, content);
   clearCache();

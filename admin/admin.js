@@ -154,7 +154,7 @@
     var order = [];
     function section(name) {
       if (!sections[name]) {
-        sections[name] = { fields: [], photos: [], videos: [], marquees: [] };
+        sections[name] = { fields: [], photos: [], videos: [], marquees: [], settings: [] };
         order.push(name);
       }
       return sections[name];
@@ -163,6 +163,7 @@
     page.photos.forEach(function (p) { section(p.key).photos.push(p); });
     page.videos.forEach(function (v) { section(v.key === 'videos' ? 'videos' : v.key).videos.push(v); });
     page.marquees.forEach(function (m) { section(m.key).marquees.push(m); });
+    (page.settings || []).forEach(function (s) { section(s.section || 'settings').settings.push(s); });
 
     order.forEach(function (name) {
       var sec = sections[name];
@@ -192,6 +193,7 @@
       sec.marquees.forEach(function (m) { body.appendChild(marqueeEl(m)); });
       sec.photos.forEach(function (p) { body.appendChild(photosEl(p)); });
       sec.videos.forEach(function (v) { body.appendChild(videosEl(v)); });
+      sec.settings.forEach(function (s) { body.appendChild(settingEl(s)); });
 
       card.appendChild(body);
       $content.appendChild(card);
@@ -227,6 +229,28 @@
     if (f.value.indexOf('<br>') !== -1 || f.value.indexOf('&nbsp;') !== -1) {
       wrap.appendChild(el('div', 'hint', '&lt;br&gt; — перенос строки, &amp;nbsp; — неразрывный пробел'));
     }
+    return wrap;
+  }
+
+  /* числовая настройка (ползунок + поле) */
+  function settingEl(s) {
+    var wrap = el('div', 'field');
+    wrap.appendChild(el('label', '', s.label || s.key));
+    var row = el('div', 'setting-row');
+    var range = el('input');
+    range.type = 'range'; range.min = s.min; range.max = s.max; range.value = s.value;
+    var num = el('input');
+    num.type = 'number'; num.min = s.min; num.max = s.max; num.value = s.value;
+    var sync = function (v) {
+      v = Math.max(s.min, Math.min(s.max, parseInt(v, 10) || s.def));
+      s.value = v; range.value = v; num.value = v;
+      markDirty();
+    };
+    range.addEventListener('input', function () { sync(range.value); });
+    num.addEventListener('change', function () { sync(num.value); });
+    row.appendChild(range);
+    row.appendChild(num);
+    wrap.appendChild(row);
     return wrap;
   }
 
@@ -410,11 +434,12 @@
   document.getElementById('save').addEventListener('click', function () {
     if (state.page === '_inq') return;
     var page = state.data[state.page];
-    var body = { page: state.page, texts: {}, photos: {}, videos: {}, marquees: {} };
+    var body = { page: state.page, texts: {}, photos: {}, videos: {}, marquees: {}, settings: {} };
     page.fields.forEach(function (f) { body.texts[f.key] = f.value; });
     page.photos.forEach(function (p) { body.photos[p.key] = p.value; });
     page.videos.forEach(function (v) { body.videos[v.key] = v.value; });
     page.marquees.forEach(function (m) { body.marquees[m.key] = m.value; });
+    (page.settings || []).forEach(function (s) { body.settings[s.key] = s.value; });
     $status.textContent = 'Сохранение…';
     $status.className = '';
     api('/api/admin/save', {

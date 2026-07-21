@@ -49,6 +49,12 @@ input,textarea{font-family:inherit}
 .field.changed input,.field.changed textarea{border-color:rgba(198,161,91,.6)}
 .hint{font-size:11px;color:var(--text-45);margin-top:4px}
 
+/* числовые настройки */
+.setting-row{display:flex;gap:14px;align-items:center}
+.setting-row input[type=range]{flex:1;accent-color:var(--bronze)}
+.setting-row input[type=number]{width:90px;background:var(--bg);border:1px solid rgba(237,234,227,.2);border-radius:2px;color:var(--text);padding:9px 10px;font-size:13px;outline:none}
+.setting-row input[type=number]:focus{border-color:var(--bronze)}
+
 /* фото-списки */
 .media-list{display:flex;flex-direction:column;gap:10px}
 .media-item{display:flex;gap:12px;align-items:center;border:1px solid var(--hairline);border-radius:2px;padding:10px;background:var(--panel2)}
