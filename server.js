@@ -77,6 +77,11 @@ function renderPage(pageId) {
     const key = $(el).attr('data-edit-ph');
     if (texts[key] != null) $(el).attr('placeholder', texts[key]);
   });
+  const images = content.images || {};
+  $('[data-edit-img]').each((i, el) => {
+    const key = $(el).attr('data-edit-img');
+    if (images[key] != null) $(el).attr('src', images[key]);
+  });
   $('[data-photos]').each((i, el) => {
     const list = photos[$(el).attr('data-photos')];
     if (!Array.isArray(list)) return;
@@ -146,6 +151,10 @@ function extractPage(pageId) {
   $('[data-edit-ph]').each((i, el) => {
     fields.push({ key: $(el).attr('data-edit-ph'), type: 'ph', def: $(el).attr('placeholder') || '' });
   });
+  const images = [];
+  $('[data-edit-img]').each((i, el) => {
+    images.push({ key: $(el).attr('data-edit-img'), def: $(el).attr('src') || '' });
+  });
   const photos = {};
   $('[data-photos]').each((i, el) => {
     const imgs = $(el).find('img').toArray();
@@ -168,7 +177,7 @@ function extractPage(pageId) {
     const spans = $(el).find('.marquee-group').first().children('span').not('.d').toArray();
     marquees[$(el).attr('data-marquee')] = spans.map(s => ($(s).html() || '').trim());
   });
-  return { fields, photos, videos, marquees };
+  return { fields, images, photos, videos, marquees };
 }
 
 /* ---------- приложение ---------- */
@@ -223,6 +232,10 @@ app.get('/api/admin/data', requireAdmin, (req, res) => {
         ...f,
         value: over.texts && over.texts[f.key] != null ? over.texts[f.key] : f.def
       })),
+      images: def.images.map(im => ({
+        ...im,
+        value: over.images && over.images[im.key] != null ? over.images[im.key] : im.def
+      })),
       photos: Object.keys(def.photos).map(key => ({
         key,
         value: over.photos && over.photos[key] ? over.photos[key] : def.photos[key]
@@ -245,11 +258,12 @@ app.get('/api/admin/data', requireAdmin, (req, res) => {
 });
 
 app.post('/api/admin/save', requireAdmin, (req, res) => {
-  const { page, texts, photos, videos, marquees, settings } = req.body || {};
+  const { page, texts, images, photos, videos, marquees, settings } = req.body || {};
   if (!PAGES[page]) return res.status(400).json({ error: 'Неизвестная страница' });
   const content = readJson(CONTENT_FILE, {});
   content[page] = {
     texts: texts || {},
+    images: images || {},
     photos: photos || {},
     videos: videos || {},
     marquees: marquees || {},

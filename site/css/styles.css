@@ -265,6 +265,9 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 .review{border:1px solid var(--line-10);border-radius:2px;padding:30px 32px}
 .review--tint{background:linear-gradient(160deg,rgba(198,161,91,.05),transparent 50%)}
 .review .quote-mark{font-family:var(--benzin);font-size:20px;color:var(--bronze);line-height:1}
+.review-person{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.review-avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;border:1px solid var(--bronze-35);background:var(--panel);flex:none}
+.review-name{font-size:13px;font-weight:600;letter-spacing:.04em}
 .review p{margin:12px 0 0;font-size:13.5px;line-height:1.7;color:var(--text-78)}
 .reviews--3 .review p{font-size:13px}
 

@@ -39,6 +39,8 @@
     if ((m = last.match(/^t(\d+)$/))) return 'Текст ' + m[1];
     if ((m = last.match(/^q(\d+)$/))) return 'Вопрос ' + m[1];
     if ((m = last.match(/^a(\d+)$/))) return 'Ответ ' + m[1];
+    if ((m = last.match(/^n(\d+)$/))) return 'Имя ' + m[1];
+    if ((m = last.match(/^img(\d+)$/))) return 'Фото ' + m[1];
     if ((m = last.match(/^i(\d+)l$/))) return 'Пункт ' + m[1] + ' — выделенная метка';
     if ((m = last.match(/^i(\d+)t$/))) return 'Пункт ' + m[1] + ' — текст';
     if ((m = last.match(/^i(\d+)$/))) return 'Пункт ' + m[1];
@@ -154,12 +156,13 @@
     var order = [];
     function section(name) {
       if (!sections[name]) {
-        sections[name] = { fields: [], photos: [], videos: [], marquees: [], settings: [] };
+        sections[name] = { fields: [], images: [], photos: [], videos: [], marquees: [], settings: [] };
         order.push(name);
       }
       return sections[name];
     }
     page.fields.forEach(function (f) { section(f.key.split('.')[0]).fields.push(f); });
+    (page.images || []).forEach(function (im) { section(im.key.split('.')[0]).images.push(im); });
     page.photos.forEach(function (p) { section(p.key).photos.push(p); });
     page.videos.forEach(function (v) { section(v.key === 'videos' ? 'videos' : v.key).videos.push(v); });
     page.marquees.forEach(function (m) { section(m.key).marquees.push(m); });
@@ -190,6 +193,7 @@
         body.appendChild(fieldEl(f));
       });
 
+      sec.images.forEach(function (im) { body.appendChild(imageEl(im)); });
       sec.marquees.forEach(function (m) { body.appendChild(marqueeEl(m)); });
       sec.photos.forEach(function (p) { body.appendChild(photosEl(p)); });
       sec.videos.forEach(function (v) { body.appendChild(videosEl(v)); });
@@ -229,6 +233,38 @@
     if (f.value.indexOf('<br>') !== -1 || f.value.indexOf('&nbsp;') !== -1) {
       wrap.appendChild(el('div', 'hint', '&lt;br&gt; — перенос строки, &amp;nbsp; — неразрывный пробел'));
     }
+    return wrap;
+  }
+
+  /* одиночная картинка (аватар отзыва и т.п.) */
+  function imageEl(im) {
+    var wrap = el('div', 'media-item');
+    var img = el('img');
+    img.src = '/' + im.value;
+    wrap.appendChild(img);
+    var name = el('div', 'media-name', fieldLabel(im.key));
+    name.style.flex = '1';
+    wrap.appendChild(name);
+    var actions = el('div', 'media-actions');
+    var repl = el('button', '', '⟳'); repl.title = 'Заменить фото';
+    repl.addEventListener('click', function () {
+      uploadFile('image/*', function (path) {
+        im.value = path;
+        img.src = '/' + path;
+        markDirty();
+      });
+    });
+    actions.appendChild(repl);
+    if (im.value !== im.def) {
+      var reset = el('button', '', '⊘'); reset.title = 'Вернуть исходное';
+      reset.addEventListener('click', function () {
+        im.value = im.def;
+        img.src = '/' + im.def;
+        markDirty();
+      });
+      actions.appendChild(reset);
+    }
+    wrap.appendChild(actions);
     return wrap;
   }
 
@@ -434,8 +470,9 @@
   document.getElementById('save').addEventListener('click', function () {
     if (state.page === '_inq') return;
     var page = state.data[state.page];
-    var body = { page: state.page, texts: {}, photos: {}, videos: {}, marquees: {}, settings: {} };
+    var body = { page: state.page, texts: {}, images: {}, photos: {}, videos: {}, marquees: {}, settings: {} };
     page.fields.forEach(function (f) { body.texts[f.key] = f.value; });
+    (page.images || []).forEach(function (im) { body.images[im.key] = im.value; });
     page.photos.forEach(function (p) { body.photos[p.key] = p.value; });
     page.videos.forEach(function (v) { body.videos[v.key] = v.value; });
     page.marquees.forEach(function (m) { body.marquees[m.key] = m.value; });
