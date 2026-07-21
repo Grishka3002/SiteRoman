@@ -211,16 +211,16 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 }
 .vizitka-fab.hidden{opacity:0;pointer-events:none;transform:translateY(12px)}
 .vizitka-fab-btn{
-  width:54px;height:54px;border-radius:50%;padding:0;cursor:pointer;
+  width:84px;height:84px;border-radius:50%;padding:0;cursor:pointer;
   border:2px solid var(--bronze);overflow:hidden;position:relative;
   background:var(--video-bg);animation:rshPulse 2.6s ease-out infinite;
   transition:transform .3s;display:block;
 }
-.vizitka-fab-btn:hover{transform:scale(1.1)}
+.vizitka-fab-btn:hover{transform:scale(1.08)}
 .vizitka-fab-btn img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
 .vizitka-fab-play{
   position:absolute;inset:0;display:grid;place-items:center;
-  font-size:13px;color:var(--yellow);text-shadow:0 0 10px rgba(0,0,0,.85);
+  font-size:18px;color:var(--yellow);text-shadow:0 0 12px rgba(0,0,0,.85);
   background:rgba(13,13,15,.22);pointer-events:none;border-radius:50%;
 }
 .vizitka-panel{
@@ -440,6 +440,6 @@ h1,h2{font-family:var(--benzin);font-weight:400}
   .footer{flex-direction:column;align-items:flex-start;gap:10px;padding:20px}
   .fine{padding:0 20px 20px}
   .vizitka-fab{right:14px;bottom:14px}
-  .vizitka-fab-btn{width:48px;height:48px}
+  .vizitka-fab-btn{width:68px;height:68px}
   .vizitka-panel{right:12px;bottom:12px;width:min(290px,calc(100vw - 24px))}
 }
