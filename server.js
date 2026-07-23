@@ -152,8 +152,12 @@ function extractPage(pageId) {
     fields.push({ key: $(el).attr('data-edit-ph'), type: 'ph', def: $(el).attr('placeholder') || '' });
   });
   const images = [];
+  const seenImg = new Set();
   $('[data-edit-img]').each((i, el) => {
-    images.push({ key: $(el).attr('data-edit-img'), def: $(el).attr('src') || '' });
+    const key = $(el).attr('data-edit-img');
+    if (seenImg.has(key)) return; // один ключ = одна запись, даже если тег повторяется
+    seenImg.add(key);
+    images.push({ key, def: $(el).attr('src') || '' });
   });
   const photos = {};
   $('[data-photos]').each((i, el) => {

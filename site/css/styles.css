@@ -64,7 +64,8 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 .logo{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--text)}
 .logo:hover{color:var(--text)}
 .logo-text{font-family:var(--benzin);font-size:14px}
-.logo-dot{width:6px;height:6px;border-radius:50%;background:var(--yellow);display:inline-block;animation:rshPulse 2.6s ease-out infinite}
+.logo-img{height:17px;width:auto;display:block}
+.logo-dot{width:6px;height:6px;border-radius:50%;background:var(--yellow);display:inline-block;animation:rshPulse 2.6s ease-out infinite;flex:none}
 
 /* ---------- навбар ---------- */
 .nav{display:flex;justify-content:space-between;align-items:center;padding:22px 52px;border-bottom:1px solid var(--hairline);position:relative}
@@ -404,9 +405,10 @@ h1,h2{font-family:var(--benzin);font-weight:400}
   display:flex;justify-content:space-between;align-items:center;
   padding:22px 52px;border-top:1px solid var(--hairline);font-size:12px;color:var(--text-45);
 }
-.footer-logo{font-family:var(--benzin);font-size:12px;color:rgba(237,234,227,.8);text-decoration:none}
+.footer-logo{display:inline-flex;align-items:center;font-family:var(--benzin);font-size:12px;color:rgba(237,234,227,.8);text-decoration:none}
 .footer-logo:hover{color:rgba(237,234,227,.8)}
 .footer-logo .dot{color:var(--yellow)}
+.logo-img--footer{height:12px;opacity:.8}
 .footer-links{display:flex;gap:18px}
 .footer-links a{color:var(--text-60);text-decoration:none}
 .footer-links a:hover{color:var(--yellow)}
