@@ -69,9 +69,12 @@ function renderPage(pageId) {
   const videos = content.videos || {};
   const marquees = content.marquees || {};
 
+  const nl2br = s => String(s).replace(/\r\n?/g, '\n').replace(/\n/g, '<br>');
   $('[data-edit]').each((i, el) => {
     const key = $(el).attr('data-edit');
-    if (texts[key] != null) $(el).html(texts[key]);
+    if (texts[key] == null) return;
+    if (el.tagName === 'title') $(el).text(texts[key].replace(/\s*\n\s*/g, ' ').trim());
+    else $(el).html(nl2br(texts[key])); // перенос строки из админки → <br>
   });
   $('[data-edit-ph]').each((i, el) => {
     const key = $(el).attr('data-edit-ph');

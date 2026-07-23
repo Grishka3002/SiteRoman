@@ -57,6 +57,7 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 @keyframes rshMarq{to{transform:translateX(-50%)}}
 @keyframes rshMarqUp{to{transform:translateY(-50%)}}
 @keyframes rshPulse{0%{box-shadow:0 0 0 0 rgba(255,228,15,.55)}70%{box-shadow:0 0 0 14px rgba(255,228,15,0)}100%{box-shadow:0 0 0 0 rgba(255,228,15,0)}}
+@keyframes rshPulseWhite{0%{box-shadow:0 0 0 0 rgba(255,255,255,.55)}70%{box-shadow:0 0 0 14px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
 @keyframes rshCaret{0%,45%{border-color:#FFE40F}50%,100%{border-color:transparent}}
 @keyframes rshFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 
@@ -65,7 +66,7 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 .logo:hover{color:var(--text)}
 .logo-text{font-family:var(--benzin);font-size:14px}
 .logo-img{height:17px;width:auto;display:block}
-.logo-dot{width:6px;height:6px;border-radius:50%;background:var(--yellow);display:inline-block;animation:rshPulse 2.6s ease-out infinite;flex:none}
+.logo-dot{width:6px;height:6px;border-radius:50%;background:#fff;display:inline-block;animation:rshPulseWhite 2.6s ease-out infinite;flex:none}
 
 /* ---------- навбар ---------- */
 .nav{display:flex;justify-content:space-between;align-items:center;padding:22px 52px;border-bottom:1px solid var(--hairline);position:relative}
@@ -127,7 +128,7 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 .btn-ghost:hover{background:var(--bronze);color:var(--bg)}
 .btn-ghost:hover span{color:var(--bg)}
 
-.hero-cities{margin-top:auto;padding-top:36px;font-size:clamp(11px,.75vw,13px);letter-spacing:.22em;color:var(--text-45)}
+.hero-cities{margin-top:auto;padding-top:40px;font-size:clamp(14px,1.5vw,24px);letter-spacing:.26em;line-height:1.5;color:var(--text-60);font-weight:500}
 .hero--sub .hero-cities{margin-top:44px;padding-top:0}
 
 /* каскад появления */

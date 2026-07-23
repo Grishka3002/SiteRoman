@@ -17,7 +17,7 @@
     marquee: 'БЕГУЩАЯ СТРОКА', guar: 'ГАРАНТИИ', pkg: 'ПАКЕТЫ УСЛУГ', lv: 'УРОВНИ РЕАЛИЗАЦИИ',
     videos: 'ВИДЕО', rev: 'ОТЗЫВЫ', faq: 'ВОПРОСЫ И ОТВЕТЫ (FAQ)', quiz: 'КВИЗ — РАСЧЁТ СТОИМОСТИ',
     footer: 'ФУТЕР', fine: 'МЕЛКИЙ ТЕКСТ В ПОДВАЛЕ', preloader: 'ЭКРАН ЗАГРУЗКИ',
-    vizitka: 'ВИДЕО-ВИЗИТКА'
+    vizitka: 'ВИДЕО-ВИЗИТКА', seo: 'ЗАГОЛОВОК ВКЛАДКИ БРАУЗЕРА'
   };
   var FIELD_LABELS = {
     text: 'Текст', label: 'Надпись', type: 'Тайпрайтер-строка', title: 'Заголовок', lead: 'Подзаголовок / текст',
@@ -211,28 +211,40 @@
     return d.textContent;
   }
 
-  /* текстовое поле */
+  /* текстовое поле. В поле переносы строк показываются как есть (Enter);
+     в HTML хранятся/рендерятся как <br>. */
   function fieldEl(f) {
     var wrap = el('div', 'field');
     wrap.appendChild(el('label', '', fieldLabel(f.key)));
-    var long = f.value.length > 70 || f.value.indexOf('<br>') !== -1;
+    var display = f.value.replace(/<br\s*\/?>/gi, '\n');
+    var multiline = display.length > 60 || display.indexOf('\n') !== -1;
     var input;
-    if (long) {
+    if (multiline) {
       input = el('textarea');
-      input.rows = Math.min(6, Math.max(2, Math.ceil(f.value.length / 80)));
+      input.value = display;
+      var autoGrow = function () {
+        input.style.height = 'auto';
+        input.style.height = Math.min(340, input.scrollHeight + 2) + 'px';
+      };
+      setTimeout(autoGrow, 0);
+      input.addEventListener('input', function () {
+        f.value = input.value;
+        wrap.classList.toggle('changed', f.value !== f.def);
+        markDirty();
+        autoGrow();
+      });
+      wrap.appendChild(input);
+      wrap.appendChild(el('div', 'hint', 'Каждый Enter — перенос на новую строку на сайте'));
     } else {
       input = el('input');
       input.type = 'text';
-    }
-    input.value = f.value;
-    input.addEventListener('input', function () {
-      f.value = input.value;
-      wrap.classList.toggle('changed', f.value !== f.def);
-      markDirty();
-    });
-    wrap.appendChild(input);
-    if (f.value.indexOf('<br>') !== -1 || f.value.indexOf('&nbsp;') !== -1) {
-      wrap.appendChild(el('div', 'hint', '&lt;br&gt; — перенос строки, &amp;nbsp; — неразрывный пробел'));
+      input.value = display;
+      input.addEventListener('input', function () {
+        f.value = input.value;
+        wrap.classList.toggle('changed', f.value !== f.def);
+        markDirty();
+      });
+      wrap.appendChild(input);
     }
     return wrap;
   }
