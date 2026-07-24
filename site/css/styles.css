@@ -34,7 +34,7 @@
   --line-14:rgba(255,255,255,.14);
   --benzin:'Benzin',sans-serif;
   /* градиент главных CTA: фирменный жёлтый → золото → мягкий фиолет */
-  --grad-cta:linear-gradient(115deg,#FFE40F 0%,#F6CE4F 38%,#E4B77E 62%,#C79EF2 88%,#9D74F5 100%);
+  --grad-cta:linear-gradient(115deg,#F6CE4F 0%,#FFE40F 34%,#E6B347 60%,#FFE40F 86%,#F6CE4F 100%);
 }
 
 *{box-sizing:border-box}
