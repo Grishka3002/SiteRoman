@@ -363,24 +363,13 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 .quiz-form.sent .quiz-fields{display:none}
 .quiz-form.sent .quiz-success{display:block}
 
-/* ---------- градиент жёлтых CTA ---------- */
-.btn-yellow,.quiz-submit,.package-cta--yellow{
-  background-color:var(--yellow); /* fallback */
-  background-image:var(--grad-cta);
-  background-size:170% 100%;
-  background-position:0% 50%;
-  transition:background-position .5s ease;
-}
-.btn-yellow:hover,.quiz-submit:hover,.package-cta--yellow:hover{
-  background-position:100% 50%;
-}
-/* бронзовая кнопка квиза на главной: hover — тот же градиент */
-.quiz-submit--bronze{
+/* ---------- главные CTA: бронза → жёлтый при наведении ---------- */
+.btn-yellow,.quiz-submit,.quiz-submit--bronze,.package-cta--yellow{
   background-color:var(--bronze);
   background-image:none;
-  transition:background .3s;
+  transition:background-color .3s;
 }
-.quiz-submit--bronze:hover{
+.btn-yellow:hover,.quiz-submit:hover,.quiz-submit--bronze:hover,.package-cta--yellow:hover{
   background-color:var(--yellow);
   background-image:var(--grad-cta);
   background-size:170% 100%;
