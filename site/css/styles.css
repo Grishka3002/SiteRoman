@@ -75,13 +75,14 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 .nav-links a:hover{color:var(--yellow)}
 .nav-links .active{color:var(--bronze);border-bottom:1px solid var(--bronze-60);padding-bottom:3px}
 .nav-cta{
-  background-color:var(--bronze);
-  background-image:linear-gradient(110deg,#C6A15B 0%,#C6A15B 42%,#E6C67A 70%,#FFE40F 100%);
-  background-size:210% 100%;background-position:0% 50%;
+  background-color:var(--bronze);background-image:none;
   color:var(--bg);font-size:12px;font-weight:600;letter-spacing:.06em;text-decoration:none;
-  padding:11px 20px;border-radius:2px;transition:background-position .6s ease;
+  padding:11px 20px;border-radius:2px;transition:background .3s;
 }
-.nav-cta:hover{color:var(--bg);background-position:100% 50%}
+.nav-cta:hover{
+  color:var(--bg);background-color:var(--yellow);
+  background-image:var(--grad-cta);background-size:170% 100%;background-position:0% 50%;
+}
 .nav-right{display:flex;align-items:center;gap:14px}
 .burger{display:none;background:none;border:1px solid var(--bronze-50);border-radius:2px;padding:9px 10px;cursor:pointer;flex-direction:column;gap:4px}
 .burger span{display:block;width:18px;height:1.5px;background:var(--text)}
@@ -249,9 +250,10 @@ h1,h2{font-family:var(--benzin);font-weight:400}
   cursor:pointer;padding:2px 4px;line-height:1;
 }
 .vizitka-close:hover{color:var(--yellow)}
+.vizitka-panel-video{background:#000}
 .vizitka-panel-video video{
-  display:block;width:100%;aspect-ratio:9/16;max-height:60vh;
-  object-fit:cover;background:var(--video-bg);
+  display:block;width:100%;aspect-ratio:9/16;max-height:68vh;
+  object-fit:contain;background:#000;
 }
 .vizitka-panel-cta{margin:12px;font-size:13px;padding:14px}
 
