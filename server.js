@@ -12,10 +12,15 @@ const multer = require('multer');
 
 const SITE = path.join(__dirname, 'site');
 const ADMIN = path.join(__dirname, 'admin');
-const DATA = path.join(__dirname, 'data');
-const UPLOADS = path.join(SITE, 'assets', 'uploads');
+/* DATA_DIR / UPLOADS_DIR можно указать через переменные окружения и смонтировать
+   туда постоянный диск (Railway Volume), чтобы правки и загрузки не терялись
+   при передеплое. По умолчанию — папки внутри проекта. */
+const DATA = process.env.DATA_DIR || path.join(__dirname, 'data');
+const UPLOADS = process.env.UPLOADS_DIR || path.join(SITE, 'assets', 'uploads');
 const CONTENT_FILE = path.join(DATA, 'content.json');
 const INQUIRIES_FILE = path.join(DATA, 'inquiries.json');
+fs.mkdirSync(DATA, { recursive: true });
+fs.mkdirSync(UPLOADS, { recursive: true });
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'roman2026';
 const PORT = process.env.PORT || 3000;
@@ -328,6 +333,7 @@ app.delete('/api/admin/inquiries/:id', requireAdmin, (req, res) => {
 
 /* админ-панель и статика */
 app.use('/admin', express.static(ADMIN));
+app.use('/assets/uploads', express.static(UPLOADS)); // загрузки (в т.ч. с внешнего диска)
 app.use(express.static(SITE));
 
 app.use((err, req, res, next) => {
