@@ -12,16 +12,18 @@
   --panel:#17181B;
   --video-bg:#0d0d0f;
   --text:#EDEAE3;
-  --text-78:rgba(237,234,227,.78);
-  --text-75:rgba(237,234,227,.75);
-  --text-72:rgba(237,234,227,.72);
-  --text-70:rgba(237,234,227,.7);
-  --text-68:rgba(237,234,227,.68);
-  --text-60:rgba(237,234,227,.6);
-  --text-55:rgba(237,234,227,.55);
-  --text-50:rgba(237,234,227,.5);
-  --text-45:rgba(237,234,227,.45);
-  --text-40:rgba(237,234,227,.4);
+  /* весь основной/вторичный текст — белый для читаемости;
+     серым остаётся только мелкий текст в подвале (--text-30) */
+  --text-78:#EDEAE3;
+  --text-75:#EDEAE3;
+  --text-72:#EDEAE3;
+  --text-70:#EDEAE3;
+  --text-68:#EDEAE3;
+  --text-60:#EDEAE3;
+  --text-55:#EDEAE3;
+  --text-50:#EDEAE3;
+  --text-45:#EDEAE3;
+  --text-40:#EDEAE3;
   --text-30:rgba(237,234,227,.3);
   --bronze:#C6A15B;
   --bronze-25:rgba(198,161,91,.25);
@@ -46,6 +48,7 @@ body{
   font-family:'InterL',Inter,system-ui,sans-serif;
   min-height:100vh;
   overflow-x:hidden;
+  letter-spacing:.015em; /* чуть больше межбуквенного расстояния для читаемости */
 }
 a{color:var(--bronze)}
 a:hover{color:var(--yellow)}
@@ -343,7 +346,7 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 }
 .quiz-form input:focus{border-color:var(--bronze)}
 .quiz-form input.invalid{border-color:#c05b5b}
-.quiz-form input::placeholder{color:var(--text-45)}
+.quiz-form input::placeholder{color:rgba(237,234,227,.5)}
 .quiz-submit{
   background:var(--yellow);color:var(--bg);font-size:13px;font-weight:600;
   padding:16px;border-radius:2px;text-align:center;border:none;cursor:pointer;font-family:inherit;
