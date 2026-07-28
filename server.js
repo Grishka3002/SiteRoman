@@ -99,10 +99,17 @@ function renderPage(pageId) {
   $('[data-videos]').each((i, el) => {
     const list = videos[$(el).attr('data-videos')];
     if (!Array.isArray(list)) return;
+    // постеры по умолчанию из HTML (по src) — если в сохранённом списке постер не задан
+    const defPosters = {};
+    $(el).find('video').each((j, vel) => {
+      const s = $(vel).attr('src'); const p = $(vel).attr('poster');
+      if (s && p) defPosters[s] = p;
+    });
     $(el).html(list.map(raw => {
       // обратная совместимость: раньше элемент был строкой-src
       const v = typeof raw === 'string' ? { src: raw } : raw;
-      const poster = v.poster ? ` poster="${escAttr(v.poster)}"` : '';
+      const posterSrc = v.poster || defPosters[v.src] || '';
+      const poster = posterSrc ? ` poster="${escAttr(posterSrc)}"` : '';
       return `<video src="${escAttr(v.src)}"${poster} controls playsinline preload="metadata"></video>`;
     }).join(''));
   });
