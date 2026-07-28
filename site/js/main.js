@@ -109,6 +109,20 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  /* ---------- видео: единая кнопка play ---------- */
+  document.querySelectorAll('.video-item').forEach(function (item) {
+    var v = item.querySelector('video');
+    var btn = item.querySelector('.video-play');
+    if (!v || !btn) return;
+    btn.addEventListener('click', function () {
+      var p = v.play();
+      if (p) p.catch(function () {});
+    });
+    v.addEventListener('play', function () { item.classList.add('playing'); });
+    v.addEventListener('pause', function () { item.classList.remove('playing'); });
+    v.addEventListener('ended', function () { item.classList.remove('playing'); });
+  });
+
   /* ---------- карусель отзывов (скролл + автопрокрутка раз в 5 с) ---------- */
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.querySelectorAll('.reviews').forEach(function (track) {

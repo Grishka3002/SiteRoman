@@ -97,20 +97,29 @@ function renderPage(pageId) {
     $(el).html(list.map(p => photoImg(p, false)).join('') + list.map(p => photoImg(p, true)).join(''));
   });
   $('[data-videos]').each((i, el) => {
-    const list = videos[$(el).attr('data-videos')];
-    if (!Array.isArray(list)) return;
-    // постеры по умолчанию из HTML (по src) — если в сохранённом списке постер не задан
+    const key = $(el).attr('data-videos');
+    // постеры по умолчанию из HTML (по src)
     const defPosters = {};
     $(el).find('video').each((j, vel) => {
       const s = $(vel).attr('src'); const p = $(vel).attr('poster');
       if (s && p) defPosters[s] = p;
     });
+    // список: из сохранённого (админка) либо из текущего HTML
+    let list = videos[key];
+    if (!Array.isArray(list)) {
+      list = $(el).find('video').toArray().map(v => ({ src: $(v).attr('src') || '', poster: $(v).attr('poster') || '' }));
+    }
+    // лента мероприятий — в обёртке с кастомной кнопкой play;
+    // видео-визитка (своя вёрстка/логика) — обычным <video>
+    const wrap = $(el).hasClass('videos');
     $(el).html(list.map(raw => {
-      // обратная совместимость: раньше элемент был строкой-src
       const v = typeof raw === 'string' ? { src: raw } : raw;
       const posterSrc = v.poster || defPosters[v.src] || '';
       const poster = posterSrc ? ` poster="${escAttr(posterSrc)}"` : '';
-      return `<video src="${escAttr(v.src)}"${poster} controls playsinline preload="metadata"></video>`;
+      const video = `<video src="${escAttr(v.src)}"${poster} controls playsinline preload="metadata"></video>`;
+      return wrap
+        ? `<div class="video-item">${video}<button class="video-play" type="button" aria-label="Смотреть видео"></button></div>`
+        : video;
     }).join(''));
   });
   $('[data-marquee]').each((i, el) => {
