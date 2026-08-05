@@ -85,6 +85,15 @@ function renderPage(pageId) {
     const key = $(el).attr('data-edit-ph');
     if (texts[key] != null) $(el).attr('placeholder', texts[key]);
   });
+  // редактируемое описание (meta description) + синхронизация OG/Twitter
+  $('[data-edit-meta]').each((i, el) => {
+    const key = $(el).attr('data-edit-meta');
+    if (texts[key] != null) $(el).attr('content', texts[key].replace(/\s*\n\s*/g, ' ').trim());
+  });
+  const titleText = ($('title').first().text() || '').trim();
+  const descText = $('meta[name="description"]').attr('content') || '';
+  $('meta[property="og:title"], meta[name="twitter:title"]').attr('content', titleText);
+  $('meta[property="og:description"], meta[name="twitter:description"]').attr('content', descText);
   const images = content.images || {};
   $('[data-edit-img]').each((i, el) => {
     const key = $(el).attr('data-edit-img');
@@ -174,6 +183,9 @@ function extractPage(pageId) {
   });
   $('[data-edit-ph]').each((i, el) => {
     fields.push({ key: $(el).attr('data-edit-ph'), type: 'ph', def: $(el).attr('placeholder') || '' });
+  });
+  $('[data-edit-meta]').each((i, el) => {
+    fields.push({ key: $(el).attr('data-edit-meta'), type: 'meta', def: $(el).attr('content') || '' });
   });
   const images = [];
   const seenImg = new Set();
