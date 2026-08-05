@@ -102,9 +102,9 @@ h1,h2{font-family:var(--benzin);font-weight:400}
   font-size:clamp(12px,.8vw,15px);letter-spacing:.34em;color:var(--bronze);max-width:100%;
   align-self:flex-start;
 }
-.hero h1{font-size:clamp(56px,5.5vw,96px);line-height:1.08;margin:18px 0 0;animation:rshRise .9s .15s both}
+.hero h1{font-size:clamp(56px,5.5vw,96px);line-height:1.18;margin:18px 0 0;animation:rshRise .9s .15s both}
 .hero--sub h1{font-size:clamp(52px,5.2vw,90px)}
-.hero h1.h1-long{font-size:clamp(40px,4vw,72px);line-height:1.12}
+.hero h1.h1-long{font-size:clamp(40px,4vw,72px);line-height:1.2}
 .hero-lead{margin-top:24px;font-size:clamp(15px,1.1vw,19px);line-height:1.7;color:var(--text-72);max-width:560px;animation:rshRise .9s .35s both}
 .hero--sub .hero-lead{max-width:560px}
 
