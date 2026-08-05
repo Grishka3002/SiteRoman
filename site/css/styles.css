@@ -189,24 +189,26 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 .guarantee .num{font-size:11px;letter-spacing:.24em;color:var(--bronze);margin-bottom:14px}
 .guarantee h3{font-family:var(--benzin);font-size:15px;font-weight:400;margin:0 0 12px}
 .guarantees--5 .guarantee h3{font-size:13.5px;line-height:1.4}
-.guarantee p{font-size:13px;line-height:1.6;color:var(--text-68);margin:0}
-.guarantees--5 .guarantee p{font-size:12.5px}
-.guarantees-note{margin-top:18px;font-size:12.5px;letter-spacing:.06em;color:var(--text-55);display:flex;align-items:center;gap:10px}
+.guarantee p{font-size:15px;line-height:1.6;color:var(--text-68);margin:0}
+.guarantees--5 .guarantee p{font-size:14px}
+.guarantees-note{margin-top:18px;font-size:14px;letter-spacing:.06em;color:var(--text-55);display:flex;align-items:center;gap:10px}
 .guarantees-note .d{color:var(--bronze)}
 
 /* ---------- пакеты / уровни ---------- */
 .packages{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
 .package{border:1px solid var(--line-14);border-radius:2px;padding:34px 30px;position:relative;display:flex;flex-direction:column}
 .package--featured{border-color:var(--bronze);background:linear-gradient(160deg,rgba(198,161,91,.08),transparent 55%)}
-.package-badge{position:absolute;top:-13px;right:22px;background:var(--yellow);color:var(--bg);font-size:11px;font-weight:600;letter-spacing:.14em;padding:6px 12px;border-radius:2px}
+.package-badge{position:absolute;top:-13px;right:22px;background:#fff;color:#141416;font-size:11px;font-weight:700;letter-spacing:.14em;padding:6px 12px;border-radius:2px}
 .package h3{font-family:var(--benzin);font-size:22px;font-weight:400;margin:0}
 .package--featured h3{color:var(--bronze)}
-.package-sub{margin-top:6px;font-size:12px;letter-spacing:.18em;color:var(--text-50)}
-.package-desc{margin-top:12px;font-size:13px;line-height:1.6;color:var(--text-70)}
-.package-list{margin-top:22px;display:flex;flex-direction:column;gap:11px;font-size:13px;line-height:1.55;color:var(--text-75);flex:1}
+.package-sub,.package-desc{margin-top:12px;font-size:15px;line-height:1.6;color:var(--text-70)}
+.package-list{margin-top:22px;display:flex;flex-direction:column;gap:11px;font-size:15px;line-height:1.55;color:var(--text-75);flex:1}
 .package-list--labels{gap:13px}
 .package-item{display:flex;gap:10px}
 .package-item .d{color:var(--bronze);flex:none}
+/* пустые пункты (очищенные в админке) не показываем — убираем осиротевший ◆ */
+.package-item:has(> [data-edit]:empty){display:none}
+.package-list--labels > div:has([data-edit]:empty){display:none}
 .package-label{color:var(--bronze);font-weight:600}
 .package-cta{display:block;margin-top:26px;font-size:13px;font-weight:600;text-decoration:none;padding:15px;border-radius:2px;text-align:center}
 .package-cta--yellow{background:var(--yellow);color:var(--bg)}
@@ -307,20 +309,20 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 .review-person{display:flex;align-items:center;gap:12px;margin-bottom:4px}
 .review-avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;border:1px solid var(--bronze-35);background:var(--panel);flex:none}
 .review-name{font-size:13px;font-weight:600;letter-spacing:.04em}
-.review p{margin:12px 0 0;font-size:13.5px;line-height:1.7;color:var(--text-78)}
-.reviews--3 .review p{font-size:13px}
+.review p{margin:12px 0 0;font-size:15px;line-height:1.7;color:var(--text-78)}
+.reviews--3 .review p{font-size:15px}
 
 /* ---------- FAQ ---------- */
 .faq{display:flex;flex-direction:column;gap:2px}
 .faq details{border:1px solid var(--line-10);border-radius:2px;background:var(--panel)}
 .faq summary{
-  list-style:none;cursor:pointer;padding:20px 26px;font-size:14px;
+  list-style:none;cursor:pointer;padding:20px 26px;font-size:15.5px;
   display:flex;justify-content:space-between;align-items:center;gap:16px;
 }
 .faq summary::-webkit-details-marker{display:none}
 .faq summary .arrow{color:var(--bronze);flex:none;transition:transform .25s}
 .faq details[open] summary .arrow{transform:rotate(90deg)}
-.faq .answer{padding:0 26px 22px;font-size:13.5px;line-height:1.7;color:var(--text-68)}
+.faq .answer{padding:0 26px 22px;font-size:15px;line-height:1.7;color:var(--text-68)}
 
 /* ---------- квиз ---------- */
 .quiz{
@@ -333,7 +335,7 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 .quiz--home .quiz-grid{align-items:center}
 .quiz h2{font-size:22px;line-height:1.35;margin:0 0 14px}
 .quiz--home h2{font-size:24px;line-height:1.3}
-.quiz-lead{font-size:13.5px;line-height:1.65;color:var(--text-70);margin-bottom:26px}
+.quiz-lead{font-size:15px;line-height:1.65;color:var(--text-70);margin-bottom:26px}
 .quiz--home .quiz-lead{font-size:14px;margin-bottom:0}
 
 /* подарки-радио */
@@ -379,7 +381,7 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 .quiz-consent{font-size:11px;line-height:1.6;color:var(--text-40)}
 .quiz-success{display:none;text-align:center;padding:24px 0}
 .quiz-success h3{font-family:var(--benzin);font-size:20px;font-weight:400;margin:0 0 12px}
-.quiz-success p{font-size:13.5px;line-height:1.65;color:var(--text-70);margin:0}
+.quiz-success p{font-size:15px;line-height:1.65;color:var(--text-70);margin:0}
 .quiz-form.sent .quiz-fields{display:none}
 .quiz-form.sent .quiz-success{display:block}
 
