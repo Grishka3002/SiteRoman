@@ -300,17 +300,27 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 .reviews::-webkit-scrollbar-thumb{background:var(--line-14);border-radius:2px}
 .reviews::-webkit-scrollbar-track{background:transparent}
 .review{
-  flex:0 0 min(440px,82vw);scroll-snap-align:start;
-  border:1px solid var(--line-10);border-radius:2px;padding:30px 32px;
+  flex:0 0 min(430px,84vw);scroll-snap-align:start;position:relative;
+  border:1px solid var(--line-14);border-radius:4px;padding:34px 34px 28px;
   display:flex;flex-direction:column;
+  background:linear-gradient(165deg,rgba(255,255,255,.035),rgba(255,255,255,.01) 60%);
 }
-.review--tint{background:linear-gradient(160deg,rgba(198,161,91,.05),transparent 50%)}
-.review .quote-mark{font-family:var(--benzin);font-size:20px;color:var(--bronze);line-height:1}
-.review-person{display:flex;align-items:center;gap:12px;margin-bottom:4px}
-.review-avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;border:1px solid var(--bronze-35);background:var(--panel);flex:none}
-.review-name{font-size:13px;font-weight:600;letter-spacing:.04em}
-.review p{margin:12px 0 0;font-size:15px;line-height:1.7;color:var(--text-78)}
+.review--tint{background:linear-gradient(165deg,rgba(198,161,91,.12),rgba(255,255,255,.01) 60%)}
+/* декоративная кавычка */
+.review::before{
+  content:'\201C';position:absolute;top:14px;right:26px;
+  font-family:Georgia,serif;font-size:80px;line-height:1;color:var(--bronze);opacity:.18;
+}
+.review-stars{color:#F2C94C;font-size:16px;letter-spacing:4px;margin-bottom:16px}
+.review .quote-mark{display:none}
+.review p{margin:0 0 22px;font-size:15px;line-height:1.75;color:var(--text-78);flex:1;position:relative;z-index:1}
 .reviews--3 .review p{font-size:15px}
+.review-person{display:flex;align-items:center;gap:14px;padding-top:20px;border-top:1px solid var(--hairline)}
+.review-avatar{
+  width:56px;height:56px;border-radius:50%;object-fit:cover;flex:none;
+  border:2px solid var(--bronze);box-shadow:0 0 0 4px rgba(198,161,91,.1);background:var(--panel);
+}
+.review-name{font-size:15px;font-weight:600;letter-spacing:.02em}
 
 /* ---------- FAQ ---------- */
 .faq{display:flex;flex-direction:column;gap:2px}
