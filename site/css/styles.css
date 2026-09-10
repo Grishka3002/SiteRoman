@@ -317,7 +317,8 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 .reviews--3 .review p{font-size:15px}
 .review-person{display:flex;align-items:center;gap:14px;padding-top:20px;border-top:1px solid var(--hairline)}
 .review-avatar{
-  width:56px;height:56px;border-radius:50%;object-fit:cover;flex:none;
+  width:64px;height:64px;border-radius:50%;flex:none;
+  object-fit:cover;object-position:50% 35%; /* любое фото аккуратно кадрируется, лицо в кадре */
   border:2px solid var(--bronze);box-shadow:0 0 0 4px rgba(198,161,91,.1);background:var(--panel);
 }
 .review-name{font-size:15px;font-weight:600;letter-spacing:.02em}
