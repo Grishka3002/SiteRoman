@@ -2,7 +2,7 @@
    Отдаёт страницы из site/, подставляя правки контента из data/content.json
    (тексты — [data-edit], плейсхолдеры — [data-edit-ph], фото-ленты — [data-photos],
    видео — [data-videos], бегущие строки — [data-marquee]).
-   Админ-панель: /admin (пароль — env ADMIN_PASSWORD, по умолчанию roman2026). */
+   Админ-панель: /admin (пароль — env ADMIN_PASSWORD, по умолчанию ADMIN_PASSWORD). */
 
 const express = require('express');
 const fs = require('fs');
@@ -22,7 +22,8 @@ const INQUIRIES_FILE = path.join(DATA, 'inquiries.json');
 fs.mkdirSync(DATA, { recursive: true });
 fs.mkdirSync(UPLOADS, { recursive: true });
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'roman2026';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+if (!ADMIN_PASSWORD) throw new Error('Set ADMIN_PASSWORD before starting the server');
 const PORT = process.env.PORT || 3000;
 
 /* page id → файл в site/ */
@@ -36,11 +37,17 @@ const PAGE_TITLES = { home: 'Главная', svadby: 'Свадьбы', korporat
 /* числовые настройки страниц, редактируемые в админке */
 const SETTINGS_DEFS = {
   home: [
+    { key: 'reviewPhotoSize', label: 'Размер всех фото в отзывах (px)', section: 'reviewPhotos', def: 144, min: 48, max: 240 },
     { key: 'fabSize', label: 'Размер кнопки видео-визитки (px)', section: 'vizitka', def: 84, min: 48, max: 160 }
   ]
 };
 
 /* ---------- утилиты ---------- */
+function normalizeSetting(value, def) {
+  const number = Number(value);
+  return value == null || value === '' || !Number.isFinite(number)
+    ? def.def : Math.max(def.min, Math.min(def.max, Math.round(number)));
+}
 function readJson(file, fallback) {
   try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) { return fallback; }
 }
@@ -68,7 +75,11 @@ function renderPage(pageId) {
   if (pageCache[pageId]) return pageCache[pageId];
   const html = fs.readFileSync(path.join(SITE, PAGES[pageId]), 'utf8');
   const $ = cheerio.load(html);
-  const content = (readJson(CONTENT_FILE, {})[pageId]) || {};
+  const allContent = readJson(CONTENT_FILE, {});
+  const content = allContent[pageId] || {};
+  const reviewPhotoDef = SETTINGS_DEFS.home.find(s => s.key === 'reviewPhotoSize');
+  const reviewPhotoSize = normalizeSetting((allContent.home || {}).settings?.reviewPhotoSize, reviewPhotoDef);
+  $('head').append(`<style>:root{--review-photo-size:${reviewPhotoSize}px}</style>`);
   const texts = content.texts || {};
   const photos = content.photos || {};
   const videos = content.videos || {};
@@ -290,7 +301,7 @@ app.get('/api/admin/data', requireAdmin, (req, res) => {
       })),
       settings: (SETTINGS_DEFS[pageId] || []).map(s => ({
         ...s,
-        value: over.settings && over.settings[s.key] != null ? over.settings[s.key] : s.def
+        value: normalizeSetting((over.settings || {})[s.key], s)
       }))
     };
   }
@@ -307,7 +318,10 @@ app.post('/api/admin/save', requireAdmin, (req, res) => {
     photos: photos || {},
     videos: videos || {},
     marquees: marquees || {},
-    settings: settings || {}
+    settings: Object.fromEntries((SETTINGS_DEFS[page] || []).map(s => [
+      s.key, normalizeSetting(settings && settings[s.key] != null
+        ? settings[s.key] : ((content[page] || {}).settings || {})[s.key], s)
+    ]))
   };
   writeJson(CONTENT_FILE, content);
   clearCache();

@@ -12,6 +12,7 @@
 
   /* ---------- подписи ---------- */
   var SECTION_LABELS = {
+    reviewPhotos: 'Фото в отзывах — весь сайт',
     logo: 'ЛОГОТИП', nav: 'НАВИГАЦИЯ', hero: 'ГЕРОЙ (ПЕРВЫЙ ЭКРАН)',
     stripLeft: 'ФОТО-ЛЕНТА — ЛЕВАЯ КОЛОНКА', stripRight: 'ФОТО-ЛЕНТА — ПРАВАЯ КОЛОНКА',
     marquee: 'БЕГУЩАЯ СТРОКА', guar: 'ГАРАНТИИ', pkg: 'ПАКЕТЫ УСЛУГ', lv: 'УРОВНИ РЕАЛИЗАЦИИ',
@@ -300,6 +301,9 @@
     row.appendChild(range);
     row.appendChild(num);
     wrap.appendChild(row);
+    if (s.key === 'reviewPhotoSize') {
+      wrap.appendChild(el('div', 'hint', 'Единый размер для всех фотографий в отзывах на страницах «Свадьбы» и «Корпоративы». На узких экранах фото ограничено шириной карточки.'));
+    }
     return wrap;
   }
 
