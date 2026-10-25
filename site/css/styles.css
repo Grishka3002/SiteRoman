@@ -292,7 +292,7 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 
 /* ---------- отзывы ---------- */
 .reviews{
-  position:relative;display:flex;gap:24px;overflow-x:auto;
+  position:relative;display:flex;align-items:flex-start;gap:24px;overflow-x:auto;
   scroll-snap-type:x mandatory;scroll-behavior:smooth;
   padding-bottom:18px;-webkit-overflow-scrolling:touch;
 }
@@ -315,6 +315,11 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 .review .quote-mark{display:none}
 .review p{margin:0 0 22px;font-size:15px;line-height:1.75;color:var(--text-78);flex:1;position:relative;z-index:1}
 .reviews--3 .review p{font-size:15px}
+.review--overflow:not(.review--expanded) p{max-height:var(--review-preview-height);overflow:hidden;flex:none}
+.review-toggle{align-self:flex-start;margin:-8px 0 20px;padding:6px 0;border:0;background:none;color:var(--bronze);font:inherit;font-size:14px;cursor:pointer;text-decoration:underline;text-underline-offset:4px}
+.review-toggle:hover{color:var(--text)}
+.review-toggle:focus-visible{outline:2px solid var(--bronze);outline-offset:4px}
+.review-toggle[hidden]{display:none}
 .review-person{display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding-top:20px;border-top:1px solid var(--hairline)}
 .review-avatar{
   width:var(--review-photo-size,144px);max-width:100%;height:auto;aspect-ratio:1;border-radius:50%;flex:none;

@@ -124,6 +124,53 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   /* ---------- карусель отзывов (скролл + автопрокрутка раз в 5 с) ---------- */
+  // Keep longer reviews as compact as the first card until the reader expands them.
+  document.querySelectorAll('.reviews').forEach(function (track, trackIndex) {
+    var cards = Array.from(track.querySelectorAll('.review'));
+    var firstText = cards[0] && cards[0].querySelector('p');
+    if (!firstText) return;
+    var entries = cards.map(function (card, index) {
+      var text = card.querySelector('p');
+      if (!text) return null;
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'review-toggle';
+      button.hidden = true;
+      text.id = text.id || 'review-text-' + trackIndex + '-' + index;
+      button.setAttribute('aria-controls', text.id);
+      function setExpanded(expanded) {
+        card.classList.toggle('review--expanded', expanded);
+        button.setAttribute('aria-expanded', String(expanded));
+        button.textContent = expanded ? 'Свернуть' : 'Читать полностью';
+      }
+      setExpanded(false);
+      button.addEventListener('click', function () {
+        setExpanded(!card.classList.contains('review--expanded'));
+      });
+      text.insertAdjacentElement('afterend', button);
+      return { card: card, text: text, button: button, setExpanded: setExpanded };
+    }).filter(Boolean);
+    function updatePreview() {
+      var height = firstText.getBoundingClientRect().height;
+      if (!height) return;
+      track.style.setProperty('--review-preview-height', height + 'px');
+      entries.forEach(function (entry) {
+        var overflow = entry.text !== firstText && entry.text.scrollHeight > height + 1;
+        entry.card.classList.toggle('review--overflow', overflow);
+        entry.button.hidden = !overflow;
+        if (!overflow) entry.setExpanded(false);
+      });
+    }
+    updatePreview();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(updatePreview);
+    if (window.ResizeObserver) {
+      var observer = new ResizeObserver(updatePreview);
+      observer.observe(firstText);
+    } else {
+      window.addEventListener('resize', updatePreview);
+    }
+  });
+
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.querySelectorAll('.reviews').forEach(function (track) {
     var cards = track.children;
@@ -136,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     function start() {
       if (reduceMotion || timer) return;
-      timer = setInterval(function () { if (!paused) goTo(idx + 1); }, 5000);
+      timer = setInterval(function () { if (!paused && !track.querySelector('.review--expanded')) goTo(idx + 1); }, 5000);
     }
 
     /* пауза при наведении (десктоп) */
