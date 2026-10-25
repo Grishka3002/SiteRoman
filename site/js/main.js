@@ -124,11 +124,10 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   /* ---------- карусель отзывов (скролл + автопрокрутка раз в 5 с) ---------- */
-  // Keep longer reviews as compact as the first card until the reader expands them.
+  // Show at most five lines in every review, including the first card.
   document.querySelectorAll('.reviews').forEach(function (track, trackIndex) {
     var cards = Array.from(track.querySelectorAll('.review'));
-    var firstText = cards[0] && cards[0].querySelector('p');
-    if (!firstText) return;
+    if (!cards.length) return;
     var entries = cards.map(function (card, index) {
       var text = card.querySelector('p');
       if (!text) return null;
@@ -151,11 +150,11 @@ document.addEventListener('DOMContentLoaded', function () {
       return { card: card, text: text, button: button, setExpanded: setExpanded };
     }).filter(Boolean);
     function updatePreview() {
-      var height = firstText.getBoundingClientRect().height;
-      if (!height) return;
-      track.style.setProperty('--review-preview-height', height + 'px');
       entries.forEach(function (entry) {
-        var overflow = entry.text !== firstText && entry.text.scrollHeight > height + 1;
+        var lineHeight = parseFloat(window.getComputedStyle(entry.text).lineHeight) || 26.25;
+        var height = lineHeight * 5;
+        entry.text.style.setProperty('--review-preview-height', height + 'px');
+        var overflow = entry.text.scrollHeight > height + 1;
         entry.card.classList.toggle('review--overflow', overflow);
         entry.button.hidden = !overflow;
         if (!overflow) entry.setExpanded(false);
@@ -165,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(updatePreview);
     if (window.ResizeObserver) {
       var observer = new ResizeObserver(updatePreview);
-      observer.observe(firstText);
+      observer.observe(track);
     } else {
       window.addEventListener('resize', updatePreview);
     }
