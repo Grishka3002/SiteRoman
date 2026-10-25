@@ -313,10 +313,11 @@ h1,h2{font-family:var(--benzin);font-weight:400}
 }
 .review-stars{color:#F2C94C;font-size:16px;letter-spacing:4px;margin-bottom:16px}
 .review .quote-mark{display:none}
-.review p{margin:0 0 22px;font-size:15px;line-height:1.75;color:var(--text-78);flex:1;position:relative;z-index:1}
+.review p{min-height:var(--review-preview-height,8.75em);margin:0 0 22px;font-size:15px;line-height:1.75;color:var(--text-78);flex:1;position:relative;z-index:1}
 .reviews--3 .review p{font-size:15px}
 .review--overflow:not(.review--expanded) p{max-height:var(--review-preview-height,8.75em);overflow:hidden;flex:none}
-.review-toggle{align-self:flex-start;margin:-8px 0 20px;padding:6px 0;border:0;background:none;color:var(--bronze);font:inherit;font-size:14px;cursor:pointer;text-decoration:underline;text-underline-offset:4px}
+.review-toggle-slot{min-height:33px;margin:-8px 0 20px}
+.review-toggle{display:block;align-self:flex-start;margin:0;line-height:1.5;padding:6px 0;border:0;background:none;color:var(--bronze);font:inherit;font-size:14px;cursor:pointer;text-decoration:underline;text-underline-offset:4px}
 .review-toggle:hover{color:var(--text)}
 .review-toggle:focus-visible{outline:2px solid var(--bronze);outline-offset:4px}
 .review-toggle[hidden]{display:none}
@@ -326,11 +327,12 @@ h1,h2{font-family:var(--benzin);font-weight:400}
   object-fit:cover;object-position:50% 35%; /* любое фото аккуратно кадрируется, лицо в кадре */
   border:2px solid var(--bronze);box-shadow:0 0 0 4px rgba(198,161,91,.1);background:var(--panel);
 }
-.review-name{min-width:0;overflow-wrap:anywhere;font-size:15px;font-weight:600;letter-spacing:.02em}
+.review-name{flex:1 1 0;min-width:0;overflow-wrap:anywhere;font-size:15px;font-weight:600;letter-spacing:.02em}
 
 @media (max-width:600px){
   .review-person{flex-direction:column;align-items:flex-start;gap:16px}
   .review-avatar{width:var(--review-photo-size,128px)}
+  .review-name{flex:none;width:100%}
 }
 
 /* ---------- FAQ ---------- */

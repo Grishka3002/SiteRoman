@@ -146,7 +146,10 @@ document.addEventListener('DOMContentLoaded', function () {
       button.addEventListener('click', function () {
         setExpanded(!card.classList.contains('review--expanded'));
       });
-      text.insertAdjacentElement('afterend', button);
+      var toggleSlot = document.createElement('div');
+      toggleSlot.className = 'review-toggle-slot';
+      toggleSlot.appendChild(button);
+      text.insertAdjacentElement('afterend', toggleSlot);
       return { card: card, text: text, button: button, setExpanded: setExpanded };
     }).filter(Boolean);
     function updatePreview() {
