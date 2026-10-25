@@ -37,6 +37,10 @@
     var last = key.split('.').pop();
     if (FIELD_LABELS[last]) return FIELD_LABELS[last];
     var m;
+    if ((m = last.match(/^original(Text|Name|Photo)(\d+)$/))) {
+      var labels = { Text: 'Текст отзыва', Name: 'Автор отзыва', Photo: 'Фото автора' };
+      return labels[m[1]] + ' ' + m[2];
+    }
     if ((m = last.match(/^h(\d+)$/))) return 'Заголовок ' + m[1];
     if ((m = last.match(/^t(\d+)$/))) return 'Текст ' + m[1];
     if ((m = last.match(/^q(\d+)$/))) return 'Вопрос ' + m[1];
